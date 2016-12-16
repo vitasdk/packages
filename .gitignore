@@ -1,4 +1,7 @@
 *.tar.xz
 *.tar.gz
+*.zip
+*.tar.bz2
+*.part
 pkg
 src

@@ -15,3 +15,6 @@ b libmad
 b libogg
 b libvorbis
 b libftpvita
+b henkaku
+b taihen
+b onigmo

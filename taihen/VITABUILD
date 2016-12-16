@@ -1,0 +1,16 @@
+pkgname=taihen
+pkgver=0.6
+pkgrel=1
+url="https://github.com/yifanlu/taiHEN"
+source=("https://github.com/yifanlu/taiHEN/releases/download/v${pkgver}/taihen.tar.gz")
+sha256sums=('ceae5ae46244cb5adb37c68a140f5f7b15383705e3f366437e5f24efda9f4bc5')
+
+build() {
+  echo ""
+}
+
+package () {
+  mkdir -p $pkgdir/$prefix
+  cp -r include $pkgdir/$prefix
+  cp -r lib $pkgdir/$prefix
+}
