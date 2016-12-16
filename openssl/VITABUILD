@@ -1,0 +1,19 @@
+pkgname=openssl
+pkgver=1.0.2
+pkgrel=1
+url="https://github.com/d3m3vilurr/vita-openssl"
+source=("git://github.com/d3m3vilurr/vita-openssl.git")
+sha256sums=('SKIP')
+
+build() {
+  cd vita-openssl
+  ./Configure no-threads --prefix=$VITASDK/arm-vita-eabi/ vita-cross
+  make depend
+  make
+}
+
+package () {
+  cd vita-openssl
+  printf '#!/bin/bash\nmkdir -p $@\n' > util/mkdir-p.pl
+  make INSTALL_PREFIX=$pkgdir install
+}

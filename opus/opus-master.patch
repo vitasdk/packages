@@ -1,0 +1,26 @@
+From e1bda52db192ac82adeeccf7187526e9eb931eb2 Mon Sep 17 00:00:00 2001
+From: Sunguk Lee <d3m3vilurr@gmail.com>
+Date: Fri, 19 Aug 2016 01:47:01 +0900
+Subject: [PATCH] Patch for VITA platform
+
+https://github.com/xyzz/vita-moonlight/blob/vita/README.md#opus
+---
+ include/opus_defines.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/opus_defines.h b/include/opus_defines.h
+index 315412d..9679f5c 100644
+--- a/include/opus_defines.h
++++ b/include/opus_defines.h
+@@ -170,7 +170,7 @@ extern "C" {
+ 
+ /* Macros to trigger compilation errors when the wrong types are provided to a CTL */
+ #define __opus_check_int(x) (((void)((x) == (opus_int32)0)), (opus_int32)(x))
+-#define __opus_check_int_ptr(ptr) ((ptr) + ((ptr) - (opus_int32*)(ptr)))
++#define __opus_check_int_ptr(ptr) (ptr)
+ #define __opus_check_uint_ptr(ptr) ((ptr) + ((ptr) - (opus_uint32*)(ptr)))
+ #define __opus_check_val16_ptr(ptr) ((ptr) + ((ptr) - (opus_val16*)(ptr)))
+ /** @endcond */
+-- 
+2.7.4
+

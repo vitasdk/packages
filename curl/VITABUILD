@@ -1,0 +1,19 @@
+pkgname=curl
+pkgver=9999
+pkgrel=1
+url="https://github.com/d3m3vilurr/vita-curl"
+source=("git://github.com/d3m3vilurr/vita-curl.git")
+sha256sums=('SKIP')
+
+build() {
+  cd vita-curl
+  ./buildconf
+  ./configure --host=arm-vita-eabi  --prefix=$VITASDK/arm-vita-eabi/
+  cp lib/config-vita.h lib/curl_config.h
+  make
+}
+
+package () {
+  cd vita-curl
+  make DESTDIR=$pkgdir install
+}
