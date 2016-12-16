@@ -1,0 +1,17 @@
+pkgname=libpng
+pkgver=1.6.25
+pkgrel=1
+url="http://www.libpng.org/pub/png/libpng.html"
+source=("http://download.sourceforge.net/libpng/libpng-${pkgver}.tar.gz")
+sha256sums=('67fef52fc70f21cd9efbb4fc9e74c1ed4eec770e5dc3dbfa6788212798967459')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-arm-neon
+  make
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}

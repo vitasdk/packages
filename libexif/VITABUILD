@@ -1,0 +1,17 @@
+pkgname=libexif
+pkgver=0.6.21
+pkgrel=1
+url="http://libexif.sourceforge.net/"
+source=("http://sourceforge.net/projects/libexif/files/libexif/${pkgver}/libexif-${pkgver}.tar.bz2")
+sha256sums=('16cdaeb62eb3e6dfab2435f7d7bccd2f37438d21c5218ec4e58efa9157d4d41a')
+
+build() {
+  cd libexif-$pkgver
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  make
+}
+
+package () {
+  cd libexif-$pkgver
+  make DESTDIR=$pkgdir install
+}
