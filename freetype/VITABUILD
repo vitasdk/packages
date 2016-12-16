@@ -1,0 +1,18 @@
+pkgname=freetype
+pkgver=2.7
+pkgrel=1
+url="https://www.freetype.org/"
+source=("http://downloads.sourceforge.net/project/freetype/freetype2/${pkgver}/freetype-${pkgver}.tar.gz")
+sha256sums=('7b657d5f872b0ab56461f3bd310bd1c5ec64619bd15f0d8e08282d494d9cfea4')
+
+build() {
+  cd freetype-$pkgver
+  mkdir build && cd build
+  cmake .. $CMARGS -DWITH_ZLIB=ON -DWITH_BZip2=OFF -DWITH_PNG=ON -DWITH_HarfBuzz=OFF -DCMAKE_INSTALL_PREFIX=$prefix
+  make
+}
+
+package () {
+  cd freetype-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
