@@ -16,4 +16,5 @@ build() {
 package () {
   cd vita-curl
   make DESTDIR=$pkgdir install
+  rm -rf $pkgdir/$prefix/share/man # remove useless man pages
 }
