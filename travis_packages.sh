@@ -21,6 +21,7 @@ b onigmo
 b sdl2
 b sdl_image
 b sdl_mixer
+b sdl_net
 b openssl
 b curl
 b expat
