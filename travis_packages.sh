@@ -22,6 +22,7 @@ b sdl2
 b sdl_image
 b sdl_mixer
 b sdl_net
+b sdl_ttf
 b openssl
 b curl
 b expat
