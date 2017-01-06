@@ -2,7 +2,7 @@ pkgname=zlib
 pkgver=1.2.8
 pkgrel=1
 url="http://www.zlib.net/"
-source=("http://zlib.net/zlib-${pkgver}.tar.gz")
+source=("http://downloads.sourceforge.net/project/libpng/zlib/${pkgver}/zlib-${pkgver}.tar.gz")
 sha256sums=('36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d')
 
 build() {
