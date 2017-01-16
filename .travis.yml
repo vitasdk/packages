@@ -1,5 +1,12 @@
 sudo: required
 os: linux
+addons:
+  apt:
+    sources:
+      - george-edison55-precise-backports # cmake >= 3
+    packages:
+      - cmake
+      - cmake-data
 language: c
 compiler: clang
 env:
