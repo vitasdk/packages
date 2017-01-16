@@ -14,6 +14,7 @@ b libvita2d
 b libmad
 b libogg
 b libvorbis
+b libpsp2shell
 b libftpvita
 b henkaku
 b taihen
