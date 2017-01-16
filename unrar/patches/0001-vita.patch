@@ -1,0 +1,330 @@
+diff --git a/arcread.cpp b/arcread.cpp
+index 1463938..f1fc28f 100644
+--- a/arcread.cpp
++++ b/arcread.cpp
+@@ -1221,7 +1221,7 @@ void Archive::ConvertAttributes()
+   if (FileHead.HSType!=HSYS_WINDOWS)
+     FileHead.FileAttr=FileHead.Dir ? 0x10 : 0x20;
+ #endif
+-#ifdef _UNIX
++#if defined(_UNIX) && !defined(__vita__)
+   // umask defines which permission bits must not be set by default
+   // when creating a file or directory. The typical default value
+   // for the process umask is S_IWGRP | S_IWOTH (octal 022),
+diff --git a/file.cpp b/file.cpp
+index 7fbfb6e..cc1bd06 100644
+--- a/file.cpp
++++ b/file.cpp
+@@ -99,7 +99,7 @@ bool File::Open(const wchar *Name,uint Mode)
+   WideToChar(Name,NameA,ASIZE(NameA));
+ 
+   int handle=open(NameA,flags);
+-#ifdef LOCK_EX
++#if defined(LOCK_EX) && !defined(__vita__)
+ 
+ #ifdef _OSF_SOURCE
+   extern "C" int flock(int, int);
+@@ -247,7 +247,8 @@ bool File::Close()
+         Success=CloseHandle(hFile)==TRUE;
+ #else
+ #ifdef FILE_USE_OPEN
+-      Success=close(hFile)!=-1;
++      if (HandleType!=FILE_HANDLESTD)
++        Success=close(hFile)!=-1;
+ #else
+       Success=fclose(hFile)!=EOF;
+ #endif
+@@ -302,9 +303,9 @@ bool File::Write(const void *Data,size_t Size)
+     if (hFile==FILE_BAD_HANDLE)
+     {
+ #ifdef FILE_USE_OPEN
+-      hFile=dup(STDOUT_FILENO); // Open new stdout stream.
++      hFile=STDOUT_FILENO; // Open new stdout stream.
+ #else
+-      hFile=fdopen(dup(STDOUT_FILENO),"w"); // Open new stdout stream.
++      hFile=fdopen(STDOUT_FILENO,"w"); // Open new stdout stream.
+ #endif
+     }
+ #endif
+@@ -574,9 +575,10 @@ bool File::Truncate()
+ {
+ #ifdef _WIN_ALL
+   return SetEndOfFile(hFile)==TRUE;
+-#else
++#elif !defined(__vita__)
+   return ftruncate(GetFD(),(off_t)Tell())==0;
+ #endif
++  return true;
+ }
+ 
+ 
+@@ -627,7 +629,7 @@ void File::SetCloseFileTime(RarTime *ftm,RarTime *fta)
+ 
+ void File::SetCloseFileTimeByName(const wchar *Name,RarTime *ftm,RarTime *fta)
+ {
+-#ifdef _UNIX
++#if defined(_UNIX) && !defined(__vita__)
+   bool setm=ftm!=NULL && ftm->IsSet();
+   bool seta=fta!=NULL && fta->IsSet();
+   if (setm || seta)
+diff --git a/filefn.cpp b/filefn.cpp
+index 0c2b03d..2a44500 100644
+--- a/filefn.cpp
++++ b/filefn.cpp
+@@ -1,5 +1,15 @@
+ #include "rar.hpp"
+ 
++#ifdef _UNIX
++#ifdef __vita__
++#elif defined(_ANDROID)
++#include <sys/vfs.h>
++#define statvfs statfs
++#else
++#include <sys/statvfs.h>
++#endif
++#endif
++
+ MKDIR_CODE MakeDir(const wchar *Name,bool SetAttr,uint Attr)
+ {
+ #ifdef _WIN_ALL
+@@ -28,7 +38,11 @@ MKDIR_CODE MakeDir(const wchar *Name,bool SetAttr,uint Attr)
+   char NameA[NM];
+   WideToChar(Name,NameA,ASIZE(NameA));
+   mode_t uattr=SetAttr ? (mode_t)Attr:0777;
++#ifdef __vita__
++  int ErrCode=sceIoMkdir(NameA,uattr);
++#else
+   int ErrCode=mkdir(NameA,uattr);
++#endif
+ #ifdef _ANDROID
+   if (ErrCode==-1 && errno!=ENOENT)
+     ErrCode=JniMkdir(Name) ? 0 : -1;  // If external card is read-only for usual file API.
+@@ -162,7 +176,7 @@ int64 GetFreeDisk(const wchar *Name)
+       uiUserFree.u.HighPart<=uiTotalFree.u.HighPart)
+     return INT32TO64(uiUserFree.u.HighPart,uiUserFree.u.LowPart);
+   return 0;
+-#elif defined(_UNIX)
++#elif defined(_UNIX) && !defined(__vita__)
+   wchar Root[NM];
+   GetFilePath(Name,Root,ASIZE(Root));
+   char RootA[NM];
+@@ -274,7 +288,7 @@ void PrepareToDelete(const wchar *Name)
+ #if defined(_WIN_ALL) || defined(_EMX)
+   SetFileAttr(Name,0);
+ #endif
+-#ifdef _UNIX
++#if defined(_UNIX) && !defined(__vita__)
+   if (Name!=NULL)
+   {
+     char NameA[NM];
+@@ -318,7 +332,7 @@ bool SetFileAttr(const wchar *Name,uint Attr)
+       Success=SetFileAttributes(LongName,Attr)!=0;
+   }
+   return Success;
+-#elif defined(_UNIX)
++#elif defined(_UNIX) && !defined(__vita__)
+   char NameA[NM];
+   WideToChar(Name,NameA,ASIZE(NameA));
+   return chmod(NameA,(mode_t)Attr)==0;
+diff --git a/find.cpp b/find.cpp
+index 2e6c434..0ebf603 100644
+--- a/find.cpp
++++ b/find.cpp
+@@ -6,6 +6,8 @@ FindFile::FindFile()
+   FirstCall=true;
+ #ifdef _WIN_ALL
+   hFind=INVALID_HANDLE_VALUE;
++#elif defined(__vita__)
++  dirid = 0;
+ #else
+   dirp=NULL;
+ #endif
+@@ -17,6 +19,11 @@ FindFile::~FindFile()
+ #ifdef _WIN_ALL
+   if (hFind!=INVALID_HANDLE_VALUE)
+     FindClose(hFind);
++#elif defined(__vita__)
++  if (dirid > 0) {
++    sceIoDclose(dirid);
++    dirid = 0;
++  }
+ #else
+   if (dirp!=NULL)
+     closedir(dirp);
+@@ -55,15 +62,30 @@ bool FindFile::Next(FindData *fd,bool GetSymLink)
+       wcscpy(DirName,L".");
+     char DirNameA[NM];
+     WideToChar(DirName,DirNameA,ASIZE(DirNameA));
++#ifdef __vita__
++    if ((dirid=sceIoDopen(DirNameA))<0)
++    {
++      fd->Error=true;
++      return false;
++    }
++#else
+     if ((dirp=opendir(DirNameA))==NULL)
+     {
+       fd->Error=(errno!=ENOENT);
+       return false;
+     }
++#endif
+   }
+   while (1)
+   {
++#ifdef __vita__
++    struct SceIoDirent entry;
++    struct SceIoDirent *ent = NULL;
++    if(sceIoDread(dirid, &entry) > 0)
++      ent = &entry;
++#else
+     struct dirent *ent=readdir(dirp);
++#endif
+     if (ent==NULL)
+       return false;
+     if (strcmp(ent->d_name,".")==0 || strcmp(ent->d_name,"..")==0)
+diff --git a/find.hpp b/find.hpp
+index 250637f..4b2340f 100644
+--- a/find.hpp
++++ b/find.hpp
+@@ -1,6 +1,14 @@
+ #ifndef _RAR_FINDDATA_
+ #define _RAR_FINDDATA_
+ 
++#ifdef _UNIX
++#ifdef __vita__
++#include <psp2/io/dirent.h>
++#else
++#include <dirent.h>
++#endif
++#endif
++
+ enum FINDDATA_FLAGS {
+   FDDF_SECONDDIR=1  // Second encounter of same directory in SCAN_GETDIRSTWICE ScanTree mode.
+ };
+@@ -35,6 +43,8 @@ class FindFile
+     bool FirstCall;
+ #ifdef _WIN_ALL
+     HANDLE hFind;
++#elif defined(__vita__)
++    int dirid;
+ #else
+     DIR *dirp;
+ #endif
+diff --git a/os.hpp b/os.hpp
+index 1b0813f..76b9a7f 100644
+--- a/os.hpp
++++ b/os.hpp
+@@ -128,7 +128,7 @@
+ #if defined(RAR_SMP) && defined(__APPLE__)
+   #include <sys/sysctl.h>
+ #endif
+-#ifndef SFX_MODULE
++#if !defined(SFX_MODULE) && !defined(__vita__)
+   #ifdef _ANDROID
+     #include <sys/vfs.h>
+     #define statvfs statfs
+@@ -149,14 +149,13 @@
+ #include <ctype.h>
+ #include <fcntl.h>
+ #include <errno.h>
+-#include <dirent.h>
+ #include <time.h>
+ #include <signal.h>
+ #include <utime.h>
+ #include <locale.h>
+ 
+ 
+-#ifdef  S_IFLNK
++#if defined(S_IFLNK) && !defined(__vita__)
+ #define SAVE_LINKS
+ #endif
+ 
+@@ -185,6 +184,10 @@
+ #define _stdfunction 
+ #define _forceinline inline
+ 
++#ifdef __vita__
++#define LITTLE_ENDIAN
++#endif
++
+ #ifdef _APPLE
+   #if defined(__BIG_ENDIAN__) && !defined(BIG_ENDIAN)
+     #define BIG_ENDIAN
+diff --git a/uowners.cpp b/uowners.cpp
+index 9f46308..38dd9a6 100644
+--- a/uowners.cpp
++++ b/uowners.cpp
+@@ -2,6 +2,7 @@
+ 
+ void ExtractUnixOwner20(Archive &Arc,const wchar *FileName)
+ {
++#ifndef __vita__
+   char NameA[NM];
+   WideToChar(FileName,NameA,ASIZE(NameA));
+ 
+@@ -44,11 +45,13 @@ void ExtractUnixOwner20(Archive &Arc,const wchar *FileName)
+     ErrHandler.SetErrorCode(RARX_CREATE);
+   }
+   SetFileAttr(FileName,Attr);
++#endif
+ }
+ 
+ 
+ void ExtractUnixOwner30(Archive &Arc,const wchar *FileName)
+ {
++#ifndef __vita__
+   char NameA[NM];
+   WideToChar(FileName,NameA,ASIZE(NameA));
+ 
+@@ -87,11 +90,13 @@ void ExtractUnixOwner30(Archive &Arc,const wchar *FileName)
+     ErrHandler.SetErrorCode(RARX_CREATE);
+   }
+   SetFileAttr(FileName,Attr);
++#endif
+ }
+ 
+ 
+ void SetUnixOwner(Archive &Arc,const wchar *FileName)
+ {
++#ifndef __vita__
+   char NameA[NM];
+   WideToChar(FileName,NameA,ASIZE(NameA));
+ 
+@@ -138,4 +143,5 @@ void SetUnixOwner(Archive &Arc,const wchar *FileName)
+     uiMsg(UIERROR_UOWNERSET,Arc.FileName,FileName);
+     ErrHandler.SetErrorCode(RARX_CREATE);
+   }
++#endif
+ }
+diff --git a/Makefile.vita b/Makefile.vita
+new file mode 100644
+index 0000000..d490f71
+--- /dev/null
++++ b/Makefile.vita
+@@ -0,0 +1,26 @@
++TARGET    = libunrar.a
++OBJS      = archive.o arcread.o blake2s.o cmddata.o consio.o crc.o crypt.o \
++			dll.o encname.o errhnd.o extinfo.o extract.o filcreat.o file.o \
++			filefn.o filestr.o find.o getbits.o global.o hash.o headers.o \
++			isnt.o match.o options.o pathfn.o qopen.o rar.o rarpch.o rarvm.o \
++			rawread.o rdwrfn.o rijndael.o rs.o rs16.o scantree.o secpassword.o \
++			sha1.o sha256.o smallfn.o strfn.o strlist.o system.o threadpool.o \
++			timefn.o ui.o unicode.o unpack.o volume.o
++
++PREFIX   = arm-vita-eabi
++CC       = $(PREFIX)-gcc
++CXX      = $(PREFIX)-g++
++AR       = $(PREFIX)-ar
++CFLAGS   = -Wl,-q -Wall -O3 -Wno-unused-variable -Wno-unused-but-set-variable -ffat-lto-objects -flto -DRARDLL -DUNRAR -DSILENT
++CXXFLAGS = $(CFLAGS) -std=gnu++11 -fno-rtti
++
++.PHONY: all clean
++
++all: $(TARGET)
++
++$(TARGET): $(OBJS)
++	$(AR) rcu $@ $^
++
++clean:
++	@rm -rf $(TARGET) $(OBJS)
++	@echo "Cleaned up!"
