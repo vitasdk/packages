@@ -13,6 +13,6 @@ build() {
 }
 
 package () {
-  cd libk
+  cd libk/build
   make DESTDIR=$pkgdir install
 }

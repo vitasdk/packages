@@ -13,6 +13,6 @@ build() {
 }
 
 package () {
-  cd PSP2SHELL
+  cd PSP2SHELL/build
   make DESTDIR=$pkgdir install
 }
