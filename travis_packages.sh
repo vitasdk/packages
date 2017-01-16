@@ -18,6 +18,7 @@ b libftpvita
 b henkaku
 b taihen
 b libpsp2shell
+b libk
 b onigmo
 b sdl2
 b sdl_image
