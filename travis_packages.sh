@@ -8,6 +8,7 @@ b libpng
 b libexif
 b libjpeg-turbo
 b jansson
+b yaml-cpp
 b freetype
 b fftw
 b libvita2d
