@@ -1,0 +1,18 @@
+pkgname=glm
+pkgver=0.9.9.0
+pkgrel=1
+url="https://github.com/g-truc/glm.git"
+source=("git://github.com/g-truc/glm.git")
+sha256sums=('SKIP')
+
+build() {
+  cd glm
+  mkdir build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=$prefix
+  make
+}
+
+package () {
+  cd glm/build
+  make DESTDIR=$pkgdir install
+}
