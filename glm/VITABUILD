@@ -8,7 +8,7 @@ sha256sums=('SKIP')
 build() {
   cd glm
   mkdir build && cd build
-  cmake .. -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
   make
 }
 
