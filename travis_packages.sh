@@ -32,3 +32,4 @@ b expat
 b opus
 b unrar
 b glm
+b libxml2
