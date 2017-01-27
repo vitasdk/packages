@@ -12,7 +12,7 @@ prepare() {
 
 build() {
   cd ${pkgname}-${pkgver}
-  ./autogen.sh --host arm-vita-eabi --prefix=$prefix --disable-ipv6 --without-debug --without-ftp --without-http --without-threads --without-lzma --disable-tests
+  ./autogen.sh --host arm-vita-eabi --prefix=$prefix --disable-ipv6 --disable-shared --without-debug --without-ftp --without-http --without-lzma --disable-tests
   make
 }
 
