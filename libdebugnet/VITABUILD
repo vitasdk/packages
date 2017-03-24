@@ -6,13 +6,13 @@ source=("git://github.com/psxdev/debugnet.git")
 sha256sums=('SKIP')
 
 build() {
-  cd libdebugnet
+  cd debugnet/libdebugnet
   mkdir build && cd build
   cmake ..  -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
   make
 }
 
 package () {
-  cd libdebugnet/build
+  cd debugnet/libdebugnet/build
   make DESTDIR=$pkgdir install
 }
