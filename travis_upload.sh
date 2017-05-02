@@ -10,7 +10,7 @@ b() {
 	if [ -n "$FILE" ]; then
 		source VITABUILD
 		echo "Uploading $FILE as $pkgname.tar.xz..."
-		sshpass -e scp $FILE travis@go.henkaku.xyz:/home/travis/pkg/$pkgname.tar.xz
+		sshpass -e scp $FILE travis@dl.vitasdk.org:/home/travis/pkg/$pkgname.tar.xz
 	fi
 	cd ..
 }
