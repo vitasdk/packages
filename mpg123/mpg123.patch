@@ -1,0 +1,49 @@
+diff -Naur mpg123-1.23.3-orig/src/compat/compat_impl.h mpg123-1.23.3/src/compat/compat_impl.h
+--- mpg123-1.23.3-orig/src/compat/compat_impl.h	2016-03-22 22:09:45.000000000 +0000
++++ mpg123-1.23.3/src/compat/compat_impl.h	2016-04-18 20:06:57.466698335 +0000
+@@ -228,9 +228,9 @@
+ 	new_sa.sa_handler = handler;
+ 	sigemptyset(&new_sa.sa_mask);
+ 	new_sa.sa_flags = 0;
+-	if(sigaction(signum, &new_sa, &old_sa) == -1)
+-		return ((void (*)()) -1);
+-	return (old_sa.sa_handler);
++	//if(sigaction(signum, &new_sa, &old_sa) == -1)
++	return ((void (*)()) -1);
++	//return (old_sa.sa_handler);
+ }
+ #endif
+ #endif
+diff -Naur mpg123-1.23.3-orig/src/control_generic.c mpg123-1.23.3/src/control_generic.c
+--- mpg123-1.23.3-orig/src/control_generic.c	2016-03-22 22:09:45.000000000 +0000
++++ mpg123-1.23.3/src/control_generic.c	2016-04-18 20:07:10.490738975 +0000
+@@ -28,7 +28,7 @@
+ #include <ctype.h>
+ #if !defined (WIN32) || defined (__CYGWIN__)
+ #include <sys/wait.h>
+-#include <sys/socket.h>
++//#include <sys/socket.h>
+ #endif
+ #include <errno.h>
+ #include <string.h>
+@@ -68,6 +68,8 @@
+ 	fprintf(outstream, "\n");
+ }
+ 
++#define select(...) 0
++
+ /* Split up a number of lines separated by \n, \r, both or just zero byte
+    and print out each line with specified prefix. */
+ static void generic_send_lines(const char* fmt, mpg123_string *inlines)
+diff -Naur mpg123-1.23.3-orig/src/mpg123.c mpg123-1.23.3/src/mpg123.c
+--- mpg123-1.23.3-orig/src/mpg123.c	2016-03-22 22:09:45.000000000 +0000
++++ mpg123-1.23.3/src/mpg123.c	2016-04-18 20:06:57.467698338 +0000
+@@ -44,6 +44,8 @@
+ 
+ #include "debug.h"
+ 
++#define sleep(...) 0;
++
+ static void usage(int err);
+ static void want_usage(char* arg);
+ static void long_usage(int err);
