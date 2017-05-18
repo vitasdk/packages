@@ -5,6 +5,7 @@ addons:
     sources:
       - george-edison55-precise-backports # cmake >= 3
     packages:
+      - fakeroot
       - cmake
       - cmake-data
 language: c
