@@ -36,3 +36,6 @@ b glm
 b libxml2
 b speexdsp
 b pixman
+b TinyGL
+b kuio
+b mpg123
