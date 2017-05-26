@@ -4,6 +4,7 @@
 
 # since we don't have dep tracking, we need to build in a specific order
 b zlib
+b bzip2
 b libpng
 b libexif
 b libjpeg-turbo
