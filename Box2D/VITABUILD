@@ -11,7 +11,7 @@ build() {
 }
 
 package () {
-  cd V$pkgname
+  cd $pkgname
   mkdir -p $pkgdir/$prefix
   cp -r include $pkgdir/$prefix
   cp libbox2d.a $pkgdir/$prefix/lib
