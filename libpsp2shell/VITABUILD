@@ -6,13 +6,13 @@ source=("git://github.com/Cpasjuste/PSP2SHELL.git")
 sha256sums=('SKIP')
 
 build() {
-  cd PSP2SHELL/psp2shell
+  cd PSP2SHELL
   mkdir build && cd build
   cmake ..  -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
   make psp2shell
 }
 
 package () {
-  cd PSP2SHELL/psp2shell/build
+  cd PSP2SHELL/build
   make DESTDIR=$pkgdir install
 }
