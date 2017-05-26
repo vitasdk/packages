@@ -1,0 +1,16 @@
+pkgname=TinyGL
+pkgver=0.4
+pkgrel=1
+url="https://github.com/Cpasjuste/VTinyGL"
+source=("git://github.com/Cpasjuste/VTinyGL.git")
+sha256sums=('SKIP')
+
+build() {
+  cd V$pkgname
+  make
+}
+
+package () {
+  cd V$pkgname
+  make DESTDIR=$pkgdir install
+}
