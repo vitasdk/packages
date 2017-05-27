@@ -12,6 +12,6 @@ build() {
 
 package () {
   cd V$pkgname
-  cp -rf ./include $pkgdir/
-  cp -rf ./lib $pkgdir/  
+  cp -rf ./include $pkgdir/$prefix/
+  cp -rf ./lib $pkgdir/$prefix/
 }
