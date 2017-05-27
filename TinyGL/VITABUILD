@@ -12,5 +12,6 @@ build() {
 
 package () {
   cd V$pkgname
-  make DESTDIR=$pkgdir install
+  cp -rf ./include $pkgdir/
+  cp -rf ./lib $pkgdir/  
 }
