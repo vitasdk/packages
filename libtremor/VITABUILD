@@ -1,0 +1,17 @@
+pkgname=libtremor
+pkgver=1.2rc3
+pkgrel=1
+url="http://xiph.org/"
+source=("http://downloads.sourceforge.net/sourceforge/devkitpro/tremor-lowmem-src.tar.bz2")
+sha256sums=('513bf0e0abcf7dce0999c1d97d86a28c79c1b707089c40a42513d0d193f03498')
+
+build() {
+  cd tremor-lowmem
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  make
+}
+
+package () {
+  cd tremor-lowmem
+  make DESTDIR=$pkgdir install
+}
