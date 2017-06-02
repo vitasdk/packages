@@ -1,16 +1,18 @@
 pkgname=kuio
-pkgver=1.1
+pkgver=9999
 pkgrel=1
 url="https://github.com/Rinnegatamante/kuio"
-source=("https://github.com/Rinnegatamante/kuio/releases/download/${pkgver}/kuio.tar.gz")
-sha256sums=('4e038c8d71ef451679bb39b0c6aa58580c155db70a60e81263c2103dd4fee097')
+source=("git://github.com/Rinnegatamante/kuio.git")
+sha256sums=('SKIP')
 
 build() {
-  echo ""
+  cd $pkgname
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  make
 }
 
 package () {
-  mkdir -p $pkgdir/$prefix
-  cp -r include $pkgdir/$prefix
-  cp -r lib $pkgdir/$prefix
+  cd $pkgname/build
+  make DESTDIR=$pkgdir install
 }
