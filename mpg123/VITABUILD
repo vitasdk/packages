@@ -3,7 +3,7 @@ pkgver=1.23.3
 pkgrel=1
 url="http://www.mpg123.de"
 source=("http://www.mpg123.de/download/mpg123-${pkgver}.tar.bz2" "mpg123.patch")
-sha256sums=('5c431da7e7446fae586c9207772dc0038ce2bfe75f0274a7933d1b4a7d84e6c6' '80f0075ae008e86c249a93cad896281162ec41f1940442257120d457e47335dd')
+sha256sums=('5c431da7e7446fae586c9207772dc0038ce2bfe75f0274a7933d1b4a7d84e6c6' 'a1ecd2a792adf4023a5cf880bec1a5b2b6c56c5daf13837058abd2e3fc1af123')
 
 prepare() {
   patch -Np0 -i "${srcdir}/mpg123.patch"
