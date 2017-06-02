@@ -18,6 +18,7 @@ b libvita2d
 b libmad
 b libogg
 b libvorbis
+b libtremor
 b libftpvita
 b henkaku
 b taihen
