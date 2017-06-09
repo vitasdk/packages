@@ -1,0 +1,25 @@
+TARGET_LIB  = libSDL2_ttf.a
+COMMON_OBJS = glfont.o \
+	showfont.o \
+	SDL_ttf.o 
+
+PREFIX  = arm-vita-eabi
+CC      = $(PREFIX)-gcc
+AR      = $(PREFIX)-gcc-ar
+CFLAGS  = -Wl,-q -Wall -O3 -I$(VITASDK)/arm-vita-eabi/include/freetype2 -I$(VITASDK)/arm-vita-eabi/include/SDL2
+ASFLAGS = $(CFLAGS)
+
+LIBS    += -lSDL2
+
+$(TARGET_LIB): $(COMMON_OBJS)
+	$(AR) rcs $@ $^
+
+clean:
+	@rm -rf $(TARGET_LIB) $(COMMON_OBJS)
+
+install: $(TARGET_LIB)
+	@cp  $(TARGET_LIB) $(VITASDK)/arm-vita-eabi/lib
+	@mkdir -p "$(VITASDK)/arm-vita-eabi/include/SDL2"
+	@cp SDL_ttf.h "$(VITASDK)/arm-vita-eabi/include/SDL2"
+	@echo "Installed!"
+
