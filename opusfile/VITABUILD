@@ -1,0 +1,17 @@
+pkgname=opusfile
+pkgver=0.7
+pkgrel=1
+url="https://github.com/xiph/opusfile"
+source=("https://github.com/xiph/opusfile/releases/download/v${pkgver}/opusfile-${pkgver}.tar.gz")
+sha256sums=('9e2bed13bc729058591a0f1cab2505e8cfd8e7ac460bf10a78bcc3b125e7c301')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fixed-point
+  make
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}

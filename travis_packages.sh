@@ -34,6 +34,7 @@ b openssl
 b curl
 b expat
 b opus
+b opusfile
 b unrar
 b glm
 b libxml2
