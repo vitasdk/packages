@@ -1,7 +1,7 @@
 pkgname=bzip2
 pkgver=1.0.6
 pkgrel=1
-url="http://bzip2.org"
+url="http://bzip.org"
 source=("http://bzip.org/${pkgver}/${pkgname}-${pkgver}.tar.gz" "bzip2.patch")
 sha256sums=('a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd' '7662ae5403c35b8b9822a25968b44cb70a7527cd70a1f80eadd7bcad3777119f')
 
