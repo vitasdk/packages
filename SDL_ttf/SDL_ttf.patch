@@ -1,0 +1,44 @@
+From c6334f1db357d270500014e892ecbdece43f601b Mon Sep 17 00:00:00 2001
+From: devnoname120 <devnoname120@gmail.com>
+Date: Tue, 3 Jan 2017 17:46:55 +0100
+Subject: [PATCH] Add Vita Makefile
+
+---
+ Makefile.vita.SDL2_ttf | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Makefile.vita.SDL2_ttf
+
+diff --git a/Makefile.vita.SDL2_ttf b/Makefile.vita.SDL2_ttf
+new file mode 100644
+index 0000000..90b396d
+--- /dev/null
++++ b/Makefile.vita.SDL2_ttf
+@@ -0,0 +1,25 @@
++TARGET_LIB  = libSDL2_ttf.a
++COMMON_OBJS = glfont.o \
++	showfont.o \
++	SDL_ttf.o 
++
++PREFIX  = arm-vita-eabi
++CC      = $(PREFIX)-gcc
++AR      = $(PREFIX)-gcc-ar
++CFLAGS  = -Wl,-q -Wall -O3 -I$(VITASDK)/arm-vita-eabi/include/freetype2 -I$(VITASDK)/arm-vita-eabi/include/SDL2
++ASFLAGS = $(CFLAGS)
++
++LIBS    += -lSDL2
++
++$(TARGET_LIB): $(COMMON_OBJS)
++	$(AR) rcs $@ $^
++
++clean:
++	@rm -rf $(TARGET_LIB) $(COMMON_OBJS)
++
++install: $(TARGET_LIB)
++	@cp  $(TARGET_LIB) $(VITASDK)/arm-vita-eabi/lib
++	@mkdir -p "$(VITASDK)/arm-vita-eabi/include/SDL2"
++	@cp SDL_ttf.h "$(VITASDK)/arm-vita-eabi/include/SDL2"
++	@echo "Installed!"
++
+-- 
+2.13.0
+
