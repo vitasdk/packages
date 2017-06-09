@@ -1,18 +1,19 @@
 pkgname=bzip2
-pkgver=9999
+pkgver=1.0.6
 pkgrel=1
-url="https://github.com/devnoname120/bzip2-vita"
-source=("git://github.com/devnoname120/bzip2-vita.git")
-sha256sums=('SKIP')
+url="http://bzip.org"
+source=("http://bzip.org/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd')
 
 build() {
-  cd bzip2-vita
-  make libbz2.a
+  cd ${pkgname}-${pkgver}
+  make CC=arm-vita-eabi-gcc AR=arm-vita-eabi-ar RANLIB=arm-vita-eabi-ranlib libbz2.a
 }
 
 package () {
-  cd bzip2-vita
-  mkdir -p $pkgdir/$prefix/include
-  mkdir -p $pkgdir/$prefix/lib
-  make PREFIX=$pkgdir/$prefix installlib
+  cd ${pkgname}-${pkgver}
+  mkdir -p ${pkgdir}/${prefix}/include
+  mkdir -p ${pkgdir}/${prefix}/lib
+  cp -f libbz2.a ${pkgdir}/${prefix}/lib/
+  cp -f bzlib.h ${pkgdir}/${prefix}/include/
 }
