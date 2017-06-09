@@ -3,7 +3,7 @@ pkgver=1.0.6
 pkgrel=1
 url="http://bzip2.org"
 source=("http://bzip.org/${pkgver}/${pkgname}-${pkgver}.tar.gz" "bzip2.patch")
-sha256sums=('a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd' 'a314dcca714a0a3bb8f256583cc00d3a318838c8521fc19ee3d7907f97cbfb38')
+sha256sums=('a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd' '7662ae5403c35b8b9822a25968b44cb70a7527cd70a1f80eadd7bcad3777119f')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -15,5 +15,7 @@ package () {
   cd ${pkgname}-${pkgver}
   mkdir -p $pkgdir/$prefix/include
   mkdir -p $pkgdir/$prefix/lib
+  cp -f libbz2.a $(PREFIX)/lib/
+  cp -f bzlib.h $(PREFIX)/include/
   make PREFIX=$pkgdir/$prefix installlib
 }

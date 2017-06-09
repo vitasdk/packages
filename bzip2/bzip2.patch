@@ -1,14 +1,14 @@
-From 29df60240f6329c44d7323b7046319c1704ca046 Mon Sep 17 00:00:00 2001
+From c3700e6504247a246938513e9b5d85b67e171f35 Mon Sep 17 00:00:00 2001
 From: devnoname120 <devnoname120+gh@gmail.com>
 Date: Fri, 26 May 2017 16:57:24 +0200
 Subject: [PATCH] Vita changes
 
 ---
- Makefile | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 9754ddf..6c7b4f2 100644
+index 9754ddf..580bc0d 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -15,9 +15,9 @@
@@ -24,17 +24,6 @@ index 9754ddf..6c7b4f2 100644
  LDFLAGS=
  
  BIGFILES=-D_FILE_OFFSET_BITS=64
-@@ -69,6 +69,10 @@ test: bzip2
- 	cmp sample3.tst sample3.ref
- 	@cat words3
- 
-+installlib: libbz2.a
-+	cp -f libbz2.a $(PREFIX)/lib/
-+	cp -f bzlib.h $(PREFIX)/include/
-+
- install: bzip2 bzip2recover
- 	if ( test ! -d $(PREFIX)/bin ) ; then mkdir -p $(PREFIX)/bin ; fi
- 	if ( test ! -d $(PREFIX)/lib ) ; then mkdir -p $(PREFIX)/lib ; fi
 -- 
 2.13.0
 
