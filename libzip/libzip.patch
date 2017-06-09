@@ -1,0 +1,27 @@
+From a86ff0c756e07d5fd7c398aabdd07755eca56a26 Mon Sep 17 00:00:00 2001
+From: devnoname120 <devnoname120+gh@gmail.com>
+Date: Fri, 9 Jun 2017 11:15:44 +0200
+Subject: [PATCH] Remove unnecessary parts
+
+---
+ CMakeLists.txt | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 60ef6ff..21887df 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -114,10 +114,6 @@ ADD_DEFINITIONS("-DHAVE_CONFIG_H")
+ 
+ # Targets
+ ADD_SUBDIRECTORY(lib)
+-ADD_SUBDIRECTORY(man)
+-ADD_SUBDIRECTORY(src)
+-ADD_SUBDIRECTORY(regress)
+-ADD_SUBDIRECTORY(examples)
+ 
+ # TODO: pkgconfig file
+ 
+-- 
+2.13.0
+
