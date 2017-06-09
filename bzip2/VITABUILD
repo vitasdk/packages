@@ -3,7 +3,7 @@ pkgver=1.0.6
 pkgrel=1
 url="http://bzip2.org"
 source=("http://bzip.org/${pkgver}/${pkgname}-${pkgver}.tar.gz" "bzip2.patch")
-sha256sums=('a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd' 'SKIP')
+sha256sums=('a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd' 'a314dcca714a0a3bb8f256583cc00d3a318838c8521fc19ee3d7907f97cbfb38')
 
 build() {
   cd ${pkgname}-${pkgver}
