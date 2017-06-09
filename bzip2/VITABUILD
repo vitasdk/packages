@@ -7,7 +7,7 @@ sha256sums=('a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd')
 
 build() {
   cd ${pkgname}-${pkgver}
-  CC=arm-vita-eabi-gcc AR=arm-vita-eabi-ar RANLIB=arm-vita-eabi-ranlib make libbz2.a
+  make CC=arm-vita-eabi-gcc AR=arm-vita-eabi-ar RANLIB=arm-vita-eabi-ranlib libbz2.a
 }
 
 package () {
