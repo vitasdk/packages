@@ -13,6 +13,7 @@ build() {
 package () {
   cd $pkgname
   mkdir -p $pkgdir/$prefix
+  mkdir -p $pkgdir/$prefix/lib
   cp -r include $pkgdir/$prefix
   cp libbox2d.a $pkgdir/$prefix/lib
 }
