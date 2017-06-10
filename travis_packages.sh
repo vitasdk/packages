@@ -4,6 +4,8 @@
 
 # since we don't have dep tracking, we need to build in a specific order
 b zlib
+b bzip2
+b libzip
 b libpng
 b libexif
 b libjpeg-turbo
@@ -19,14 +21,13 @@ b libftpvita
 b henkaku
 b taihen
 b libk
-b libpsp2shell
 b libdebugnet
 b onigmo
 b sdl2
 b sdl_image
 b sdl_mixer
 b sdl_net
-b sdl_ttf
+b SDL_ttf
 b openssl
 b curl
 b expat
@@ -36,4 +37,8 @@ b glm
 b libxml2
 b speexdsp
 b pixman
+b TinyGL
+b kuio
+b taipool
+b mpg123
 b Box2D
