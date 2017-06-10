@@ -1,7 +1,7 @@
 pkgname=opus
 pkgver=1.1.5
 pkgrel=1
-url="http://www.digip.org/jansson/"
+url="https://opus-codec.org/"
 source=("http://downloads.xiph.org/releases/opus/opus-${pkgver}.tar.gz" "opus-master.patch")
 sha256sums=('eb84981ca0f40a3e5d5e58d2e8582cb2fee05a022825a6dfe14d14b04eb563e4'
             '1ba3ab331bdb3011fdaf9027d680f134077ba6fde34c8791438fdc613d67d1d5')
