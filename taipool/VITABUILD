@@ -1,8 +1,8 @@
-pkgname=kuio
+pkgname=taipool
 pkgver=9999
 pkgrel=1
-url="https://github.com/Rinnegatamante/kuio"
-source=("git://github.com/Rinnegatamante/kuio.git")
+url="https://github.com/Rinnegatamante/taipool"
+source=("git://github.com/Rinnegatamante/taipool.git")
 sha256sums=('SKIP')
 
 build() {
@@ -16,3 +16,4 @@ package () {
   cd $pkgname/build
   make DESTDIR=$pkgdir install
 }
+

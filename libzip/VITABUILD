@@ -1,0 +1,24 @@
+pkgname=libzip
+pkgver=1.2.0
+pkgrel=1
+url="https://github.com/devnoname120/libzip"
+source=("https://nih.at/${pkgname}/${pkgname}-${pkgver}.tar.gz" "libzip.patch")
+sha256sums=('6cf9840e427db96ebf3936665430bab204c9ebbd0120c326459077ed9c907d9f'
+            '14665721119e582449fc4e96e9e04f4cd128ba74b816e02275cb35c4c8b6f6bb')
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i "${srcdir}/libzip.patch"
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+  find ./ -type f -exec sed -i '/#include <memory.h>/d' '{}' \;
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  make
+}
+
+package () {
+  cd ${pkgname}-${pkgver}/build
+  make DESTDIR=$pkgdir install
+}
