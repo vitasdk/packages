@@ -12,6 +12,7 @@ b libjpeg-turbo
 b jansson
 b yaml-cpp
 b freetype
+b harfbuzz
 b fftw
 b libvita2d
 b libmad
