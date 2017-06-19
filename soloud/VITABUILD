@@ -1,0 +1,21 @@
+pkgname=soloud
+pkgver=9999
+pkgrel=1
+url="https://github.com/xyzz/soloud"
+source=("https://github.com/xyzz/soloud/archive/vita.zip")
+sha256sums=('SKIP')
+
+build() {
+  cd soloud-vita
+  mkdir _build
+  cd _build
+  cmake ..
+  make
+}
+
+package () {
+  cd soloud-vita
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
+  cp _build/libsoloud.a $pkgdir/$VITASDK/arm-vita-eabi/lib
+  cp include/* $pkgdir/$VITASDK/arm-vita-eabi/include
+}
