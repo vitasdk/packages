@@ -1,0 +1,493 @@
+diff --git a/src/hb-buffer.cc b/src/hb-buffer.cc
+index 3940a3d..bd483a8 100644
+--- a/src/hb-buffer.cc
++++ b/src/hb-buffer.cc
+@@ -555,7 +555,7 @@ hb_buffer_t::merge_clusters_impl (unsigned int start,
+   unsigned int cluster = info[start].cluster;
+ 
+   for (unsigned int i = start + 1; i < end; i++)
+-    cluster = MIN (cluster, info[i].cluster);
++    cluster = MIN<unsigned int> (cluster, info[i].cluster);
+ 
+   /* Extend end */
+   while (end < len && info[end - 1].cluster == info[end].cluster)
+@@ -586,7 +586,7 @@ hb_buffer_t::merge_out_clusters (unsigned int start,
+   unsigned int cluster = out_info[start].cluster;
+ 
+   for (unsigned int i = start + 1; i < end; i++)
+-    cluster = MIN (cluster, out_info[i].cluster);
++    cluster = MIN<unsigned int> (cluster, out_info[i].cluster);
+ 
+   /* Extend start */
+   while (start && out_info[start - 1].cluster == out_info[start].cluster)
+diff --git a/src/hb-common.cc b/src/hb-common.cc
+index 4716cfb..bdf157a 100644
+--- a/src/hb-common.cc
++++ b/src/hb-common.cc
+@@ -792,8 +792,8 @@ static bool
+ parse_feature_value_postfix (const char **pp, const char *end, hb_feature_t *feature)
+ {
+   bool had_equal = parse_char (pp, end, '=');
+-  bool had_value = parse_uint (pp, end, &feature->value) ||
+-                   parse_bool (pp, end, &feature->value);
++  bool had_value = parse_uint (pp, end, (unsigned int*) &feature->value) ||
++                   parse_bool (pp, end, (unsigned int*) &feature->value);
+   /* CSS doesn't use equal-sign between tag and value.
+    * If there was an equal-sign, then there *must* be a value.
+    * A value without an eqaul-sign is ok, but not required. */
+diff --git a/src/hb-ot-font.cc b/src/hb-ot-font.cc
+index 009db20..f8623d9 100644
+--- a/src/hb-ot-font.cc
++++ b/src/hb-ot-font.cc
+@@ -138,7 +138,7 @@ struct hb_ot_face_metrics_accelerator_t
+ 	return this->default_advance;
+     }
+ 
+-    return this->table->longMetric[MIN (glyph, this->num_advances - 1)].advance
++    return this->table->longMetric[MIN<hb_codepoint_t> (glyph, this->num_advances - 1)].advance
+ 	 + this->var->get_advance_var (glyph, font->coords, font->num_coords); // TODO Optimize?!
+   }
+ };
+diff --git a/src/hb-ot-layout.cc b/src/hb-ot-layout.cc
+index 7f4e018..ebfe108 100644
+--- a/src/hb-ot-layout.cc
++++ b/src/hb-ot-layout.cc
+@@ -281,7 +281,8 @@ hb_ot_layout_get_ligature_carets (hb_font_t      *font,
+ 				  unsigned int   *caret_count /* IN/OUT */,
+ 				  int            *caret_array /* OUT */)
+ {
+-  return _get_gdef (font->face).get_lig_carets (font, direction, glyph, start_offset, caret_count, caret_array);
++  return _get_gdef (font->face).get_lig_carets (font, direction, glyph, start_offset,
++    caret_count, (hb_position_t*) caret_array);
+ }
+ 
+ 
+diff --git a/src/hb-ot-shape-complex-arabic-table.hh b/src/hb-ot-shape-complex-arabic-table.hh
+index 736c7f7..228f366 100644
+--- a/src/hb-ot-shape-complex-arabic-table.hh
++++ b/src/hb-ot-shape-complex-arabic-table.hh
+@@ -139,28 +139,28 @@ joining_type (hb_codepoint_t u)
+   switch (u >> 12)
+   {
+     case 0x0u:
+-      if (hb_in_range (u, 0x0600u, 0x08E2u)) return joining_table[u - 0x0600u + joining_offset_0x0600u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x0600u, 0x08E2u)) return joining_table[u - 0x0600u + joining_offset_0x0600u];
+       break;
+ 
+     case 0x1u:
+-      if (hb_in_range (u, 0x1806u, 0x18AAu)) return joining_table[u - 0x1806u + joining_offset_0x1806u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1806u, 0x18AAu)) return joining_table[u - 0x1806u + joining_offset_0x1806u];
+       break;
+ 
+     case 0x2u:
+-      if (hb_in_range (u, 0x200Cu, 0x2069u)) return joining_table[u - 0x200Cu + joining_offset_0x200cu];
++      if (hb_in_range<hb_codepoint_t> (u, 0x200Cu, 0x2069u)) return joining_table[u - 0x200Cu + joining_offset_0x200cu];
+       break;
+ 
+     case 0xAu:
+-      if (hb_in_range (u, 0xA840u, 0xA873u)) return joining_table[u - 0xA840u + joining_offset_0xa840u];
++      if (hb_in_range<hb_codepoint_t> (u, 0xA840u, 0xA873u)) return joining_table[u - 0xA840u + joining_offset_0xa840u];
+       break;
+ 
+     case 0x10u:
+-      if (hb_in_range (u, 0x10AC0u, 0x10AEFu)) return joining_table[u - 0x10AC0u + joining_offset_0x10ac0u];
+-      if (hb_in_range (u, 0x10B80u, 0x10BAFu)) return joining_table[u - 0x10B80u + joining_offset_0x10b80u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x10AC0u, 0x10AEFu)) return joining_table[u - 0x10AC0u + joining_offset_0x10ac0u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x10B80u, 0x10BAFu)) return joining_table[u - 0x10B80u + joining_offset_0x10b80u];
+       break;
+ 
+     case 0x1Eu:
+-      if (hb_in_range (u, 0x1E900u, 0x1E943u)) return joining_table[u - 0x1E900u + joining_offset_0x1e900u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1E900u, 0x1E943u)) return joining_table[u - 0x1E900u + joining_offset_0x1e900u];
+       break;
+ 
+     default:
+diff --git a/src/hb-ot-shape-complex-arabic.cc b/src/hb-ot-shape-complex-arabic.cc
+index 57ffc1d..c6609c5 100644
+--- a/src/hb-ot-shape-complex-arabic.cc
++++ b/src/hb-ot-shape-complex-arabic.cc
+@@ -345,7 +345,7 @@ mongolian_variation_selectors (hb_buffer_t *buffer)
+   unsigned int count = buffer->len;
+   hb_glyph_info_t *info = buffer->info;
+   for (unsigned int i = 1; i < count; i++)
+-    if (unlikely (hb_in_range (info[i].codepoint, 0x180Bu, 0x180Du)))
++    if (unlikely (hb_in_range<hb_codepoint_t> (info[i].codepoint, 0x180Bu, 0x180Du)))
+       info[i].arabic_shaping_action() = info[i - 1].arabic_shaping_action();
+ }
+ 
+diff --git a/src/hb-ot-shape-complex-hangul.cc b/src/hb-ot-shape-complex-hangul.cc
+index af50565..23e07e5 100644
+--- a/src/hb-ot-shape-complex-hangul.cc
++++ b/src/hb-ot-shape-complex-hangul.cc
+@@ -105,16 +105,16 @@ data_destroy_hangul (void *data)
+ #define NCount (VCount * TCount)
+ #define SCount (LCount * NCount)
+ 
+-#define isCombiningL(u) (hb_in_range ((u), LBase, LBase+LCount-1))
+-#define isCombiningV(u) (hb_in_range ((u), VBase, VBase+VCount-1))
+-#define isCombiningT(u) (hb_in_range ((u), TBase+1, TBase+TCount-1))
+-#define isCombinedS(u) (hb_in_range ((u), SBase, SBase+SCount-1))
++#define isCombiningL(u) (hb_in_range<hb_codepoint_t> ((u), LBase, LBase+LCount-1))
++#define isCombiningV(u) (hb_in_range<hb_codepoint_t> ((u), VBase, VBase+VCount-1))
++#define isCombiningT(u) (hb_in_range<hb_codepoint_t> ((u), TBase+1, TBase+TCount-1))
++#define isCombinedS(u) (hb_in_range<hb_codepoint_t> ((u), SBase, SBase+SCount-1))
+ 
+-#define isL(u) (hb_in_ranges ((u), 0x1100u, 0x115Fu, 0xA960u, 0xA97Cu))
+-#define isV(u) (hb_in_ranges ((u), 0x1160u, 0x11A7u, 0xD7B0u, 0xD7C6u))
+-#define isT(u) (hb_in_ranges ((u), 0x11A8u, 0x11FFu, 0xD7CBu, 0xD7FBu))
++#define isL(u) (hb_in_ranges<hb_codepoint_t> ((u), 0x1100u, 0x115Fu, 0xA960u, 0xA97Cu))
++#define isV(u) (hb_in_ranges<hb_codepoint_t> ((u), 0x1160u, 0x11A7u, 0xD7B0u, 0xD7C6u))
++#define isT(u) (hb_in_ranges<hb_codepoint_t> ((u), 0x11A8u, 0x11FFu, 0xD7CBu, 0xD7FBu))
+ 
+-#define isHangulTone(u) (hb_in_range ((u), 0x302Eu, 0x302Fu))
++#define isHangulTone(u) (hb_in_range<hb_codepoint_t> ((u), 0x302Eu, 0x302Fu))
+ 
+ /* buffer var allocations */
+ #define hangul_shaping_feature() complex_var_u8_0() /* hangul jamo shaping feature */
+diff --git a/src/hb-ot-shape-complex-indic-table.cc b/src/hb-ot-shape-complex-indic-table.cc
+index e10a4d2..3bf5285 100644
+--- a/src/hb-ot-shape-complex-indic-table.cc
++++ b/src/hb-ot-shape-complex-indic-table.cc
+@@ -398,28 +398,28 @@ hb_indic_get_categories (hb_codepoint_t u)
+   switch (u >> 12)
+   {
+     case 0x0u:
+-      if (hb_in_range (u, 0x0028u, 0x003Fu)) return indic_table[u - 0x0028u + indic_offset_0x0028u];
+-      if (hb_in_range (u, 0x00B0u, 0x00D7u)) return indic_table[u - 0x00B0u + indic_offset_0x00b0u];
+-      if (hb_in_range (u, 0x0900u, 0x0DF7u)) return indic_table[u - 0x0900u + indic_offset_0x0900u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x0028u, 0x003Fu)) return indic_table[u - 0x0028u + indic_offset_0x0028u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x00B0u, 0x00D7u)) return indic_table[u - 0x00B0u + indic_offset_0x00b0u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x0900u, 0x0DF7u)) return indic_table[u - 0x0900u + indic_offset_0x0900u];
+       if (unlikely (u == 0x00A0u)) return _(CP,x);
+       break;
+ 
+     case 0x1u:
+-      if (hb_in_range (u, 0x1000u, 0x109Fu)) return indic_table[u - 0x1000u + indic_offset_0x1000u];
+-      if (hb_in_range (u, 0x1780u, 0x17EFu)) return indic_table[u - 0x1780u + indic_offset_0x1780u];
+-      if (hb_in_range (u, 0x1CD0u, 0x1CFFu)) return indic_table[u - 0x1CD0u + indic_offset_0x1cd0u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1000u, 0x109Fu)) return indic_table[u - 0x1000u + indic_offset_0x1000u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1780u, 0x17EFu)) return indic_table[u - 0x1780u + indic_offset_0x1780u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1CD0u, 0x1CFFu)) return indic_table[u - 0x1CD0u + indic_offset_0x1cd0u];
+       break;
+ 
+     case 0x2u:
+-      if (hb_in_range (u, 0x2008u, 0x2017u)) return indic_table[u - 0x2008u + indic_offset_0x2008u];
+-      if (hb_in_range (u, 0x2070u, 0x2087u)) return indic_table[u - 0x2070u + indic_offset_0x2070u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x2008u, 0x2017u)) return indic_table[u - 0x2008u + indic_offset_0x2008u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x2070u, 0x2087u)) return indic_table[u - 0x2070u + indic_offset_0x2070u];
+       if (unlikely (u == 0x25CCu)) return _(CP,x);
+       break;
+ 
+     case 0xAu:
+-      if (hb_in_range (u, 0xA8E0u, 0xA8F7u)) return indic_table[u - 0xA8E0u + indic_offset_0xa8e0u];
+-      if (hb_in_range (u, 0xA9E0u, 0xA9FFu)) return indic_table[u - 0xA9E0u + indic_offset_0xa9e0u];
+-      if (hb_in_range (u, 0xAA60u, 0xAA7Fu)) return indic_table[u - 0xAA60u + indic_offset_0xaa60u];
++      if (hb_in_range<hb_codepoint_t> (u, 0xA8E0u, 0xA8F7u)) return indic_table[u - 0xA8E0u + indic_offset_0xa8e0u];
++      if (hb_in_range<hb_codepoint_t> (u, 0xA9E0u, 0xA9FFu)) return indic_table[u - 0xA9E0u + indic_offset_0xa9e0u];
++      if (hb_in_range<hb_codepoint_t> (u, 0xAA60u, 0xAA7Fu)) return indic_table[u - 0xAA60u + indic_offset_0xaa60u];
+       break;
+ 
+     case 0x11u:
+diff --git a/src/hb-ot-shape-complex-indic.cc b/src/hb-ot-shape-complex-indic.cc
+index ec12ce6..cbc46c8 100644
+--- a/src/hb-ot-shape-complex-indic.cc
++++ b/src/hb-ot-shape-complex-indic.cc
+@@ -177,15 +177,15 @@ set_indic_properties (hb_glyph_info_t &info)
+    */
+ 
+   /* The following act more like the Bindus. */
+-  if (unlikely (hb_in_range (u, 0x0953u, 0x0954u)))
++  if (unlikely (hb_in_range<hb_codepoint_t> (u, 0x0953u, 0x0954u)))
+     cat = OT_SM;
+   /* The following act like consonants. */
+-  else if (unlikely (hb_in_ranges (u, 0x0A72u, 0x0A73u,
++  else if (unlikely (hb_in_ranges<hb_codepoint_t> (u, 0x0A72u, 0x0A73u,
+ 				      0x1CF5u, 0x1CF6u)))
+     cat = OT_C;
+   /* TODO: The following should only be allowed after a Visarga.
+    * For now, just treat them like regular tone marks. */
+-  else if (unlikely (hb_in_range (u, 0x1CE2u, 0x1CE8u)))
++  else if (unlikely (hb_in_range<hb_codepoint_t> (u, 0x1CE2u, 0x1CE8u)))
+     cat = OT_A;
+   /* TODO: The following should only be allowed after some of
+    * the nasalization marks, maybe only for U+1CE9..U+1CF1.
+@@ -193,7 +193,7 @@ set_indic_properties (hb_glyph_info_t &info)
+   else if (unlikely (u == 0x1CEDu))
+     cat = OT_A;
+   /* The following take marks in standalone clusters, similar to Avagraha. */
+-  else if (unlikely (hb_in_ranges (u, 0xA8F2u, 0xA8F7u,
++  else if (unlikely (hb_in_ranges<hb_codepoint_t> (u, 0xA8F2u, 0xA8F7u,
+ 				      0x1CE9u, 0x1CECu,
+ 				      0x1CEEu, 0x1CF1u)))
+   {
+@@ -201,7 +201,7 @@ set_indic_properties (hb_glyph_info_t &info)
+     ASSERT_STATIC ((int) INDIC_SYLLABIC_CATEGORY_AVAGRAHA == OT_Symbol);
+   }
+   else if (unlikely (u == 0x17C6u)) cat = OT_N; /* Khmer Bindu doesn't like to be repositioned. */
+-  else if (unlikely (hb_in_range (u, 0x2010u, 0x2011u)))
++  else if (unlikely (hb_in_range<hb_codepoint_t> (u, 0x2010u, 0x2011u)))
+ 				    cat = OT_PLACEHOLDER;
+   else if (unlikely (u == 0x25CCu)) cat = OT_DOTTEDCIRCLE;
+ 
+@@ -1738,7 +1738,7 @@ decompose_indic (const hb_ot_shape_normalize_context_t *c,
+ #endif
+   }
+ 
+-  if ((ab == 0x0DDAu || hb_in_range (ab, 0x0DDCu, 0x0DDEu)))
++  if ((ab == 0x0DDAu || hb_in_range<hb_codepoint_t> (ab, 0x0DDCu, 0x0DDEu)))
+   {
+     /*
+      * Sinhala split matras...  Let the fun begin.
+diff --git a/src/hb-ot-shape-complex-myanmar.cc b/src/hb-ot-shape-complex-myanmar.cc
+index bb68622..4e912c3 100644
+--- a/src/hb-ot-shape-complex-myanmar.cc
++++ b/src/hb-ot-shape-complex-myanmar.cc
+@@ -175,7 +175,7 @@ set_myanmar_properties (hb_glyph_info_t &info)
+   /* Myanmar
+    * http://www.microsoft.com/typography/OpenTypeDev/myanmar/intro.htm#analyze
+    */
+-  if (unlikely (hb_in_range (u, 0xFE00u, 0xFE0Fu)))
++  if (unlikely (hb_in_range<hb_codepoint_t> (u, 0xFE00u, 0xFE0Fu)))
+     cat = (indic_category_t) OT_VS;
+ 
+   switch (u)
+diff --git a/src/hb-ot-shape-complex-thai.cc b/src/hb-ot-shape-complex-thai.cc
+index e6f80f5..e75b353 100644
+--- a/src/hb-ot-shape-complex-thai.cc
++++ b/src/hb-ot-shape-complex-thai.cc
+@@ -52,7 +52,7 @@ get_consonant_type (hb_codepoint_t u)
+     return RC;
+   if (u == 0x0E0Eu || u == 0x0E0Fu)
+     return DC;
+-  if (hb_in_range (u, 0x0E01u, 0x0E2Eu))
++  if (hb_in_range<hb_codepoint_t> (u, 0x0E01u, 0x0E2Eu))
+     return NC;
+   return NOT_CONSONANT;
+ }
+@@ -70,12 +70,12 @@ enum thai_mark_type_t
+ static thai_mark_type_t
+ get_mark_type (hb_codepoint_t u)
+ {
+-  if (u == 0x0E31u || hb_in_range (u, 0x0E34u, 0x0E37u) ||
+-      u == 0x0E47u || hb_in_range (u, 0x0E4Du, 0x0E4Eu))
++  if (u == 0x0E31u || hb_in_range<hb_codepoint_t> (u, 0x0E34u, 0x0E37u) ||
++      u == 0x0E47u || hb_in_range<hb_codepoint_t> (u, 0x0E4Du, 0x0E4Eu))
+     return AV;
+-  if (hb_in_range (u, 0x0E38u, 0x0E3Au))
++  if (hb_in_range<hb_codepoint_t> (u, 0x0E38u, 0x0E3Au))
+     return BV;
+-  if (hb_in_range (u, 0x0E48u, 0x0E4Cu))
++  if (hb_in_range<hb_codepoint_t> (u, 0x0E48u, 0x0E4Cu))
+     return T;
+   return NOT_MARK;
+ }
+@@ -310,7 +310,7 @@ preprocess_text_thai (const hb_ot_shape_plan_t *plan,
+ #define IS_SARA_AM(x) (((x) & ~0x0080u) == 0x0E33u)
+ #define NIKHAHIT_FROM_SARA_AM(x) ((x) - 0x0E33u + 0x0E4Du)
+ #define SARA_AA_FROM_SARA_AM(x) ((x) - 1)
+-#define IS_TONE_MARK(x) (hb_in_ranges ((x) & ~0x0080u, 0x0E34u, 0x0E37u, 0x0E47u, 0x0E4Eu, 0x0E31u, 0x0E31u))
++#define IS_TONE_MARK(x) (hb_in_ranges<hb_codepoint_t> ((x) & ~0x0080u, 0x0E34u, 0x0E37u, 0x0E47u, 0x0E4Eu, 0x0E31u, 0x0E31u))
+ 
+   buffer->clear_output ();
+   unsigned int count = buffer->len;
+diff --git a/src/hb-ot-shape-complex-use-table.cc b/src/hb-ot-shape-complex-use-table.cc
+index 38c46d0..416d748 100644
+--- a/src/hb-ot-shape-complex-use-table.cc
++++ b/src/hb-ot-shape-complex-use-table.cc
+@@ -644,47 +644,47 @@ hb_use_get_categories (hb_codepoint_t u)
+   switch (u >> 12)
+   {
+     case 0x0u:
+-      if (hb_in_range (u, 0x0028u, 0x003Fu)) return use_table[u - 0x0028u + use_offset_0x0028u];
+-      if (hb_in_range (u, 0x00A0u, 0x00D7u)) return use_table[u - 0x00A0u + use_offset_0x00a0u];
+-      if (hb_in_range (u, 0x0900u, 0x0DF7u)) return use_table[u - 0x0900u + use_offset_0x0900u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x0028u, 0x003Fu)) return use_table[u - 0x0028u + use_offset_0x0028u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x00A0u, 0x00D7u)) return use_table[u - 0x00A0u + use_offset_0x00a0u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x0900u, 0x0DF7u)) return use_table[u - 0x0900u + use_offset_0x0900u];
+       if (unlikely (u == 0x034Fu)) return CGJ;
+       break;
+ 
+     case 0x1u:
+-      if (hb_in_range (u, 0x1000u, 0x109Fu)) return use_table[u - 0x1000u + use_offset_0x1000u];
+-      if (hb_in_range (u, 0x1700u, 0x17EFu)) return use_table[u - 0x1700u + use_offset_0x1700u];
+-      if (hb_in_range (u, 0x1900u, 0x1A9Fu)) return use_table[u - 0x1900u + use_offset_0x1900u];
+-      if (hb_in_range (u, 0x1B00u, 0x1C4Fu)) return use_table[u - 0x1B00u + use_offset_0x1b00u];
+-      if (hb_in_range (u, 0x1CD0u, 0x1CFFu)) return use_table[u - 0x1CD0u + use_offset_0x1cd0u];
+-      if (hb_in_range (u, 0x1DF8u, 0x1DFFu)) return use_table[u - 0x1DF8u + use_offset_0x1df8u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1000u, 0x109Fu)) return use_table[u - 0x1000u + use_offset_0x1000u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1700u, 0x17EFu)) return use_table[u - 0x1700u + use_offset_0x1700u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1900u, 0x1A9Fu)) return use_table[u - 0x1900u + use_offset_0x1900u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1B00u, 0x1C4Fu)) return use_table[u - 0x1B00u + use_offset_0x1b00u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1CD0u, 0x1CFFu)) return use_table[u - 0x1CD0u + use_offset_0x1cd0u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x1DF8u, 0x1DFFu)) return use_table[u - 0x1DF8u + use_offset_0x1df8u];
+       break;
+ 
+     case 0x2u:
+-      if (hb_in_range (u, 0x2008u, 0x2017u)) return use_table[u - 0x2008u + use_offset_0x2008u];
+-      if (hb_in_range (u, 0x2060u, 0x2087u)) return use_table[u - 0x2060u + use_offset_0x2060u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x2008u, 0x2017u)) return use_table[u - 0x2008u + use_offset_0x2008u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x2060u, 0x2087u)) return use_table[u - 0x2060u + use_offset_0x2060u];
+       if (unlikely (u == 0x25CCu)) return GB;
+       break;
+ 
+     case 0xAu:
+-      if (hb_in_range (u, 0xA800u, 0xAAF7u)) return use_table[u - 0xA800u + use_offset_0xa800u];
+-      if (hb_in_range (u, 0xABC0u, 0xABFFu)) return use_table[u - 0xABC0u + use_offset_0xabc0u];
++      if (hb_in_range<hb_codepoint_t> (u, 0xA800u, 0xAAF7u)) return use_table[u - 0xA800u + use_offset_0xa800u];
++      if (hb_in_range<hb_codepoint_t> (u, 0xABC0u, 0xABFFu)) return use_table[u - 0xABC0u + use_offset_0xabc0u];
+       break;
+ 
+     case 0xFu:
+-      if (hb_in_range (u, 0xFE00u, 0xFE0Fu)) return use_table[u - 0xFE00u + use_offset_0xfe00u];
++      if (hb_in_range<hb_codepoint_t> (u, 0xFE00u, 0xFE0Fu)) return use_table[u - 0xFE00u + use_offset_0xfe00u];
+       break;
+ 
+     case 0x10u:
+-      if (hb_in_range (u, 0x10A00u, 0x10A47u)) return use_table[u - 0x10A00u + use_offset_0x10a00u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x10A00u, 0x10A47u)) return use_table[u - 0x10A00u + use_offset_0x10a00u];
+       break;
+ 
+     case 0x11u:
+-      if (hb_in_range (u, 0x11000u, 0x110BFu)) return use_table[u - 0x11000u + use_offset_0x11000u];
+-      if (hb_in_range (u, 0x11100u, 0x1123Fu)) return use_table[u - 0x11100u + use_offset_0x11100u];
+-      if (hb_in_range (u, 0x11280u, 0x11377u)) return use_table[u - 0x11280u + use_offset_0x11280u];
+-      if (hb_in_range (u, 0x11400u, 0x114DFu)) return use_table[u - 0x11400u + use_offset_0x11400u];
+-      if (hb_in_range (u, 0x11580u, 0x1173Fu)) return use_table[u - 0x11580u + use_offset_0x11580u];
+-      if (hb_in_range (u, 0x11C00u, 0x11CB7u)) return use_table[u - 0x11C00u + use_offset_0x11c00u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x11000u, 0x110BFu)) return use_table[u - 0x11000u + use_offset_0x11000u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x11100u, 0x1123Fu)) return use_table[u - 0x11100u + use_offset_0x11100u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x11280u, 0x11377u)) return use_table[u - 0x11280u + use_offset_0x11280u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x11400u, 0x114DFu)) return use_table[u - 0x11400u + use_offset_0x11400u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x11580u, 0x1173Fu)) return use_table[u - 0x11580u + use_offset_0x11580u];
++      if (hb_in_range<hb_codepoint_t> (u, 0x11C00u, 0x11CB7u)) return use_table[u - 0x11C00u + use_offset_0x11c00u];
+       if (unlikely (u == 0x1107Fu)) return HN;
+       break;
+ 
+diff --git a/src/hb-unicode-private.hh b/src/hb-unicode-private.hh
+index a4d118b..75b55c0 100644
+--- a/src/hb-unicode-private.hh
++++ b/src/hb-unicode-private.hh
+@@ -126,7 +126,7 @@ HB_UNICODE_FUNCS_IMPLEMENT_CALLBACKS_SIMPLE
+   {
+     /* U+180B..180D MONGOLIAN FREE VARIATION SELECTORs are handled in the
+      * Arabic shaper.  No need to match them here. */
+-    return unlikely (hb_in_ranges (unicode,
++    return unlikely (hb_in_ranges<hb_codepoint_t> (unicode,
+ 				   0xFE00u, 0xFE0Fu, /* VARIATION SELECTOR-1..16 */
+ 				   0xE0100u, 0xE01EFu));  /* VARIATION SELECTOR-17..256 */
+   }
+@@ -179,13 +179,13 @@ HB_UNICODE_FUNCS_IMPLEMENT_CALLBACKS_SIMPLE
+ 	case 0x00: return unlikely (ch == 0x00ADu);
+ 	case 0x03: return unlikely (ch == 0x034Fu);
+ 	case 0x06: return unlikely (ch == 0x061Cu);
+-	case 0x17: return hb_in_range (ch, 0x17B4u, 0x17B5u);
+-	case 0x18: return hb_in_range (ch, 0x180Bu, 0x180Eu);
+-	case 0x20: return hb_in_ranges (ch, 0x200Bu, 0x200Fu,
++	case 0x17: return hb_in_range<hb_codepoint_t> (ch, 0x17B4u, 0x17B5u);
++	case 0x18: return hb_in_range<hb_codepoint_t> (ch, 0x180Bu, 0x180Eu);
++	case 0x20: return hb_in_ranges<hb_codepoint_t> (ch, 0x200Bu, 0x200Fu,
+ 					    0x202Au, 0x202Eu,
+ 					    0x2060u, 0x206Fu);
+-	case 0xFE: return hb_in_range (ch, 0xFE00u, 0xFE0Fu) || ch == 0xFEFFu;
+-	case 0xFF: return hb_in_range (ch, 0xFFF0u, 0xFFF8u);
++	case 0xFE: return hb_in_range<hb_codepoint_t> (ch, 0xFE00u, 0xFE0Fu) || ch == 0xFEFFu;
++	case 0xFF: return hb_in_range<hb_codepoint_t> (ch, 0xFFF0u, 0xFFF8u);
+ 	default: return false;
+       }
+     }
+@@ -193,9 +193,9 @@ HB_UNICODE_FUNCS_IMPLEMENT_CALLBACKS_SIMPLE
+     {
+       /* Other planes */
+       switch (plane) {
+-	case 0x01: return hb_in_ranges (ch, 0x1BCA0u, 0x1BCA3u,
++	case 0x01: return hb_in_ranges<hb_codepoint_t> (ch, 0x1BCA0u, 0x1BCA3u,
+ 					    0x1D173u, 0x1D17Au);
+-	case 0x0E: return hb_in_range (ch, 0xE0000u, 0xE0FFFu);
++	case 0x0E: return hb_in_range<hb_codepoint_t> (ch, 0xE0000u, 0xE0FFFu);
+ 	default: return false;
+       }
+     }
+diff --git a/src/hb-utf-private.hh b/src/hb-utf-private.hh
+index 74cf5d6..211eb4d 100644
+--- a/src/hb-utf-private.hh
++++ b/src/hb-utf-private.hh
+@@ -48,7 +48,7 @@ struct hb_utf8_t
+ 
+     if (c > 0x7Fu)
+     {
+-      if (hb_in_range (c, 0xC2u, 0xDFu)) /* Two-byte */
++      if (hb_in_range<hb_codepoint_t> (c, 0xC2u, 0xDFu)) /* Two-byte */
+       {
+ 	unsigned int t1;
+ 	if (likely (text < end &&
+@@ -60,7 +60,7 @@ struct hb_utf8_t
+ 	else
+ 	  goto error;
+       }
+-      else if (hb_in_range (c, 0xE0u, 0xEFu)) /* Three-byte */
++      else if (hb_in_range<hb_codepoint_t> (c, 0xE0u, 0xEFu)) /* Three-byte */
+       {
+ 	unsigned int t1, t2;
+ 	if (likely (1 < end - text &&
+@@ -68,14 +68,14 @@ struct hb_utf8_t
+ 		    (t2 = text[1] - 0x80u) <= 0x3Fu))
+ 	{
+ 	  c = ((c&0xFu)<<12) | (t1<<6) | t2;
+-	  if (unlikely (c < 0x0800u || hb_in_range (c, 0xD800u, 0xDFFFu)))
++	  if (unlikely (c < 0x0800u || hb_in_range<hb_codepoint_t> (c, 0xD800u, 0xDFFFu)))
+ 	    goto error;
+ 	  text += 2;
+ 	}
+ 	else
+ 	  goto error;
+       }
+-      else if (hb_in_range (c, 0xF0u, 0xF4u)) /* Four-byte */
++      else if (hb_in_range<hb_codepoint_t> (c, 0xF0u, 0xF4u)) /* Four-byte */
+       {
+ 	unsigned int t1, t2, t3;
+ 	if (likely (2 < end - text &&
+@@ -84,7 +84,7 @@ struct hb_utf8_t
+ 		    (t3 = text[2] - 0x80u) <= 0x3Fu))
+ 	{
+ 	  c = ((c&0x7u)<<18) | (t1<<12) | (t2<<6) | t3;
+-	  if (unlikely (!hb_in_range (c, 0x10000u, 0x10FFFFu)))
++	  if (unlikely (!hb_in_range<hb_codepoint_t> (c, 0x10000u, 0x10FFFFu)))
+ 	    goto error;
+ 	  text += 3;
+ 	}
+@@ -140,7 +140,7 @@ struct hb_utf16_t
+   {
+     hb_codepoint_t c = *text++;
+ 
+-    if (likely (!hb_in_range (c, 0xD800u, 0xDFFFu)))
++    if (likely (!hb_in_range<hb_codepoint_t> (c, 0xD800u, 0xDFFFu)))
+     {
+       *unicode = c;
+       return text;
+@@ -150,7 +150,7 @@ struct hb_utf16_t
+     {
+       /* High-surrogate in c */
+       hb_codepoint_t l = *text;
+-      if (likely (hb_in_range (l, 0xDC00u, 0xDFFFu)))
++      if (likely (hb_in_range<hb_codepoint_t> (l, 0xDC00u, 0xDFFFu)))
+       {
+ 	/* Low-surrogate in l */
+ 	*unicode = (c << 10) + l - ((0xD800u << 10) - 0x10000u + 0xDC00u);
+@@ -172,7 +172,7 @@ struct hb_utf16_t
+   {
+     hb_codepoint_t c = *--text;
+ 
+-    if (likely (!hb_in_range (c, 0xD800u, 0xDFFFu)))
++    if (likely (!hb_in_range<hb_codepoint_t> (c, 0xD800u, 0xDFFFu)))
+     {
+       *unicode = c;
+       return text;
+@@ -182,7 +182,7 @@ struct hb_utf16_t
+     {
+       /* Low-surrogate in c */
+       hb_codepoint_t h = text[-1];
+-      if (likely (hb_in_range (h, 0xD800u, 0xDBFFu)))
++      if (likely (hb_in_range<hb_codepoint_t> (h, 0xD800u, 0xDBFFu)))
+       {
+         /* High-surrogate in h */
+         *unicode = (h << 10) + c - ((0xD800u << 10) - 0x10000u + 0xDC00u);

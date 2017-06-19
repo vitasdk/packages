@@ -1,0 +1,23 @@
+pkgname=harfbuzz
+pkgver=1.4.6
+pkgrel=1
+url="http://harfbuzz.org/"
+source=("https://github.com/behdad/harfbuzz/releases/download/${pkgver}/harfbuzz-${pkgver}.tar.bz2" "harfbuzz.patch")
+sha256sums=('21a78b81cd20cbffdb04b59ac7edfb410e42141869f637ae1d6778e74928d293'
+            '27a4f88d00755a75572af072a0677f0ca157763222e982fa712958c7bb2af56d')
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i "${srcdir}/harfbuzz.patch"
+}
+
+build() {
+  cd harfbuzz-$pkgver
+  mkdir build && cd build
+  cmake .. $CMARGS -DCMAKE_INSTALL_PREFIX=$prefix
+  make
+}
+
+package () {
+  cd harfbuzz-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
