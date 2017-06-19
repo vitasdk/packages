@@ -42,3 +42,4 @@ b TinyGL
 b kuio
 b taipool
 b mpg123
+b Box2D
