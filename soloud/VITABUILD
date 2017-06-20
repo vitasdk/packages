@@ -2,20 +2,35 @@ pkgname=soloud
 pkgver=9999
 pkgrel=1
 url="https://github.com/xyzz/soloud"
-source=("https://github.com/xyzz/soloud/archive/vita.zip")
-sha256sums=('SKIP')
+source=("https://github.com/xyzz/soloud/archive/vita-proper.zip" "https://github.com/bkaradzic/bx/raw/bf29ace5ee396dca5620efa26d18bd02cefd78d0/tools/bin/linux/genie")
+sha256sums=('SKIP' '80d8fbb733f0f392d9cc3b79e260a4382e94398d6a2ddf44954cc2b935160712')
 
 build() {
-  cd soloud-vita
-  mkdir _build
-  cd _build
-  cmake ..
-  make
+  chmod +x genie
+  cd soloud-vita-proper/build
+  # wavstream is broken right now
+  echo "" > ../src/audiosource/wav/soloud_wavstream.cpp
+  ../../genie --with-vita-only gmake
+  cd gmake
+  make config=release SoloudStatic
 }
 
 package () {
-  cd soloud-vita
+  cd soloud-vita-proper
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
-  cp _build/libsoloud.a $pkgdir/$VITASDK/arm-vita-eabi/lib
+  cp lib/libsoloud_static.a $pkgdir/$VITASDK/arm-vita-eabi/lib/libsoloud.a
+
+  # fix soloud_speech header which references files from src/
+  sed -i 's:../src/audiosource/speech/darray.h:soloud_darray.h:' include/soloud_speech.h
+  sed -i 's:../src/audiosource/speech/klatt.h:soloud_klatt.h:' include/soloud_speech.h
+  sed -i 's:../src/audiosource/speech/tts.h:soloud_tts.h:' include/soloud_speech.h
+  # fix klatt header which references resonator.h (possible conflict)
+  sed -i 's:resonator.h:soloud_resonator.h:' src/audiosource/speech/klatt.h
+  # copy all these fixed headers over
+  cp src/audiosource/speech/darray.h $pkgdir/$VITASDK/arm-vita-eabi/include/soloud_darray.h
+  cp src/audiosource/speech/klatt.h $pkgdir/$VITASDK/arm-vita-eabi/include/soloud_klatt.h
+  cp src/audiosource/speech/tts.h $pkgdir/$VITASDK/arm-vita-eabi/include/soloud_tts.h
+  cp src/audiosource/speech/resonator.h $pkgdir/$VITASDK/arm-vita-eabi/include/soloud_resonator.h
+
   cp include/* $pkgdir/$VITASDK/arm-vita-eabi/include
 }
