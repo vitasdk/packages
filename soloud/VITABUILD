@@ -2,19 +2,19 @@ pkgname=soloud
 pkgver=9999
 pkgrel=1
 url="https://github.com/jarikomppa/soloud"
-source=("https://github.com/jarikomppa/soloud/archive/master.zip" "https://github.com/bkaradzic/bx/raw/bf29ace5ee396dca5620efa26d18bd02cefd78d0/tools/bin/linux/genie")
+source=("https://github.com/jarikomppa/soloud/archive/7b6cb7185d12b0d3283a9bf30e6cc3295e57a77c.zip" "https://github.com/bkaradzic/bx/raw/bf29ace5ee396dca5620efa26d18bd02cefd78d0/tools/bin/linux/genie")
 sha256sums=('SKIP' '80d8fbb733f0f392d9cc3b79e260a4382e94398d6a2ddf44954cc2b935160712')
 
 build() {
   chmod +x genie
-  cd soloud-master/build
+  cd soloud-*/build
   ../../genie --with-vita-homebrew-only gmake
   cd gmake
   make config=release SoloudStatic
 }
 
 package () {
-  cd soloud-master
+  cd soloud-*
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
   cp lib/libsoloud_static.a $pkgdir/$VITASDK/arm-vita-eabi/lib/libsoloud.a
 
