@@ -1,10 +1,10 @@
 pkgname=harfbuzz
-pkgver=1.4.6
+pkgver=1.4.7
 pkgrel=1
 url="http://harfbuzz.org/"
 source=("https://github.com/behdad/harfbuzz/releases/download/${pkgver}/harfbuzz-${pkgver}.tar.bz2" "harfbuzz.patch")
-sha256sums=('21a78b81cd20cbffdb04b59ac7edfb410e42141869f637ae1d6778e74928d293'
-            '27a4f88d00755a75572af072a0677f0ca157763222e982fa712958c7bb2af56d')
+sha256sums=('b85f6627425d54f32118308e053b939c63a388de9bf455b3830f68cad406bc6d'
+            'e5b2d107bc3b319cd6d498ec5fb82707c140ecfbc7c0517723cab1ac9de58d1c')
 prepare() {
   cd $pkgname-$pkgver
   patch -Np1 -i "${srcdir}/harfbuzz.patch"
