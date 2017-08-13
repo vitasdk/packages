@@ -1,0 +1,17 @@
+pkgname=quirc
+pkgver=9999
+pkgrel=1
+url="https://github.com/cxziaho/quirc-vita"
+source=("git://github.com/cxziaho/quirc-vita.git")
+sha256sums=('SKIP')
+
+build() {
+  cd $pkgname
+  mkdir build && cd build
+  make
+}
+
+package () {
+  cd $pkgname/build
+  make DESTDIR=$pkgdir install
+}
