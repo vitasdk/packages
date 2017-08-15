@@ -21,7 +21,7 @@ LIB_OBJ = \
     ../identify.o \
     ../quirc.o \
     ../version_db.o
-INCLUDES = ../include
+INCLUDES = ../lib
 
 CC      = arm-vita-eabi-gcc
 AR      = arm-vita-eabi-ar
@@ -44,4 +44,4 @@ install:
 	@mkdir -p $(DESTDIR)$(PREFIX)/lib/
 	cp $(TARGET_LIB) $(DESTDIR)$(PREFIX)/lib/
 	@mkdir -p $(DESTDIR)$(PREFIX)/include/
-	cp ../include/quirc.h $(DESTDIR)$(PREFIX)/include/
+	cp ../lib/quirc.h $(DESTDIR)$(PREFIX)/include/
