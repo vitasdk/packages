@@ -1,17 +1,18 @@
 pkgname=quirc
-pkgver=9999
+pkgver=1.0
 pkgrel=1
-url="https://github.com/cxziaho/quirc-vita"
-source=("git://github.com/cxziaho/quirc-vita.git")
+url="https://github.com/dlbeer/quirc/"
+source=("https://github.com/dlbeer/quirc/archive/v1.0.tar.gz")
 sha256sums=('SKIP')
 
 build() {
-  cd $pkgname
+  cd $pkgname-$pkgver
   mkdir build && cd build
+  cp ../../Makefile ./Makefile
   make
 }
 
 package () {
-  cd $pkgname/build
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
