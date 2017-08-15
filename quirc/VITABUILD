@@ -1,0 +1,18 @@
+pkgname=quirc
+pkgver=1.0
+pkgrel=1
+url="https://github.com/dlbeer/quirc/"
+source=("https://github.com/dlbeer/quirc/archive/v${pkgver}.tar.gz" "Makefile")
+sha256sums=('SKIP')
+
+build() {
+  cd $pkgname-$pkgver
+  mkdir build && cd build
+  cp ${srcdir}/Makefile ./Makefile
+  make
+}
+
+package () {
+  cd $pkg-name-${pkgver}/build
+  make DESTDIR=$pkgdir install
+}
