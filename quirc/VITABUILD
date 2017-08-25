@@ -1,0 +1,16 @@
+pkgname=quirc
+pkgver=1.0
+pkgrel=1
+url="https://github.com/dlbeer/quirc/"
+source=("https://github.com/dlbeer/quirc/archive/v${pkgver}.tar.gz" "Makefile.vita")
+sha256sums=('91bba64ffca5b84aa953b88d5f5ccc9507275345c200fd581dca24fbf66b3706' 'SKIP')
+
+build() {
+  cd $pkgname-$pkgver
+  make -f "${srcdir}/Makefile.vita"
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make -f "${srcdir}/Makefile.vita" DESTDIR=$pkgdir install
+}
