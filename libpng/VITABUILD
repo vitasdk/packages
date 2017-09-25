@@ -1,9 +1,9 @@
 pkgname=libpng
-pkgver=1.6.25
+pkgver=1.6.32
 pkgrel=1
 url="http://www.libpng.org/pub/png/libpng.html"
 source=("http://download.sourceforge.net/libpng/libpng-${pkgver}.tar.gz")
-sha256sums=('67fef52fc70f21cd9efbb4fc9e74c1ed4eec770e5dc3dbfa6788212798967459')
+sha256sums=('1a8ae5c8eafad895cc3fce78fbcb6fdef663b8eb8375f04616e6496360093abb')
 
 build() {
   cd $pkgname-$pkgver
