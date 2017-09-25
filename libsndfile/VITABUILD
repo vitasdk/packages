@@ -1,0 +1,23 @@
+pkgname=libsndfile
+pkgver=1.0.28
+pkgrel=1
+url="http://www.mega-nerd.com/libsndfile"
+source=("http://www.mega-nerd.com/libsndfile/files/libsndfile-${pkgver}.tar.gz" "libsndfile.patch")
+sha256sums=('1ff33929f042fa333aed1e8923aa628c3ee9e1eb85512686c55092d1e5a9dfa9' '36900159b7800458ab964e0ebfc9952db7bdd7416fa6bfc43ed15873beb41c6e')
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i "${srcdir}/libsndfile.patch"
+  autoreconf -fi
+}
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-full-suite
+  make
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
