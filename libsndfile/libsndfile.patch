@@ -1,0 +1,90 @@
+From c16cedc781fd47130289e22a14705e7aae5abfe8 Mon Sep 17 00:00:00 2001
+Date: Tue, 29 Aug 2017 00:20:29 +0200
+Subject: [PATCH 1/3] Fix inconsistency between definition and declaration for
+ wavlike_read_bext_chunk and wavlike_read_cart_chunk
+
+---
+ src/wavlike.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/wavlike.h b/src/wavlike.h
+index d3ec4ae6..3decb634 100644
+--- a/src/wavlike.h
++++ b/src/wavlike.h
+@@ -340,10 +340,10 @@ void	wavlike_write_guid (SF_PRIVATE *psf, const EXT_SUBFORMAT * subformat) ;
+ void	wavlike_analyze (SF_PRIVATE *psf) ;
+ int		wavlike_gen_channel_mask (const int *chan_map, int channels) ;
+
+-int		wavlike_read_bext_chunk (SF_PRIVATE *psf, unsigned int chunksize) ;
++int		wavlike_read_bext_chunk (SF_PRIVATE *psf, uint32_t chunksize) ;
+ int		wavlike_write_bext_chunk (SF_PRIVATE *psf) ;
+
+-int		wavlike_read_cart_chunk (SF_PRIVATE *psf, unsigned int chunksize) ;
++int		wavlike_read_cart_chunk (SF_PRIVATE *psf, uint32_t chunksize) ;
+ int		wavlike_write_cart_chunk (SF_PRIVATE *psf) ;
+
+ int		wavlike_subchunk_parse	(SF_PRIVATE *psf, int chunk, uint32_t length) ;
+
+From d8d8afada37263888260f5441952cdd1c8fdd37e Mon Sep 17 00:00:00 2001
+Date: Tue, 29 Aug 2017 00:21:33 +0200
+Subject: [PATCH 2/3] Replace int16_t & co. typedefs with stdint.h include
+
+---
+ src/GSM610/gsm610_priv.h | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/src/GSM610/gsm610_priv.h b/src/GSM610/gsm610_priv.h
+index 9e650cc4..dc95e3a0 100644
+--- a/src/GSM610/gsm610_priv.h
++++ b/src/GSM610/gsm610_priv.h
+@@ -7,6 +7,8 @@
+ #ifndef	PRIVATE_H
+ #define	PRIVATE_H
+
++#include <stdint.h>
++
+ /* Added by Erik de Castro Lopo */
+ #define	USE_FLOAT_MUL
+ #define	FAST
+@@ -17,14 +19,6 @@
+ #endif
+ /* Added by Erik de Castro Lopo */
+
+-
+-
+-typedef short				int16_t ;		/* 16 bit signed int	*/
+-typedef int					int32_t ;	/* 32 bit signed int	*/
+-
+-typedef unsigned short		uint16_t ;		/* unsigned int16_t	*/
+-typedef unsigned int		uint32_t ;	/* unsigned int32_t	*/
+-
+ struct gsm_state
+ {	int16_t			dp0 [280] ;
+
+
+From 808f4bf98057dcb7b8105667f7ec903e4bfefe0b Mon Sep 17 00:00:00 2001
+Date: Tue, 29 Aug 2017 02:40:42 +0200
+Subject: [PATCH 3/3] Fix configure step for vitasdk
+
+---
+ configure.ac | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 417e3f59..f03fa229 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -220,6 +220,13 @@
+ 		;;
+ 	esac
+
++AS_CASE([$host_vendor],
++	[vita], [
++		TYPEOF_SF_COUNT_T="int64_t"
++		SF_COUNT_MAX="0x7FFFFFFFFFFFFFFFLL"
++		SIZEOF_SF_COUNT_T=8
++	])
++
+ if test $SIZEOF_SF_COUNT_T = 4 ; then
+ 	SF_COUNT_MAX="0x7FFFFFFF"
+ 	fi
