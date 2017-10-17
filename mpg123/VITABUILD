@@ -1,17 +1,19 @@
 pkgname=mpg123
-pkgver=1.23.3
+pkgver=1.25.7
 pkgrel=1
 url="http://www.mpg123.de"
 source=("http://www.mpg123.de/download/mpg123-${pkgver}.tar.bz2" "mpg123.patch")
-sha256sums=('5c431da7e7446fae586c9207772dc0038ce2bfe75f0274a7933d1b4a7d84e6c6' 'a1ecd2a792adf4023a5cf880bec1a5b2b6c56c5daf13837058abd2e3fc1af123')
+sha256sums=('31b15ebcf26111b874732e07c8e60de5053ee555eea15fb70c657a4f9f0344f3' '4ee36048d9fd0c94630be69f07897654c81633e406a0b1cd1d8deb52c4542c66')
 
 prepare() {
   patch -Np0 -i "${srcdir}/mpg123.patch"
+  cd $pkgname-$pkgver
+  autoreconf -fi
 }
 
 build() {
   cd $pkgname-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fifo=no --enable-ipv6=no --enable-network=no --enable-int-quality=no --with-cpu=generic --with-default-audio=dummy
+  CFLAGS="-DPSP2" ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fifo=no --enable-ipv6=no --enable-network=no --enable-int-quality=no --with-cpu=generic --with-default-audio=dummy
   make
 }
 
