@@ -14,6 +14,7 @@ prepare() {
 build() {
   cd $pkgname-$pkgver
   ./autogen.sh
+  echo "PACKAGE_VERSION="$pkgver"" >> package_version
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fixed-point
   make
 }
