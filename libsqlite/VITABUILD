@@ -1,0 +1,16 @@
+pkgname=libsqlite
+pkgver=9999
+pkgrel=1
+url="https://github.com/VitaSmith/libsqlite"
+source=("git://github.com/VitaSmith/libsqlite.git")
+sha256sums=('SKIP')
+
+build() {
+  cd $pkgname/$pkgname
+  make
+}
+
+package () {
+  cd $pkgname/$pkgname
+  make DESTDIR=$pkgdir install
+}
