@@ -1,7 +1,9 @@
 #!/bin/bash
 
 sudo apt-get install sshpass bsdtar xutils-dev
-echo "|1|sH6Y65E50xoJJ/QLPN5ac/rmvwo=|9SlKRbMfLrTmQbf8u6mE43rsgNk= ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8Z6HD2zR2C45TVnpAx8BaV96pK5RmITKCfl3yYxkTxrryLo8rhz/N6CPK1MgRv1iChZh7d1rrarLzMAcZq+B6pB5k1aieoOIIz3WpeWrRImcAK/D3ltN4gq4Uaccah48ojjD3o9MBTPqgM2tMyVdYRfwIlcMVH3tXoFax8/ISADkA6ZcoJcFCCriJmUVmLM/vypPXQPEnskxO3EepQCKvAtjFA0W4qoIyH7vV852HS8fLwRSI3YZfxcWmunqFo0fSnw97powGJxSN85SG2AQGib1aS9Tv/s52vDfW/0PHg04FMtPqDOBPn1fQi37ygFzWeWXetNhg6a9VTz94pgVJ" >> ~/.ssh/known_hosts
+echo "|1|K7QZQZJexBCVdpiZ9eTIRbn7ZyA=|uP3PBfEWXFeesWyVtr8kdAbYGsM= ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDe/4u7lBdfESLXtU1abKORjOUHRql1sjNeUQHqAfOCUsuxR6LFhOP3vuOe1/473xr8u6JOj8E8XtA4nREv6jXhscV/Q/+/VeLKTWWYw+CQNt+Lz4/WSzq9lb5NQK0aMDds1VD6x2h26SVtSGehz9niwIhEDMvtvOzxRBmZhCqj2gE+OIJ3FGUmxIWuAncA8B6ZfMAjqcv30s5fzZwUacjr5WXnEmdo4C/vsTSpJUPaSpt1qGkrqHeWCJfnM27XWTFQVx/ZMk+bFycptNGVhHOf5Yqtj4e/FdVeHBvmJTFsHLgdp+YZiWkK7WsWeVmjcBR1kOAefdafi513sCxmdXeF" >> ~/.ssh/known_hosts
+echo "|1|XV846KwSDydQe2vdRFgX4bci360=|G5NzDWkFsXhXo3Koq8j+1vOl8WA= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBF22ib7zM5u9ApfbW/xUg8unpnr1LuTTCvPf4MdmLFhEmqxrSrnt0Q7x/wN/Vo3w/RxjmiK/ukjGSWulp/PWBKE=" >> ~/.ssh/known_hosts
+echo "|1|TFiAy+cxsZWXgU3EDeOtikdtDbY=|EyVMn+ixhtL8cq3ZrZWYGbe/vO8= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICWdwNPZ309h8vxSAk8Ruq5VkpZdWauQqjYW5KAepqnm" >> ~/.ssh/known_hosts
 curl https://raw.githubusercontent.com/vitasdk/vdpm/master/bootstrap-vitasdk.sh | bash
 
 pushd ..
