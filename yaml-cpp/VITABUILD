@@ -8,7 +8,7 @@ sha256sums=('SKIP')
 build() {
   cd $pkgname
   mkdir build && cd build
-  cmake .. -DCMAKE_BUILD_TYPE=Release -DMSVC_SHARED_RT=off -DYAML_CPP_BUILD_CONTRIB=off -DYAML_CPP_BUILD_TOOLS=off -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DMSVC_SHARED_RT=off -DYAML_CPP_BUILD_TESTS=off -DYAML_CPP_BUILD_CONTRIB=off -DYAML_CPP_BUILD_TOOLS=off -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
   make
 }
 
