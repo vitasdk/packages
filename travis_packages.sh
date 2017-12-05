@@ -25,6 +25,10 @@ b taihen
 b libk
 b libdebugnet
 b onigmo
+b sdl
+b sdl_image
+b sdl_mixer
+b sdl_ttf
 b sdl2
 b sdl2_image
 b sdl2_mixer
