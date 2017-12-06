@@ -26,10 +26,10 @@ b libk
 b libdebugnet
 b onigmo
 b sdl2
-b sdl_image
-b sdl_mixer
-b sdl_net
-b SDL_ttf
+b sdl2_image
+b sdl2_mixer
+b sdl2_net
+b sdl2_ttf
 b openssl
 b curl
 b expat
