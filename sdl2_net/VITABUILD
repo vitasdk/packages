@@ -1,4 +1,4 @@
-pkgname=sdl_net
+pkgname=sdl2_net
 pkgver=9999
 pkgrel=1
 url="https://github.com/lourinaldi/SDL_net-Vita.git"

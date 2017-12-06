@@ -1,8 +1,8 @@
-pkgname=SDL_ttf
+pkgname=sdl2_ttf
 pkgver=2.0.14
 pkgrel=1
 url="https://www.libsdl.org/projects/SDL_ttf"
-source=("https://www.libsdl.org/projects/${pkgname}/release/SDL2_ttf-${pkgver}.tar.gz" "Makefile.vita.SDL2_ttf")
+source=("https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-${pkgver}.tar.gz" "Makefile.vita.SDL2_ttf")
 sha256sums=('34db5e20bcf64e7071fe9ae25acaa7d72bdc4f11ab3ce59acc768ab62fe39276'
             '4538c24da16e305da73826854d28f5dd1d7d56d675a75f97731a1cdfc8efae48')
 

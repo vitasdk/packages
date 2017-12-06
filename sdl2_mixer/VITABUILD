@@ -1,4 +1,4 @@
-pkgname=sdl_mixer
+pkgname=sdl2_mixer
 pkgver=9999
 pkgrel=1
 url="https://github.com/lourinaldi/SDL_mixer-Vita.git"
