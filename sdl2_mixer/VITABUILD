@@ -1,19 +1,20 @@
 pkgname=sdl2_mixer
 pkgver=9999
 pkgrel=1
-url="https://github.com/lourinaldi/SDL_mixer-Vita.git"
-source=("git://github.com/lourinaldi/SDL_mixer-Vita.git")
+url="https://github.com/rsn8887/SDL_mixer"
+source=("git://github.com/rsn8887/SDL_mixer.git")
 sha256sums=('SKIP')
 
 build() {
-  cd SDL_mixer-Vita
-  make -f Makefile.vita.SDL2_mixer clean
-  make -f Makefile.vita.SDL2_mixer
+  cd SDL_mixer
+  make -f Makefile.vita clean
+  make -f Makefile.vita
 }
 
 package () {
-  cd SDL_mixer-Vita
+  cd SDL_mixer
   # hack: this install target ignores DESTDIR and uses VITASDK instead
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
-  make -f Makefile.vita.SDL2_mixer VITASDK=$pkgdir/$VITASDK install
+  make -f Makefile.vita VITASDK=$pkgdir/$VITASDK install
 }
+

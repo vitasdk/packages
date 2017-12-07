@@ -1,19 +1,18 @@
 pkgname=sdl2_ttf
-pkgver=2.0.14
+pkgver=9999
 pkgrel=1
-url="https://www.libsdl.org/projects/SDL_ttf"
-source=("https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-${pkgver}.tar.gz" "Makefile.vita.SDL2_ttf")
-sha256sums=('34db5e20bcf64e7071fe9ae25acaa7d72bdc4f11ab3ce59acc768ab62fe39276'
-            '4538c24da16e305da73826854d28f5dd1d7d56d675a75f97731a1cdfc8efae48')
+url="https://github.com/rsn8887/SDL_ttf"
+source=("git://github.com/rsn8887/SDL_ttf.git")
+sha256sums=('SKIP')
 
 build() {
-  cd SDL2_ttf-${pkgver}
-  make -f "${srcdir}/Makefile.vita.SDL2_ttf"
+  cd SDL_ttf
+  make -f Makefile.vita
 }
 
 package () {
-  cd SDL2_ttf-${pkgver}
+  cd SDL_ttf
   # hack: this install target ignores DESTDIR and uses VITASDK instead
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
-  make -f "${srcdir}/Makefile.vita.SDL2_ttf" VITASDK=$pkgdir/$VITASDK install 
+  make -f Makefile.vita VITASDK=$pkgdir/$VITASDK install 
 }
