@@ -1,0 +1,20 @@
+pkgname=sdl_net
+pkgver=9999
+pkgrel=1
+url="https://github.com/rsn8887/SDL_net"
+source=("git://github.com/rsn8887/SDL_net.git#branch=SDL-1.2")
+sha256sums=('SKIP')
+
+build() {
+  cd SDL_net
+  make -f Makefile.vita clean
+  make -f Makefile.vita
+}
+
+package () {
+  cd SDL_net
+  # hack: this install target ignores DESTDIR and uses VITASDK instead
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
+  make -f Makefile.vita VITASDK=$pkgdir/$VITASDK install
+}
+
