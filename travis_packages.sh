@@ -28,6 +28,7 @@ b onigmo
 b sdl
 b sdl_image
 b sdl_mixer
+b sdl_net
 b sdl_ttf
 b sdl2
 b sdl2_image
