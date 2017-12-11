@@ -20,6 +20,7 @@ b libogg
 b libvorbis
 b libtremor
 b libftpvita
+b libsqlite
 b henkaku
 b taihen
 b libk
