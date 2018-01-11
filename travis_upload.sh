@@ -6,7 +6,7 @@ shopt -s nullglob
 
 b() {
 	cd $1
-	FILE=$(echo *.tar.xz)
+	FILE=$(echo *-arm.tar.xz)
 	if [ -n "$FILE" ]; then
 		source VITABUILD
 		echo "Uploading $FILE as $pkgname.tar.xz..."
