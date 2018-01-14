@@ -53,3 +53,4 @@ b soloud
 b quirc
 b Box2D
 b libsndfile
+b libarchive

@@ -1,0 +1,24 @@
+pkgname=libarchive
+pkgver=3.3.2
+pkgrel=1
+url="https://github.com/libarchive/libarchive"
+source=("https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz" "libarchive-3.3.2-vita.patch")
+sha256sums=('22560b89d420b11a4a724877bc6672b7d7c0f239e77d42a39dcc5a9c3b28db82' 'SKIP')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  patch -Np1 -i "${srcdir}/libarchive-3.3.2-vita.patch"
+}
+
+build() {
+  cd ${pkgname}-${pkgver}/build
+  ./autogen.sh
+  cd ..
+  ./configure --prefix=${prefix} --host=arm-vita-eabi --disable-shared --enable-static --disable-bsdtar --disable-bsdcat --disable-bsdcpio --disable-acl --without-xml2
+  make
+}
+
+package () {
+  cd ${pkgname}-${pkgver}
+  make DESTDIR=$pkgdir install
+}
