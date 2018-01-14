@@ -1,0 +1,20 @@
+pkgname=xz
+pkgver=5.2.3
+pkgrel=1
+url="https://tukaani.org/xz/"
+source=("https://tukaani.org/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('71928b357d0a09a12a4b4c5fafca8c31c19b0e7d3b8ebb19622e96f26dbf28cb')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+}
+
+build() {
+  ./configure --prefix=${prefix} --host=arm-vita-eabi --disable-xz --disable-xzdec --disable-lzmadec --disable-lzmainfo --disable-lzma-links --disable-scripts --disable-doc
+  make
+}
+
+package () {
+  cd ${pkgname}-${pkgver}
+  make DESTDIR=$pkgdir install
+}
