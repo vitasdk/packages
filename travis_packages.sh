@@ -11,6 +11,7 @@ b libexif
 b libjpeg-turbo
 b jansson
 b yaml-cpp
+b harfbuzz_noft # to support hb-ft circular dependency
 b freetype
 b harfbuzz
 b fftw
