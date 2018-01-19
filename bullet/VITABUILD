@@ -1,0 +1,18 @@
+pkgname=bullet
+pkgver=2.87
+pkgrel=1
+url="https://github.com/DrakonPL/bullet-physics-vita.git"
+source=("https://github.com/DrakonPL/bullet-physics-vita.git")
+sha256sums=('SKIP')
+
+build() {
+  cd bullet-physics-vita
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  make
+}
+
+package () {
+  cd bullet-physics-vita/build
+  make DESTDIR=$pkgdir install
+}
