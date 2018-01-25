@@ -1,9 +1,9 @@
 pkgname=libzip
-pkgver=1.2.0
+pkgver=1.4.0
 pkgrel=1
 url="https://github.com/devnoname120/libzip"
 source=("https://nih.at/${pkgname}/${pkgname}-${pkgver}.tar.gz" "libzip.patch")
-sha256sums=('6cf9840e427db96ebf3936665430bab204c9ebbd0120c326459077ed9c907d9f'
+sha256sums=('759a89690e155ca52247638b9f97e16e48fbb6077abb7ce2d921dd5b81259940'
             '14665721119e582449fc4e96e9e04f4cd128ba74b816e02275cb35c4c8b6f6bb')
 prepare() {
   cd $pkgname-$pkgver
