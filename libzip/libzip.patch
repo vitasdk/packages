@@ -24,4 +24,41 @@ index 60ef6ff..21887df 100644
  
 -- 
 2.13.0
-
+diff --git a/lib/zip_source_filep.c b/lib/zip_source_filep.c
+--- a/lib/zip_source_filep.c
++++ b/lib/zip_source_filep.c
+@@ -213,7 +213,7 @@
+ 	    if (ctx->end == 0) {
+ 		ctx->st.size = (zip_uint64_t)sb.st_size - ctx->start;
+ 		ctx->st.valid |= ZIP_STAT_SIZE;
+-		
++
+ 		if (ctx->fname && start == 0) {
+ 		    ctx->supports = ZIP_SOURCE_SUPPORTS_WRITABLE;
+ 		}
+@@ -251,14 +251,11 @@
+     }
+     sprintf(temp, "%s.XXXXXX", ctx->fname);
+ 
+-    mask = umask(_SAFE_MASK);
+     if ((tfd=mkstemp(temp)) == -1) {
+         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+-	umask(mask);
+         free(temp);
+         return -1;
+     }
+-    umask(mask);
+ 
+     if ((tfp=fdopen(tfd, "r+b")) == NULL) {
+         zip_error_set(&ctx->error, ZIP_ER_TMPOPEN, errno);
+@@ -373,10 +370,7 @@
+                 zip_error_set(&ctx->error, ZIP_ER_RENAME, errno);
+                 return -1;
+             }
+-	    mask = umask(022);
+-	    umask(mask);
+ 	    /* not much we can do if chmod fails except make the whole commit fail */
+-	    (void)chmod(ctx->fname, 0666&~mask);
+ 	    free(ctx->tmpname);
+ 	    ctx->tmpname = NULL;
+             return 0;
