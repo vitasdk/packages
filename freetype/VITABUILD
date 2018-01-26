@@ -7,7 +7,7 @@ sha256sums=('bf380e4d7c4f3b5b1c1a7b2bf3abb967bda5e9ab480d0df656e0e08c5019c5e6')
 
 build() {
   cd freetype-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --with-bzip2=no --with-harfbuzz=no
   make
 }
 
