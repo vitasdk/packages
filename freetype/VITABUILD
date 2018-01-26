@@ -12,6 +12,6 @@ build() {
 }
 
 package () {
-  cd freetype-$pkgver/build
+  cd freetype-$pkgver
   make DESTDIR=$pkgdir install
 }
