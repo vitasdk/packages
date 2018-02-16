@@ -10,12 +10,11 @@ prepare() {
 
 build() {
   cd harfbuzz-$pkgver
-  mkdir build && cd build
-  cmake .. $CMARGS -DHB_HAVE_FREETYPE=ON -DCMAKE_INSTALL_PREFIX=$prefix
+  ./autogen.sh --host arm-vita-eabi --prefix=$prefix --with-freetype=no --with-glib=no --with-icu=no --with-cairo=no --with-fontconfig=no --disable-shared --enable-static
   make
 }
 
 package () {
-  cd harfbuzz-$pkgver/build
+  cd harfbuzz-$pkgver
   make DESTDIR=$pkgdir install
 }
