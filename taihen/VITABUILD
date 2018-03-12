@@ -1,9 +1,9 @@
 pkgname=taihen
-pkgver=0.6
+pkgver=0.11
 pkgrel=1
 url="https://github.com/yifanlu/taiHEN"
 source=("https://github.com/yifanlu/taiHEN/releases/download/v${pkgver}/taihen.tar.gz")
-sha256sums=('ceae5ae46244cb5adb37c68a140f5f7b15383705e3f366437e5f24efda9f4bc5')
+sha256sums=('6a7d4592b983292e8b8c53c624fa800e33ff69fe06c9d267cafc33d0ded4d2a9')
 
 build() {
   echo ""
