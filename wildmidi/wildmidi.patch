@@ -1,0 +1,35 @@
+diff --git a/src/file_io.c b/src/file_io.c
+index ca63c9f..219da8f 100644
+--- a/src/file_io.c
++++ b/src/file_io.c
+@@ -127,7 +127,7 @@ void *_WM_BufferFile(const char *filename, uint32_t *size) {
+ #elif defined(WILDMIDI_AMIGA)
+     BPTR buffer_fd;
+     long filsize;
+-#elif defined(_3DS) || defined(GEKKO)
++#elif defined(_3DS) || defined(GEKKO) || defined(__vita__)
+     int buffer_fd;
+     struct stat buffer_stat;
+ #else /* unix builds */
+diff --git a/src/lock.c b/src/lock.c
+index c43685b..c64c214 100644
+--- a/src/lock.c
++++ b/src/lock.c
+@@ -33,6 +33,8 @@
+ #include <os2.h>
+ #elif defined(WILDMIDI_AMIGA)
+ #include <proto/dos.h>
++#elif defined(__vita__)
++#include <psp2/kernel/threadmgr.h>
+ #else /* unixish ... */
+ #define _GNU_SOURCE
+ #include <unistd.h> /* usleep() */
+@@ -70,6 +72,8 @@ void _WM_Lock(int * wmlock) {
+     DosSleep(10);
+ #elif defined(WILDMIDI_AMIGA)
+     Delay(1);
++#elif defined(__vita__)
++    sceKernelDelayThread(500);
+ #else
+     usleep(500);
+ #endif

@@ -1,0 +1,27 @@
+pkgname=wildmidi
+pkgver=0.4.2
+pkgrel=1
+url="http://www.mindwerks.net/projects/wildmidi"
+source=("https://github.com/Mindwerks/${pkgname}/archive/${pkgname}-${pkgver}.tar.gz" "wildmidi.patch")
+sha256sums=('551d43cb6de6019885f933a20b6f3205a92814f50da8b0d8bceac002b9a8109d'
+            '8d1e75dd2bedee992c6ccb44c5da0b98e6283e8c0bdaafc12ffaa77257d5cac7')
+
+prepare() {
+  cd ${pkgname}-${pkgname}-${pkgver}
+  patch -Np1 -i "${srcdir}/wildmidi.patch"
+}
+
+build() {
+  cd ${pkgname}-${pkgname}-${pkgver}
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DWANT_PLAYER=OFF
+  make
+}
+
+package () {
+  cd ${pkgname}-${pkgname}-${pkgver}/build
+  mkdir -p ${pkgdir}/${prefix}/include
+  mkdir -p ${pkgdir}/${prefix}/lib
+  cp -f libWildMidi.a ${pkgdir}/${prefix}/lib/
+  cp -f ../include/wildmidi_lib.h ${pkgdir}/${prefix}/include/
+}
