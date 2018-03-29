@@ -1,12 +1,17 @@
 pkgname=glm
-pkgver=0.9.8.4
+pkgver=0.9.8.5
 pkgrel=1
 url="https://github.com/g-truc/glm.git"
-source=("https://github.com/g-truc/glm/releases/download/0.9.8.4/glm-0.9.8.4.zip")
-sha256sums=('a9b7f544b6d03739f22261da9f294638dd4671d466fe3860c7262cd037752cb1')
+source=("https://github.com/g-truc/glm/releases/download/0.9.8.5/glm-0.9.8.5.zip")
+sha256sums=('9f9f520ec7fb8c20c69d6b398ed928a2448c6a3245cbedb8631a56a987c38660')
 
 build() {
   cd glm
+
+  # GCC 7.3 fix borrowed from Arch Linux: https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/glm
+  # The current release version of glm has this bug, but it's fixed in git master - should be possible to remove this in GLM 0.9.9.x.
+  sed -i "s/(__GNUC__ == 7) && (__GNUC_MINOR__ == 2)/(__GNUC__ == 7) \&\& (__GNUC_MINOR__ >= 2)/" glm/simd/platform.h
+
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
   make
