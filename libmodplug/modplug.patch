@@ -1,0 +1,18 @@
+diff --git a/src/load_pat.h b/src/load_pat.h
+index 21db1f7..f923e9e 100644
+--- a/src/load_pat.h
++++ b/src/load_pat.h
+@@ -5,6 +5,13 @@
+ extern "C" {
+ #endif
+ 
++#ifdef __vita__
++#include <psp2/kernel/threadmgr.h>
++#define srandom srand
++#define random rand
++#define sleep(x) sceKernelDelayThread(x*1000*1000)
++#endif
++
+ void pat_init_patnames(void);
+ void pat_resetsmp(void);
+ int pat_numinstr(void);
