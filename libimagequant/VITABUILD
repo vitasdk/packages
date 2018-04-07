@@ -11,7 +11,7 @@ build() {
 }
 
 package () {
-  cd $pkgname/$pkgname
+  cd $pkgname
   mkdir -p $pkgdir/$prefix
   mkdir -p $pkgdir/$prefix/lib
   mkdir -p $pkgdir/$prefix/include
