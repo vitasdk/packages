@@ -58,4 +58,5 @@ b xz
 b libarchive
 b bullet
 b libimagequant
+b libmodplug
 
