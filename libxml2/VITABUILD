@@ -1,23 +1,23 @@
 pkgname=libxml2
-pkgver=2.9.4
+pkgver=v2.9.4
 pkgrel=1
 url="http://xmlsoft.org/"
-source=("ftp://xmlsoft.org/libxml2/libxml2-${pkgver}.tar.gz")
+source=("git://github.com/GNOME/libxml2.git#tag=${pkgver}")
 sha256sums=('SKIP')
 
 prepare() {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}
   patch -p1 < "${startdir}/patches/libxml2-2.9.4-vita.patch"
 }
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}
   ./autogen.sh --host arm-vita-eabi --prefix=$prefix --disable-ipv6 --without-debug --without-ftp --without-http --without-threads --without-lzma --disable-tests --without-python
   make
 }
 
 package () {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}
   make DESTDIR=${pkgdir} install
 }
 
