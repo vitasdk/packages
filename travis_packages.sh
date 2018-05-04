@@ -21,6 +21,7 @@ b libogg
 b libvorbis
 b flac
 b libtremor
+b libmikmod
 b libftpvita
 b henkaku
 b taihen
@@ -59,4 +60,3 @@ b libarchive
 b bullet
 b libimagequant
 b libmodplug
-
