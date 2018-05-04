@@ -1,5 +1,5 @@
 pkgname=libxml2
-pkgver=v2.9.4
+pkgver=v2.9.8
 pkgrel=1
 url="http://xmlsoft.org/"
 source=("git://github.com/GNOME/libxml2.git#tag=${pkgver}")
@@ -7,7 +7,7 @@ sha256sums=('SKIP')
 
 prepare() {
   cd ${pkgname}
-  patch -p1 < "${startdir}/patches/libxml2-2.9.4-vita.patch"
+  patch -p1 < "${startdir}/patches/libxml2-2.9.8-vita.patch"
 }
 
 build() {

@@ -1,0 +1,48 @@
+diff -ruN a/configure.ac b/configure.ac
+--- a/configure.ac	2018-03-05 17:09:43.000000000 +0100
++++ b/configure.ac	2018-04-21 13:50:08.120011839 +0200
+@@ -216,6 +216,11 @@
+ fi
+ AM_CONDITIONAL([REBUILD_DOCS], [test "$enable_rebuild_docs" = "yes" -o "$USER" = "veillard"])
+ 
++# Patch from clutter-android
++AC_ARG_ENABLE(tests,
++[  --enable-tests[[=yes/no]]  build tests [[default=yes]]])
++AM_CONDITIONAL([BUILD_TESTS], [test "$enable_tests" = "yes"])
++
+ dnl
+ dnl hard dependancies on options
+ dnl
+diff -ruN a/Makefile.am b/Makefile.am
+--- a/Makefile.am	2018-03-05 17:09:43.000000000 +0100
++++ b/Makefile.am	2018-04-21 13:50:38.150869910 +0200
+@@ -10,10 +10,15 @@
+ 
+ AM_CFLAGS = $(EXTRA_CFLAGS) $(THREAD_CFLAGS) $(Z_CFLAGS) $(LZMA_CFLAGS)
+ 
++## Patch from clutter-android
++if BUILD_TESTS
+ check_PROGRAMS=testSchemas testRelax testSAX testHTML testXPath testURI \
+                testThreads testC14N testAutomata testRegexp \
+                testReader testapi testModule runtest runsuite testchar \
+ 	       testdict runxmlconf testrecurse testlimits
++else
++noinst_PROGRAMS=
++endif
+ 
+ bin_PROGRAMS = xmllint xmlcatalog
+ 
+diff -ruN a/xmlIO.c b/xmlIO.c
+--- a/xmlIO.c	2018-03-05 17:09:43.000000000 +0100
++++ b/xmlIO.c	2018-04-21 13:51:07.785049808 +0200
+@@ -49,6 +49,10 @@
+ #include <winnls.h> /* for CP_UTF8 */
+ #endif
+ 
++#if defined(__vita__)
++#define getcwd(buf, size) NULL
++#endif
++
+ #ifndef S_ISDIR
+ #  ifdef _S_ISDIR
+ #    define S_ISDIR(x) _S_ISDIR(x)
