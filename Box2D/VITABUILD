@@ -14,6 +14,6 @@ package () {
   cd $pkgname
   mkdir -p $pkgdir/$prefix
   mkdir -p $pkgdir/$prefix/lib
-  cp -r Include $pkgdir/$prefix
+  cp -r Include/* $pkgdir/$prefix/include
   cp libbox2d.a $pkgdir/$prefix/lib
 }
