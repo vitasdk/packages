@@ -2,17 +2,17 @@ pkgname=libtremor
 pkgver=9999
 pkgrel=1
 url="http://xiph.org/"
-source=("http://downloads.sourceforge.net/sourceforge/devkitpro/tremor-lowmem-src.tar.bz2")
-sha256sums=('54a40ce5521f908b91b44bc9259ea499b8b7299b37b154c348614373ed79840c')
+source=("https://git.xiph.org/?p=tremor.git;a=snapshot;h=293fd1c04f9d4489be6d4b2b1ca8698f2f902e8e;sf=tgz")
+sha256sums=('d18ca0261d379d005bc4ff42342a691eb33374b20428f57d8dcaf68b80f68c25')
 
 build() {
-  cd tremor-lowmem
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  cd tremor-293fd1c
+  ./autogen.sh --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
   sed -ie 's/-D_REENTRANT/-D_REENTRANT -Wa,-mimplicit-it=thumb/g' Makefile
   make
 }
 
 package () {
-  cd tremor-lowmem
+  cd tremor-293fd1c
   make DESTDIR=$pkgdir install
 }
