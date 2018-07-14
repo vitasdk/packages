@@ -1,0 +1,23 @@
+pkgname=curlpp
+pkgver=0.8.1
+pkgrel=1
+url="https://github.com/jpbarrette/curlpp"
+source=("https://github.com/jpbarrette/curlpp/archive/v${pkgver}.tar.gz" "curlpp.patch")
+sha256sums=('97e3819bdcffc3e4047b6ac57ca14e04af85380bd93afe314bee9dd5c7f46a0a' 'SKIP')
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i "${srcdir}/curlpp.patch"
+}
+
+build() {
+  cd $pkgname-$pkgver
+  mkdir build && cd build
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  make
+}
+
+package () {
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
