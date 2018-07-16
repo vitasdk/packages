@@ -4,6 +4,7 @@ pkgrel=1
 url="https://github.com/rsn8887/SDL_mixer"
 source=("git://github.com/rsn8887/SDL_mixer.git")
 sha256sums=('SKIP')
+depends=('sdl2' 'libvorbis' 'libmikmod' 'libmodplug' 'mpg123' 'flac')
 
 build() {
   cd SDL_mixer
