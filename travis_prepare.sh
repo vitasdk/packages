@@ -7,7 +7,7 @@ echo "|1|TFiAy+cxsZWXgU3EDeOtikdtDbY=|EyVMn+ixhtL8cq3ZrZWYGbe/vO8= ssh-ed25519 A
 pushd ..
 git clone https://github.com/vitasdk/vdpm.git
 cd vdpm
-./bootstrap-vitasdk.sh
+bash bootstrap-vitasdk.sh
 popd
 
 pushd ..
