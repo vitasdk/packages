@@ -1,8 +1,8 @@
 pkgname=bzip2
 pkgver=1.0.6
 pkgrel=1
-url="http://bzip.org"
-source=("http://bzip.org/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+url="https://bzip2.sourceforge.net"
+source=("https://sourceforge.net/projects/${pkgname}/files/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd')
 
 build() {
