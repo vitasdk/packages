@@ -1,0 +1,36 @@
+PREFIX 	= arm-vita-eabi
+CC 		= $(PREFIX)-gcc
+AR		= $(PREFIX)-ar
+RANLIB	= $(PREFIX)-ranlib
+
+bin_dir=$(VITASDK)/arm-vita-eabi/bin
+include_dir=$(VITASDK)/arm-vita-eabi/include
+lib_dir=$(VITASDK)/arm-vita-eabi/lib
+
+CFLAGS = -O3 -I$(include_dir)/SDL
+LIBS = -L$(lib_dir) -lSDL
+
+OBJS = SDL_framerate.o SDL_gfxPrimitives.o SDL_imageFilter.o SDL_rotozoom.o SDL_gfxBlitFunc.o
+
+STATIC_LIB=libSDL_gfx.a
+
+all: $(STATIC_LIB)
+
+$(STATIC_LIB): $(OBJS)
+	$(AR) rcs $@ $^
+	$(RANLIB) $@
+
+install: $(STATIC_LIB)
+	cp $(STATIC_LIB) $(lib_dir)
+	cp SDL_framerate.h SDL_gfxPrimitives.h SDL_imageFilter.h SDL_rotozoom.h SDL_gfxBlitFunc.h $(include_dir)/SDL
+
+uninstall:
+	rm -f $(lib_dir)/$(STATIC_LIB)
+	rm -f $(include_dir)/SDL/SDL_framerate.h
+	rm -f $(include_dir)/SDL/SDL_gfxPrimitives.h
+	rm -f $(include_dir)/SDL/SDL_imageFilter.h
+	rm -f $(include_dir)/SDL/SDL_rotozoom.h
+	rm -f $(include_dir)/SDL/SDL_gfxBlitFunc.h
+
+clean:
+	rm -f *.o *.a
