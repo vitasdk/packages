@@ -1,0 +1,20 @@
+pkgname=SDL2_gfx
+pkgver=1.0.4
+pkgrel=1
+url="https://www.ferzkopp.net/joomla/content/view/19/14/"
+source=("https://www.ferzkopp.net/Software/SDL2_gfx/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('63e0e01addedc9df2f85b93a248f06e8a04affa014a835c2ea34bfe34e576262')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  cp ${startdir}/Makefile.vita .
+  make -f Makefile.vita
+}
+
+package () {
+  cd ${pkgname}-${pkgver}
+  # hack: this install target ignores DESTDIR and uses VITASDK instead
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include/SDL2
+  make -f Makefile.vita VITASDK=$pkgdir/$VITASDK install
+}
