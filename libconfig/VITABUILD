@@ -1,0 +1,20 @@
+pkgname=libconfig
+pkgver=1.7.2
+pkgrel=1
+url="https://github.com/hyperrealm/libconfig"
+source=("https://github.com/hyperrealm/libconfig/archive/v${pkgver}.tar.gz")
+sha256sums=('f67ac44099916ae260a6c9e290a90809e7d782d96cdd462cac656ebc5b685726')
+
+build() {
+  cd $pkgname-$pkgver
+  sed -i '/SUBDIRS = lib doc tinytest tests/c\SUBDIRS = lib' Makefile.am
+  autoreconf -fi
+  ./configure --prefix=$prefix --host=arm-vita-eabi --disable-shared --enable-static --disable-examples
+  make
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
+
