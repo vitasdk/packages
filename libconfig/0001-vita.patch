@@ -1,0 +1,20 @@
+--- a/lib/libconfig.c	2018-01-06 05:58:31.000000000 +0100
++++ b/lib/libconfig.c	2019-06-27 14:03:13.771111853 +0200
+@@ -691,7 +691,7 @@
+   }
+ 
+   config_write(config, stream);
+-
++#ifndef __vita__
+   if(config_get_option(config, CONFIG_OPTION_FSYNC))
+   {
+     int fd = fileno(stream);
+@@ -707,7 +707,7 @@
+       }
+     }
+   }
+-
++#endif
+   fclose(stream);
+   config->error_type = CONFIG_ERR_NONE;
+   return(CONFIG_TRUE);

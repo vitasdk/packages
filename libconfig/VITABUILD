@@ -1,0 +1,25 @@
+pkgname=libconfig
+pkgver=1.7.2
+pkgrel=1
+url="https://github.com/hyperrealm/libconfig"
+source=("https://github.com/hyperrealm/libconfig/archive/v${pkgver}.tar.gz" "0001-vita.patch")
+sha256sums=('f67ac44099916ae260a6c9e290a90809e7d782d96cdd462cac656ebc5b685726'
+	'762b1fcfabb60dd8454a1f3b705ab79b89d2a8f0cd1d0cf676e27b69b0f90a4d')
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i "${srcdir}/0001-vita.patch"
+}
+
+build() {
+  cd $pkgname-$pkgver
+  autoreconf -fi
+  ./configure --prefix=$prefix --host=arm-vita-eabi --disable-shared --enable-static --disable-examples
+  make
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
+
