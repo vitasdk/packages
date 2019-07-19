@@ -63,3 +63,4 @@ b libarchive
 b bullet
 b libimagequant
 b libmodplug
+b libconfig
