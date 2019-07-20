@@ -8,7 +8,7 @@ addons:
       - fakeroot
       - cmake
       - cmake-data
-      - makeinfo # Required to build libconfig
+      - texinfo # Contains makeinfo that is required to build libconfig
 language: c
 compiler: clang
 env:
