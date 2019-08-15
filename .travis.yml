@@ -9,7 +9,7 @@ addons:
       - cmake
       - cmake-data
       - texinfo # Contains makeinfo that is required to build libconfig
-      - libtool # Needed to build libtremor
+      - libtool-bin # Needed to build libtremor
 language: c
 compiler: clang
 env:
