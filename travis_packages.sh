@@ -64,3 +64,4 @@ b bullet
 b libimagequant
 b libmodplug
 b libconfig
+b libsodium
