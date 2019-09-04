@@ -11,6 +11,10 @@ build() {
 }
 
 package () {
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
+
   cd math-neon
-  make DESTDIR=$pkgdir install
+  cp libmathneon.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
+  cp source/math_neon.h $pkgdir/$VITASDK/arm-vita-eabi/include/
 }
