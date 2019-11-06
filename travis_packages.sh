@@ -66,3 +66,4 @@ b libmodplug
 b libconfig
 b libsodium
 b libmathneon
+b libbaremetal
