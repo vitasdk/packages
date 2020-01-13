@@ -9,7 +9,7 @@ build() {
   cd $pkgname-$pkgver
   ./autogen.sh
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fixed-point
-  make
+  make -j$(nproc)
 }
 
 package () {
