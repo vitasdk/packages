@@ -1,0 +1,18 @@
+pkgname=opusfile
+pkgver=0.10
+pkgrel=1
+url="https://opus-codec.org/"
+source=("https://github.com/xiph/$pkgname/archive/v$pkgver.tar.gz")
+sha256sums=('bd9c246cf18d27e9a0815e432731d82f0978717fe2dc2b1e1dce09c184132239')
+
+build() {
+  cd $pkgname-$pkgver
+  ./autogen.sh
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fixed-point
+  make
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
