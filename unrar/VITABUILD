@@ -12,7 +12,7 @@ prepare() {
 
 build() {
   cd ${pkgname}
-  make -f Makefile.vita
+  make -j$(nproc) -f Makefile.vita
 }
 
 package () {

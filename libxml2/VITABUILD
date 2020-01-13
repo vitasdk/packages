@@ -13,7 +13,7 @@ prepare() {
 build() {
   cd ${pkgname}
   ./autogen.sh --host arm-vita-eabi --prefix=$prefix --disable-ipv6 --without-debug --without-ftp --without-http --without-threads --without-lzma --disable-tests --without-python
-  make
+  make -j$(nproc)
 }
 
 package () {

@@ -12,7 +12,7 @@ build() {
   cd harfbuzz-$pkgver
   mkdir build && cd build
   cmake .. $CMARGS -DCMAKE_INSTALL_PREFIX=$prefix
-  make
+  make -j$(nproc)
 }
 
 package () {

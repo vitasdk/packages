@@ -8,7 +8,7 @@ sha256sums=('8ecfe1b04732ec3f5b7d279fdb8efcad536d555f9d1e8fabd027037d45ea8bcf')
 build() {
   cd fftw-$pkgver
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-fortran --without-g77-wrappers
-  make
+  make -j$(nproc)
 }
 
 package () {

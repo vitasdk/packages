@@ -10,7 +10,7 @@ build() {
   ./buildconf
   ./configure --host=arm-vita-eabi  --prefix=$VITASDK/arm-vita-eabi/
   cp lib/config-vita.h lib/curl_config.h
-  make
+  make -j$(nproc)
 }
 
 package () {

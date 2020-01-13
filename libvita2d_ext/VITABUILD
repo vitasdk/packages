@@ -7,7 +7,7 @@ sha256sums=('SKIP')
 
 build() {
   cd $pkgname/$pkgname
-  make CFLAGS='-Wl,-q -Wall -O3 -I$(INCLUDES)' # lto is broken on Windows vita-gcc for some reason
+  make -j$(nproc) CFLAGS='-Wl,-q -Wall -O3 -I$(INCLUDES)' # lto is broken on Windows vita-gcc for some reason
 }
 
 package () {

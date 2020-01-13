@@ -14,7 +14,7 @@ prepare() {
 build() {
   cd $pkgname-$pkgver
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-full-suite
-  make
+  make -j$(nproc)
 }
 
 package () {

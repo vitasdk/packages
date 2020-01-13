@@ -8,7 +8,7 @@ sha256sums=('6ed40e0241089a42c48604dc00e362beee00036af2d8b3f46338031c9e0351cb')
 build() {
   cd $pkgname-$pkgver
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
-  make
+  make -j$(nproc)
 }
 
 package () {

@@ -10,7 +10,7 @@ build() {
   cd soloud-*/build
   ../../genie --with-vita-homebrew-only gmake
   cd gmake
-  make config=release SoloudStatic
+  make -j$(nproc) config=release SoloudStatic
 }
 
 package () {

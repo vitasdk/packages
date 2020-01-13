@@ -7,8 +7,8 @@ sha256sums=('SKIP')
 
 build() {
   cd libmad-psp2
-  make clean
-  make
+  make -j$(nproc) clean
+  make -j$(nproc)
 }
 
 package () {

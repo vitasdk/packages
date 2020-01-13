@@ -8,8 +8,8 @@ sha256sums=('SKIP')
 build() {
   cd vita-openssl
   ./Configure no-threads --prefix=$VITASDK/arm-vita-eabi/ vita-cross
-  make depend
-  make
+  make -j$(nproc) depend
+  make -j$(nproc)
 }
 
 package () {

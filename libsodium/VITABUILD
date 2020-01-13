@@ -9,7 +9,7 @@ build() {
   cd libsodium-$pkgver
   export CFLAGS='-Os'
   ./configure --host=arm-vita-eabi --prefix=$prefix
-  make
+  make -j$(nproc)
 }
 
 package() {

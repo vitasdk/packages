@@ -12,8 +12,8 @@ build() {
   export CFLAGS="-Wl,-q -O3 -mfpu=neon -mcpu=cortex-a9 -march=armv7-a -mfloat-abi=hard -mvectorize-with-neon-quad"
   export CXXFLAGS=$CFLAGS
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic
-  make -C src/libFLAC
-  make -C src/libFLAC++
+  make -j$(nproc) -C src/libFLAC
+  make -j$(nproc) -C src/libFLAC++
 }
 
 package () {

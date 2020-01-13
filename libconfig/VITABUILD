@@ -15,7 +15,7 @@ build() {
   cd $pkgname-$pkgver
   autoreconf -fi
   ./configure --prefix=$prefix --host=arm-vita-eabi --disable-shared --enable-static --disable-examples
-  make
+  make -j$(nproc)
 }
 
 package () {

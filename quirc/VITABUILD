@@ -7,7 +7,7 @@ sha256sums=('91bba64ffca5b84aa953b88d5f5ccc9507275345c200fd581dca24fbf66b3706' '
 
 build() {
   cd $pkgname-$pkgver
-  make -f "${srcdir}/Makefile.vita"
+  make -j$(nproc) -f "${srcdir}/Makefile.vita"
 }
 
 package () {

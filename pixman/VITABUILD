@@ -10,7 +10,7 @@ build() {
   sed -i.bak 's/SUBDIRS = pixman demos test/SUBDIRS = pixman/' Makefile.am
   autoreconf -fi
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
-  make
+  make -j$(nproc)
 }
 
 package () {

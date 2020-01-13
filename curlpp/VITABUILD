@@ -14,7 +14,7 @@ build() {
   cd $pkgname-$pkgver
   mkdir build && cd build
   cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
-  make
+  make -j$(nproc)
 }
 
 package () {

@@ -7,7 +7,7 @@ sha256sums=('SKIP')
 
 build() {
   cd SDL-Vita
-  make -f Makefile.vita
+  make -j$(nproc) -f Makefile.vita
 }
 
 package () {
