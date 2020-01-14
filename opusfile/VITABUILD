@@ -4,6 +4,7 @@ pkgrel=1
 url="https://opus-codec.org/"
 source=("https://github.com/xiph/$pkgname/archive/v$pkgver.tar.gz")
 sha256sums=('bd9c246cf18d27e9a0815e432731d82f0978717fe2dc2b1e1dce09c184132239')
+depends=('libogg' 'opus')
 
 build() {
   cd $pkgname-$pkgver
