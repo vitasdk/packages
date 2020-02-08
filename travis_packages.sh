@@ -54,6 +54,7 @@ b TinyGL
 b kuio
 b taipool
 b mpg123
+b libmpeg2
 b soloud
 b quirc
 b Box2D
