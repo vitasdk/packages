@@ -67,3 +67,4 @@ b libconfig
 b libsodium
 b libmathneon
 b libbaremetal
+b minizip
