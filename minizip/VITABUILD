@@ -1,0 +1,19 @@
+pkgname=minizip
+pkgver=2.9.1
+pkgrel=1
+url="https://github.com/nmoinvaz/minizip"
+source=("https://github.com/nmoinvaz/minizip/archive/$pkgver.zip")
+sha256sums=('8ffe1fdb1d247fc484d1b0b87fdc71f68f3e9ad7c35b3d34a191e00b941df614')
+
+build() {
+  cd minizip-$pkgver
+  sed -i '1 i\#define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_UNIX)' mz_os.h
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  make -j$(nproc)
+}
+
+package () {
+  cd minizip-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
