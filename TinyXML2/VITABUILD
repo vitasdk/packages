@@ -2,13 +2,20 @@ pkgname=tinyxml2
 pkgver=8.0.0
 pkgrel=1
 url="http://leethomason.github.io/tinyxml2"
-source=("https://github.com/leethomason/tinyxml2/archive/${pkgver}.tar.gz")
-sha256sums=('6ce574fbb46751842d23089485ae73d3db12c1b6639cda7721bf3a7ee862012c')
+source=("https://github.com/leethomason/tinyxml2/archive/${pkgver}.tar.gz" "0001-vita.patch")
+sha256sums=('6ce574fbb46751842d23089485ae73d3db12c1b6639cda7721bf3a7ee862012c'
+	'8e9a8db89d7cbf10d678b884df2d0f88aa884eea6c492cbc4e2373cd57cca37e')
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i "${srcdir}/0001-vita.patch"
+}
 
 build() {
   cd $pkgname-$pkgver
   mkdir build && cd build
-  cmake ..  -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+	-DCMAKE_BUILD_TYPE=Release
   make -j$(nproc)
 }
 

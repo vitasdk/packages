@@ -1,0 +1,11 @@
+--- a/CMakeLists.txt	2020-03-02 02:40:07.000000000 +0100
++++ b/CMakeLists.txt	2020-03-24 13:21:19.875656034 +0100
+@@ -40,7 +40,7 @@
+ option(BUILD_TESTS "build xmltest (deprecated: Use BUILD_TESTING)" ON)
+ 
+ # To allow using tinyxml in another shared library
+-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
++set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+ 
+ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
