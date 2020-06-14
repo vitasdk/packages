@@ -69,3 +69,5 @@ b libsodium
 b libmathneon
 b libbaremetal
 b minizip
+b lame
+b ffmpeg

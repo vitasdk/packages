@@ -1,0 +1,55 @@
+pkgname=ffmpeg
+pkgver=3.3.9
+pkgrel=1
+url="http://ffmpeg.org/"
+source=("http://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz" "ffmpeg.patch")
+sha256sums=('ae34f14fffa65a1a59b256737ca9af7bf4e296b7c4320d42512350126ce06c84' 'c4058a723957547c5450e4c2694eb0b9393d983146079382f311be77f9d87f75')
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i "${srcdir}/ffmpeg.patch"
+}
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=$prefix \
+		--enable-cross-compile \
+		--cross-prefix=$VITASDK/bin/arm-vita-eabi- \
+		--disable-shared \
+		--disable-runtime-cpudetect \
+		--disable-armv5te \
+		--disable-programs \
+		--disable-doc \
+		--disable-network \
+		--enable-gpl \
+		--enable-libmp3lame \
+		--disable-everything \
+		--enable-decoder=aac,alac,ape,ac3,flac,mp3,mpeg4,opus,pcm_s16le,pcm_s24le,pcm_s32le,pcm_s8,pcm_u8,tta,vorbis,wmalossless,wavpack \
+		--enable-demuxer=aac,ac3,aiff,ape,asf,avi,caf,flac,matroska,mp3,mp4,m4a,pcm_s16le,pcm_s24le,pcm_s32le,pcm_s8,pcm_u8,ogg,opus,tta,wav,webm,wv \
+		--enable-muxer=aac,ac3,aiff,ape,asf,avi,caf,flac,matroska,mp3,mp4,m4a,pcm_s16le,pcm_s24le,pcm_s32le,pcm_s8,pcm_u8,ogg,opus,tta,wav,webm,wv \
+		--enable-encoder=aac,alac,ape,ac3,flac,libmp3lame,mpeg4,opus,pcm_s16le,pcm_s24le,pcm_s32le,pcm_s8,pcm_u8,tta,vorbis,wmalossless,wavpack \
+		--enable-parser=aac,ac3,flac,h263,mpeg4video,mpegaudio,opus,vorbis \
+		--enable-protocol=file \
+		--enable-static \
+		--enable-small \
+		--disable-debug \
+		--arch=armv7-a \
+		--cpu=cortex-a9 \
+		--disable-armv6t2 \
+		--target-os=none \
+		--extra-cflags=" -Wl,-q -O2 -ftree-vectorize -mfpu=neon -fomit-frame-pointer -ffast-math -march=armv7-a -mfloat-abi=hard " \
+		--extra-cxxflags=" -Wl,-q -O2 -ftree-vectorize -mfpu=neon -fomit-frame-pointer -ffast-math -fno-rtti -fno-exceptions -std=gnu++11 -march=armv7-a -mfloat-abi=hard " \
+		--extra-ldflags=" -march=armv7-a -mfloat-abi=hard -L$VITASDK/lib " \
+		--disable-bzlib \
+		--disable-iconv \
+		--disable-lzma \
+		--disable-sdl \
+		--disable-securetransport \
+		--disable-xlib
+  make -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
