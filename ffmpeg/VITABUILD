@@ -21,7 +21,6 @@ build() {
 		--disable-programs \
 		--disable-doc \
 		--disable-network \
-		--enable-gpl \
 		--enable-libmp3lame \
 		--disable-everything \
 		--enable-decoder=aac,alac,ape,ac3,flac,mp3,mpeg4,opus,pcm_s16le,pcm_s24le,pcm_s32le,pcm_s8,pcm_u8,tta,vorbis,wmalossless,wavpack \
