@@ -3,7 +3,8 @@ pkgver=3.3.9
 pkgrel=1
 url="http://ffmpeg.org/"
 source=("http://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz" "ffmpeg.patch")
-sha256sums=('ae34f14fffa65a1a59b256737ca9af7bf4e296b7c4320d42512350126ce06c84' 'c4058a723957547c5450e4c2694eb0b9393d983146079382f311be77f9d87f75')
+sha256sums=('ae34f14fffa65a1a59b256737ca9af7bf4e296b7c4320d42512350126ce06c84' '9415e2b829df6c3d52b46113a3e3d6bc823edce079a459f7fca68e7446ffa6e3')
+depends=('lame' 'libvorbis' 'flac' 'opus')
 
 prepare() {
   cd $pkgname-$pkgver
