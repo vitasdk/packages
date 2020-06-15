@@ -2,7 +2,7 @@ pkgname=libzip
 pkgver=1.4.0
 pkgrel=1
 url="https://github.com/devnoname120/libzip"
-source=("https://nih.at/${pkgname}/${pkgname}-${pkgver}.tar.gz" "libzip.patch")
+source=("https://libzip.org/download/${pkgname}-${pkgver}.tar.gz" "libzip.patch")
 sha256sums=('759a89690e155ca52247638b9f97e16e48fbb6077abb7ce2d921dd5b81259940'
             'SKIP')
 prepare() {
