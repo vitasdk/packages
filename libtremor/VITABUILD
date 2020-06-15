@@ -2,17 +2,17 @@ pkgname=libtremor
 pkgver=9999
 pkgrel=1
 url="http://xiph.org/"
-source=("https://git.xiph.org/?p=tremor.git;a=snapshot;h=293fd1c04f9d4489be6d4b2b1ca8698f2f902e8e;sf=tgz")
-sha256sums=('d18ca0261d379d005bc4ff42342a691eb33374b20428f57d8dcaf68b80f68c25')
+source=("git+https://gitlab.xiph.org/xiph/tremor.git#commit=293fd1c0")
+sha256sums=('SKIP')
 
 build() {
-  cd tremor-293fd1c
+  cd tremor
   ./autogen.sh --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
   sed -ie 's/-D_REENTRANT/-D_REENTRANT -Wa,-mimplicit-it=thumb/g' Makefile
   make -j$(nproc)
 }
 
 package () {
-  cd tremor-293fd1c
+  cd tremor
   make DESTDIR=$pkgdir install
 }
