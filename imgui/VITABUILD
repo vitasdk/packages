@@ -4,6 +4,7 @@ pkgrel=1
 url="https://github.com/Rinnegatamante/imgui-vita"
 source=("git://github.com/Rinnegatamante/imgui-vita.git")
 sha256sums=('SKIP')
+depends=('libmathneon' 'vitaGL')
 
 build() {
   cd $pkgname-vita
