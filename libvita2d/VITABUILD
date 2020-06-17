@@ -4,6 +4,7 @@ pkgrel=1
 url="https://github.com/xerpi/libvita2d"
 source=("git://github.com/xerpi/libvita2d.git")
 sha256sums=('SKIP')
+depends=('zlib' 'libpng' 'libjpeg-turbo' 'freetype')
 
 build() {
   cd $pkgname/$pkgname
