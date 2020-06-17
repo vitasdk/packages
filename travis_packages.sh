@@ -69,3 +69,4 @@ b libsodium
 b libmathneon
 b libbaremetal
 b minizip
+b jsoncpp
