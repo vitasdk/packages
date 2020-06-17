@@ -1,0 +1,17 @@
+pkgname=vitaGL
+pkgver=0.1
+pkgrel=1
+url="https://github.com/Rinnegatamante/vitaGL"
+source=("https://github.com/Rinnegatamante/vitaGL/archive/$pkgver.tar.gz")
+sha256sums=('8d6d1c246ef6a83c04132fbb97294225edbeb8a2b6940f0546da085e909a0d33')
+depends=('libmathneon')
+
+build() {
+  cd $pkgname-$pkgver
+  make HAVE_SBRK=1 NO_DEBUG=1 -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
