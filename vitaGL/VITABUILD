@@ -12,6 +12,10 @@ build() {
 }
 
 package () {
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
+  
   cd $pkgname-$pkgver
-  make DESTDIR=$pkgdir install
+  cp lib$pkgname.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
+  cp source/$pkgname.h $pkgdir/$VITASDK/arm-vita-eabi/include/
 }
