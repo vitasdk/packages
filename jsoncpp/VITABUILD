@@ -1,0 +1,18 @@
+pkgname=jsoncpp
+pkgver=1.8.4
+pkgrel=1
+url="https://github.com/open-source-parsers/jsoncpp"
+source=("https://github.com/open-source-parsers/jsoncpp/archive/$pkgver.tar.gz")
+sha256sums=('c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6')
+
+build() {
+  cd $pkgname-$pkgver
+  mkdir -p build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_INCLUDEDIR=include/jsoncpp -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF
+  make -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}

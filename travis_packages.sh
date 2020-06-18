@@ -71,5 +71,6 @@ b vitaGL
 b imgui
 b libbaremetal
 b minizip
+b jsoncpp
 b lame
 b ffmpeg
