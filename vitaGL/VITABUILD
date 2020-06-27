@@ -1,5 +1,5 @@
 pkgname=vitaGL
-pkgver=0.1
+pkgver=0.1.2
 pkgrel=1
 url="https://github.com/Rinnegatamante/vitaGL"
 source=("https://github.com/Rinnegatamante/vitaGL/archive/$pkgver.tar.gz")
