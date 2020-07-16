@@ -40,6 +40,7 @@ b sdl2_mixer
 b sdl2_net
 b sdl2_ttf
 b sdl2_gfx
+b openal-soft
 b openssl
 b curl
 b curlpp
