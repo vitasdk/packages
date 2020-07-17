@@ -1,14 +1,14 @@
 pkgname=vitaGL
-pkgver=0.1.2
+pkgver=0.2
 pkgrel=1
-url="https://github.com/Rinnegatamante/vitaGL"
-source=("https://github.com/Rinnegatamante/vitaGL/archive/$pkgver.tar.gz")
-sha256sums=('a1a1b7060c518e7ad840e29d0f49ab49e684107fcb725468e528d309dea5c3e4')
-depends=('libmathneon')
+url="https://github.com/Rinnegatamante/$pkgname"
+source=("https://github.com/Rinnegatamante/$pkgname/archive/$pkgver.tar.gz")
+sha256sums=('12b757519e42b4e0f20ccd155feaf75860eac50aac18bda22a78770c70a5b832')
+depends=('libmathneon vitaShaRK')
 
 build() {
   cd $pkgname-$pkgver
-  make HAVE_SBRK=1 NO_DEBUG=1 -j$(nproc)
+  make HAVE_SBRK=1 NO_DEBUG=1 HAVE_SHARK=1 -j$(nproc)
 }
 
 package () {
