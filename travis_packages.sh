@@ -67,6 +67,7 @@ b libimagequant
 b libmodplug
 b libconfig
 b libsodium
+b vitaShaRK
 b libmathneon
 b vitaGL
 b imgui
