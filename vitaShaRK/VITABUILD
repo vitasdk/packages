@@ -20,10 +20,10 @@ package () {
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include/psp2
   
-  cd $pkgname-$pkgver
+  cd $pkgname-v.$pkgver
   cp libvitashark.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
   cp build/libSceShaccCg_stub.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
   cp build/libSceShaccCg_stub_weak.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
   cp source/vitashark.h $pkgdir/$VITASDK/arm-vita-eabi/include/
-  cp shacccg.h $pkgdir/$VITASDK/arm-vita-eabi/include/psp2/shacccg
+  cp shacccg.h $pkgdir/$VITASDK/arm-vita-eabi/include/psp2
 }
