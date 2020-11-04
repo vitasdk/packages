@@ -13,7 +13,7 @@ prepare() {
 
 build() {
   cd $pkgname-$pkgver
-  CFLAGS="-DPSP2" ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fifo=no --enable-ipv6=no --enable-network=no --enable-int-quality=no --with-cpu=generic --with-default-audio=dummy
+  CFLAGS="-DPSP2" ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fifo=no --enable-ipv6=no --enable-network=no --enable-int-quality=no --with-cpu=neon --with-default-audio=dummy
   make -j$(nproc)
 }
 
