@@ -1,21 +1,21 @@
 pkgname=vitaGL
-pkgver=0.2
+pkgver=9999
 pkgrel=1
-url="https://github.com/Rinnegatamante/$pkgname"
-source=("https://github.com/Rinnegatamante/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('12b757519e42b4e0f20ccd155feaf75860eac50aac18bda22a78770c70a5b832')
+url="https://github.com/Rinnegatamante"
+source=("git://github.com/Rinnegatamante/vitaGL.git")
+sha256sums=('SKIP')
 depends=('libmathneon vitaShaRK')
 
 build() {
-  cd $pkgname-$pkgver
-  make HAVE_SBRK=1 NO_DEBUG=1 HAVE_SHARK=1 -j$(nproc)
+  cd $pkgname
+  make HAVE_SBRK=1 NO_DEBUG=1 HAVE_SHARK=2 -j$(nproc)
 }
 
 package () {
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
   
-  cd $pkgname-$pkgver
+  cd $pkgname
   cp lib$pkgname.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
   cp source/$pkgname.h $pkgdir/$VITASDK/arm-vita-eabi/include/
 }
