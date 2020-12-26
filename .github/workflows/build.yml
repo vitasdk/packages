@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        apk add build-base zip bash git imagemagick p7zip util-linux tar libarchive-tools sshpass curl
+        apk add build-base zip bash git fakeroot p7zip util-linux tar libarchive-tools sshpass curl
     - name: Prepare Build
       run: |
         addgroup -S vitasdk && adduser -S vitasdk -G vitasdk
