@@ -21,7 +21,7 @@ jobs:
     steps:
     - name: Prepare checkout
       run: |
-        sudo mkdir /__w/packages/packages
+        sudo mkdir -p /__w/packages/packages
         sudo chown -r  vitasdk /__w/
     - uses: actions/checkout@v2
     - name: Install dependencies
