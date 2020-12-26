@@ -13,7 +13,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: vitasdk/vitasdk:non-root
+    container: 
+      image: vitasdk/vitasdk:non-root
+      options: --user vitasdk
     env:
       SSHPASS: ${{ secrets.SSHPASS }}
     steps:
