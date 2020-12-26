@@ -24,10 +24,9 @@ jobs:
         apk add build-base zip bash git imagemagick p7zip util-linux tar sshpass
     - name: Prepare Build
       run: |
-        ls
-        bash ./travis-prepare.sh
+        bash ./travis_prepare.sh
 
     - name: Build packages
       run: |
-        bash ./travis-build.sh
-        bash ./travis-upload.sh
+        bash ./travis_build.sh
+        bash ./travis_upload.sh
