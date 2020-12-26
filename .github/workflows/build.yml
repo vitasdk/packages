@@ -1,0 +1,29 @@
+name: VITA - Nightly
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 0 * * *"
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: vitasdk/vitasdk:latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        apk add build-base zip bash git imagemagick p7zip util-linux tar sshpass bsdtar xutils-dev
+    - name: Prepare Build
+      run: |
+        bash ./travis-prepare.sh
+
+    - name: Build packages
+      run: |
+        bash ./travis-build.sh
+        bash ./travis-upload.sh
