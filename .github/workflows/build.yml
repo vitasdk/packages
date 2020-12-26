@@ -13,6 +13,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container: vitasdk/vitasdk:latest
+    env:
+      SSHPASS: ${{ secrets.SSHPASS }}
     steps:
     - uses: actions/checkout@v2
 
