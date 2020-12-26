@@ -19,10 +19,11 @@ jobs:
     env:
       SSHPASS: ${{ secrets.SSHPASS }}
     steps:
+    - name: Prepare checkout
+      run: |
+        sudo mkdir /__w/packages/packages
+        sudo chown -r  vitasdk /__w/
     - uses: actions/checkout@v2
-      with:
-        path: '/home/vitasdk'
-
     - name: Install dependencies
       run: |
         sudo apk add build-base zip bash git imagemagick p7zip util-linux tar sshpass
