@@ -13,25 +13,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: 
-      image: vitasdk/vitasdk:non-root
-      options: --user vitasdk --workdir /home/vitasdk
+    container: vitasdk/buildscripts
     env:
       SSHPASS: ${{ secrets.SSHPASS }}
     steps:
-    - name: Prepare checkout
-      run: |
-        sudo mkdir -p /__w/packages/packages
-        sudo chown -R  vitasdk /__w/
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apk add build-base zip bash git imagemagick p7zip util-linux tar sshpass
+        apk add build-base zip bash git imagemagick p7zip util-linux tar sshpass
     - name: Prepare Build
       run: |
-        bash ./travis_prepare.sh
-
+        useradd user
+        addgroup -S vitasdk && adduser -S vitasdk -G vitasdk
+        chown -R vitasdk:vitasdk .
+        su vitasdk -c 'bash ./travis_prepare.sh'
     - name: Build packages
       run: |
-        bash ./travis_build.sh
-        bash ./travis_upload.sh
+        su vitasdk -c 'bash ./travis_build.sh'
+        su vitasdk -c 'bash ./travis_upload.sh'
