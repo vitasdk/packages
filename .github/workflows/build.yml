@@ -20,8 +20,8 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
     steps:
     - uses: actions/checkout@v2
-        with:
-          path: '/home/vitasdk'
+      with:
+        path: '/home/vitasdk'
 
     - name: Install dependencies
       run: |
