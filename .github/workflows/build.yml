@@ -26,6 +26,7 @@ jobs:
         addgroup -S vitasdk && adduser -S vitasdk -G vitasdk
         chown -R vitasdk:vitasdk .
         chown -R vitasdk:vitasdk $VITASDK
+        ln -s /bin/sh /usr/bin/sh
         su vitasdk -pc 'bash ./travis_prepare.sh' -s /bin/sh
     - name: Build packages
       run: |
