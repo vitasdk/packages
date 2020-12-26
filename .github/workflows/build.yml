@@ -22,7 +22,7 @@ jobs:
     - name: Prepare checkout
       run: |
         sudo mkdir -p /__w/packages/packages
-        sudo chown -r  vitasdk /__w/
+        sudo chown -R  vitasdk /__w/
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
