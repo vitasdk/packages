@@ -23,7 +23,6 @@ jobs:
         apk add build-base zip bash git imagemagick p7zip util-linux tar sshpass
     - name: Prepare Build
       run: |
-        useradd user
         addgroup -S vitasdk && adduser -S vitasdk -G vitasdk
         chown -R vitasdk:vitasdk .
         su vitasdk -c 'bash ./travis_prepare.sh'
