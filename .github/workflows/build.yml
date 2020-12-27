@@ -25,5 +25,7 @@ jobs:
         bash ./travis_prepare.sh
     - name: Build packages
       run: |
+        export VITASDK=/usr/local/vitasdk
+        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
         bash ./travis_build.sh
         bash ./travis_upload.sh
