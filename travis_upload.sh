@@ -15,6 +15,6 @@ b() {
 	cd ..
 }
 
-if [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$TRAVIS_BRANCH" = "master" ] &&  [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" ]; then
+if [ "${GITHUB_REF##*/}" = "master" ]; then
 	. travis_packages.sh
 fi
