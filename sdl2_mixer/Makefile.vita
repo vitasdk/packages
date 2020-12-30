@@ -18,8 +18,6 @@ COMMON_OBJS = effect_position.o \
 	music_opus.o  \
 	music_timidity.o \
 	music_wav.o \
-	playmus.o \
-	playwave.o \
 	timidity/common.o \
 	timidity/instrum.o \
 	timidity/mix.o \
