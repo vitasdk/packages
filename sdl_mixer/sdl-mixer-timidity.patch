@@ -1,0 +1,14 @@
+diff --git a/timidity/config.h b/timidity/config.h
+index e32eedc..b286373 100644
+--- a/timidity/config.h
++++ b/timidity/config.h
+@@ -165,6 +165,9 @@ typedef char int8;
+ 
+ #if defined(__WIN32__) || defined(__OS2__)
+ #define DEFAULT_PATH	"C:\\TIMIDITY"
++#elif defined(__vita__)
++#define DEFAULT_PATH	"ux0:/data/timidity"
++#define DEFAULT_PATH1	"app0:/data/timidity"
+ #else
+ #define DEFAULT_PATH	"/etc/timidity"
+ #define DEFAULT_PATH1	"/usr/share/timidity"

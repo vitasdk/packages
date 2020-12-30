@@ -1,0 +1,57 @@
+TARGET_LIB  = libSDL_mixer.a
+COMMON_OBJS = dynamic_flac.o \
+	dynamic_fluidsynth.o \
+	dynamic_mod.o \
+	dynamic_mp3.o \
+	dynamic_ogg.o \
+	effect_position.o \
+	effect_stereoreverse.o \
+	effects_internal.o \
+	fluidsynth.o \
+	load_aiff.o \
+	load_flac.o \
+	load_ogg.o \
+	load_voc.o \
+	mixer.o \
+	music.o \
+	music_cmd.o \
+	music_flac.o \
+	music_mad.o \
+	music_mod.o \
+	music_modplug.o \
+	music_ogg.o  \
+	playmus.o \
+	playwave.o \
+	wavestream.o \
+	timidity/common.o \
+	timidity/instrum.o \
+	timidity/mix.o \
+	timidity/output.o \
+	timidity/playmidi.o \
+	timidity/readmidi.o \
+	timidity/resample.o \
+	timidity/tables.o \
+	timidity/timidity.o \
+
+
+PREFIX  = arm-vita-eabi
+CC      = $(PREFIX)-gcc
+AR      = $(PREFIX)-ar
+CFLAGS  = -Wl,-q -Wall -O3 -I$(VITASDK)/arm-vita-eabi/include/SDL -DOGG_MUSIC -DWAV_MUSIC -DMOD_MUSIC -DUSE_TIMIDITY_MIDI
+
+ASFLAGS = $(CFLAGS)
+
+LIBS    += -lSDL
+
+$(TARGET_LIB): $(COMMON_OBJS)
+	$(AR) rcs $@ $^
+
+clean:
+	@rm -rf $(TARGET_LIB) $(COMMON_OBJS)
+
+install: $(TARGET_LIB)
+	@mkdir -p "$(DESTDIR)$(VITASDK)/arm-vita-eabi/lib"
+	@cp  $(TARGET_LIB) $(DESTDIR)$(VITASDK)/arm-vita-eabi/lib
+	@mkdir -p "$(DESTDIR)$(VITASDK)/arm-vita-eabi/include/SDL"
+	@cp SDL_mixer.h "$(DESTDIR)$(VITASDK)/arm-vita-eabi/include/SDL"
+	@echo "Installed!"
