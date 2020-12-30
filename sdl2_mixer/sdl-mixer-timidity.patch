@@ -1,0 +1,14 @@
+diff --git a/timidity/options.h b/timidity/options.h
+index 7589399..948a9ce 100644
+--- a/timidity/options.h
++++ b/timidity/options.h
+@@ -77,6 +77,9 @@
+ 
+ #if defined(__WIN32__) || defined(__OS2__)
+ #define DEFAULT_PATH	"C:\\TIMIDITY"
++#elif defined(__vita__)
++#define DEFAULT_PATH	"ux0:/data/timidity"
++#define DEFAULT_PATH1	"app0:/data/timidity"
+ #else
+ #define DEFAULT_PATH	"/etc/timidity"
+ #define DEFAULT_PATH1	"/usr/share/timidity"
