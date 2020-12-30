@@ -20,8 +20,6 @@ COMMON_OBJS = dynamic_flac.o \
 	music_mod.o \
 	music_modplug.o \
 	music_ogg.o  \
-	playmus.o \
-	playwave.o \
 	wavestream.o \
 	timidity/common.o \
 	timidity/instrum.o \
