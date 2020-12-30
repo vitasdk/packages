@@ -50,4 +50,3 @@ install: $(TARGET_LIB)
 	@mkdir -p "$(DESTDIR)$(VITASDK)/arm-vita-eabi/include/SDL2"
 	@cp SDL_mixer.h "$(DESTDIR)$(VITASDK)/arm-vita-eabi/include/SDL2"
 	@echo "Installed!"
-
