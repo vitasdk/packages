@@ -1,19 +1,18 @@
 pkgname=sdl2_image
-pkgver=9999
+pkgver=2.0.5
 pkgrel=1
-url="https://github.com/rsn8887/SDL_image"
-source=("git://github.com/rsn8887/SDL_image.git")
-sha256sums=('SKIP')
+url="https://www.libsdl.org/projects/SDL_image/"
+source=("https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.tar.gz" Makefile.vita)
+sha256sums=(bdd5f6e026682f7d7e1be0b6051b209da2f402a2dd8bd1c4bd9c25ad263108d0 SKIP)
 
 build() {
-  cd SDL_image
+  cp "${srcdir}/Makefile.vita" "SDL2_image-${pkgver}"
+  cd "SDL2_image-${pkgver}"
   make -j$(nproc) -f Makefile.vita clean
   make -j$(nproc) -f Makefile.vita
 }
 
 package () {
-  cd SDL_image
-  # hack: this install target ignores DESTDIR and uses VITASDK instead
-  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
-  make -f Makefile.vita VITASDK=$pkgdir/$VITASDK install
+  cd "SDL2_image-${pkgver}"
+  make -f Makefile.vita DESTDIR="${pkgdir}" install
 }
