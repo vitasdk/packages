@@ -77,3 +77,4 @@ b jsoncpp
 b lame
 b ffmpeg
 b imgui-vita2d
+b libtheora
