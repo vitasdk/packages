@@ -52,7 +52,6 @@ b libxml2
 b speexdsp
 b pixman
 b TinyGL
-b kuio
 b taipool
 b mpg123
 b libmpeg2
