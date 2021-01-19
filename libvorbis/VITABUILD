@@ -4,6 +4,7 @@ pkgrel=1
 url="https://xiph.org/vorbis/"
 source=("http://downloads.xiph.org/releases/vorbis/libvorbis-${pkgver}.tar.gz")
 sha256sums=('6ed40e0241089a42c48604dc00e362beee00036af2d8b3f46338031c9e0351cb')
+depends=('libogg')
 
 build() {
   cd $pkgname-$pkgver

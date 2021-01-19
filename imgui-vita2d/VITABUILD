@@ -4,7 +4,7 @@ pkgrel=1
 url="https://github.com/cy33hc/imgui-vita2d"
 source=("git://github.com/cy33hc/imgui-vita2d.git")
 sha256sums=('SKIP')
-depends=('vita2d')
+depends=('libvita2d')
 
 build() {
   cd imgui-vita2d

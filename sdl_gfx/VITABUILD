@@ -4,6 +4,7 @@ pkgrel=1
 url="https://www.ferzkopp.net/joomla/content/view/19/14/"
 source=("https://www.ferzkopp.net/Software/SDL_gfx-2.0/SDL_gfx-${pkgver}.tar.gz")
 sha256sums=('7ceb4ffb6fc63ffba5f1290572db43d74386cd0781c123bc912da50d34945446')
+depends=('sdl')
 
 build() {
   cd SDL_gfx-${pkgver}

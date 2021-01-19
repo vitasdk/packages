@@ -4,6 +4,7 @@ pkgrel=1
 url="https://www.freetype.org/"
 source=("http://downloads.sourceforge.net/project/freetype/freetype2/${pkgver}/freetype-${pkgver}.tar.gz")
 sha256sums=('bf380e4d7c4f3b5b1c1a7b2bf3abb967bda5e9ab480d0df656e0e08c5019c5e6')
+depends=('zlib')
 
 build() {
   cd freetype-$pkgver

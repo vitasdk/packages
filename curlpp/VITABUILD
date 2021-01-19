@@ -4,6 +4,7 @@ pkgrel=1
 url="https://github.com/jpbarrette/curlpp"
 source=("https://github.com/jpbarrette/curlpp/archive/v${pkgver}.tar.gz" "curlpp.patch")
 sha256sums=('97e3819bdcffc3e4047b6ac57ca14e04af85380bd93afe314bee9dd5c7f46a0a' 'SKIP')
+depends=('curl')
 
 prepare() {
   cd $pkgname-$pkgver
