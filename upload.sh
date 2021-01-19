@@ -4,7 +4,7 @@ set -e
 
 shopt -s nullglob
 
-b() {
+if [ "${GITHUB_REF##*/}" = "master" ]; then
 	cd $1
 	FILE=$(echo *-arm.tar.xz)
 	if [ -n "$FILE" ]; then
@@ -13,8 +13,4 @@ b() {
 		sshpass -e sftp travis@dl.vitasdk.org:pkg <<< $"put $FILE $pkgname.tar.xz"
 	fi
 	cd ..
-}
-
-if [ "${GITHUB_REF##*/}" = "master" ]; then
-	. travis_packages.sh
 fi

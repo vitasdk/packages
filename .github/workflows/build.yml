@@ -11,8 +11,27 @@ on:
     types: [run_build]
 
 jobs:
-  build:
+  prepare_jobs:
     runs-on: ubuntu-latest
+    container: node:lts
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        id: set-matrix
+        run: |
+          echo "::set-output name=dependant::$(node create-matrix.js dependant)"
+          echo "::set-output name=non_dependant::$(node create-matrix.js non_dependant)"
+    outputs:
+      dependant: ${{ steps.set-matrix.outputs.dependant }}
+      non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
+
+  build:
+    needs: [prepare_jobs]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.non_dependant) }}
     env:
       SSHPASS: ${{ secrets.SSHPASS }}
     steps:
@@ -22,10 +41,57 @@ jobs:
         sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin
     - name: Prepare Build
       run: |
-        bash ./travis_prepare.sh
+        bash ./prepare.sh
+    - name: Build package
+      run: |
+        export VITASDK=/usr/local/vitasdk
+        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
+        bash ./build.sh ${{ matrix.package }}
+    - name: Upload package
+      run: |
+        bash ./upload.sh ${{ matrix.package }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: package
+        path: ${{ matrix.package }}/*-arm.tar.xz
+  build_depends:
+    needs: [prepare_jobs, build]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.dependant) }}
+
+    env:
+      SSHPASS: ${{ secrets.SSHPASS }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+    - name: Install dependencies
+      run: |
+        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin
+    - name: Prepare Build
+      run: |
+        bash ./prepare.sh
+    - name: Install packages
+      run: |
+        export VITASDK=/usr/local/vitasdk
+        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
+        cd package
+        for f in *.tar.xz; do tar -C $VITASDK/arm-vita-eabi/ -xvf "$f"; done
+        cd ..
     - name: Build packages
       run: |
         export VITASDK=/usr/local/vitasdk
         export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
-        bash ./travis_build.sh
-        bash ./travis_upload.sh
+        for f in ${{ matrix.package }}; do bash ./build.sh $f; done
+    - name: Upload package
+      run: |
+        export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
+        echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
+        bash ./upload.sh $PACKAGE
+    - uses: actions/upload-artifact@v2
+      with:
+        name: package
+        path: ${{ env.PACKAGE }}/*-arm.tar.xz
+        
