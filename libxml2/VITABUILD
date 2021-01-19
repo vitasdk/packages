@@ -4,6 +4,7 @@ pkgrel=1
 url="http://xmlsoft.org/"
 source=("git://github.com/GNOME/libxml2.git#tag=${pkgver}")
 sha256sums=('SKIP')
+depends=('zlib')
 
 prepare() {
   cd ${pkgname}

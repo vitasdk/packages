@@ -4,6 +4,7 @@ pkgrel=1
 url="http://www.libpng.org/pub/png/libpng.html"
 source=("http://download.sourceforge.net/libpng/libpng-${pkgver}.tar.gz")
 sha256sums=('ca13c548bde5fb6ff7117cc0bdab38808acb699c0eccb613f0e4697826e1fd7d')
+depends=('zlib')
 
 build() {
   cd $pkgname-$pkgver

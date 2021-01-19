@@ -4,6 +4,7 @@ pkgrel=1
 url="https://xiph.org/"
 source=("http://downloads.xiph.org/releases/flac/flac-${pkgver}.tar.xz")
 sha256sums=('91cfc3ed61dc40f47f050a109b08610667d73477af6ef36dcad31c31a4a8d53f')
+depends=('libogg')
 
 build() {
   cd $pkgname-$pkgver

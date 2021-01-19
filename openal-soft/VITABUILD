@@ -4,6 +4,7 @@ pkgrel=1
 url="https://github.com/Rinnegatamante/openal-soft"
 source=("git://github.com/Rinnegatamante/openal-soft.git")
 sha256sums=('SKIP')
+depends=('sdl2')
 
 build() {
   cd $pkgname
