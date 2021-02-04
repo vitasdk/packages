@@ -30,6 +30,7 @@ CFLAGS  = -Wl,-q -Wall -O3 -Iinclude \
 				-DLOAD_TGA \
 				-DLOAD_XCF \
 				-DLOAD_XPM \
+				-DLOAD_WEBP \
 				-DLOAD_XV
 
 ASFLAGS = $(CFLAGS)
