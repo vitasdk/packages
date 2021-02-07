@@ -9,6 +9,7 @@ depends=('libogg' 'opus')
 build() {
   cd $pkgname-$pkgver
   ./autogen.sh
+  export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$VITASDK/arm-vita-eabi/lib/pkgconfig
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fixed-point
   make -j$(nproc)
 }
