@@ -2,8 +2,8 @@ pkgname=opus
 pkgver=1.1.5
 pkgrel=1
 url="https://opus-codec.org/"
-source=("https://github.com/xiph/opus/archive/v${pkgver}.tar.gz" "opus-master.patch")
-sha256sums=('04f1318841b64e9cfa9a657759aee4259ad33a2b5ed5b8cdb4b8f27c52da0ddc'
+source=("https://downloads.xiph.org/releases/opus/opus-${pkgver}.tar.gz" "opus-master.patch")
+sha256sums=('eb84981ca0f40a3e5d5e58d2e8582cb2fee05a022825a6dfe14d14b04eb563e4'
             '1ba3ab331bdb3011fdaf9027d680f134077ba6fde34c8791438fdc613d67d1d5')
 
 prepare() {
@@ -13,7 +13,6 @@ prepare() {
 
 build() {
   cd $pkgname-$pkgver
-  ./autogen.sh
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fixed-point
   make -j$(nproc)
 }
