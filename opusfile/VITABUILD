@@ -2,13 +2,12 @@ pkgname=opusfile
 pkgver=0.10
 pkgrel=1
 url="https://opus-codec.org/"
-source=("https://github.com/xiph/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('bd9c246cf18d27e9a0815e432731d82f0978717fe2dc2b1e1dce09c184132239')
+source=("https://downloads.xiph.org/releases/opus/opusfile-${pkgver}.tar.gz")
+sha256sums=('48e03526ba87ef9cf5f1c47b5ebe3aa195bd89b912a57060c36184a6cd19412f')
 depends=('libogg' 'opus')
 
 build() {
   cd $pkgname-$pkgver
-  ./autogen.sh
   export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$VITASDK/arm-vita-eabi/lib/pkgconfig
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-fixed-point
   make -j$(nproc)
