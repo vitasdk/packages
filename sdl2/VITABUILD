@@ -1,10 +1,10 @@
 pkgname=sdl2
 pkgver=2.0.14
-pkgrel=2
+pkgrel=3
 url='https://www.libsdl.org'
 source=(
   "https://www.libsdl.org/release/SDL2-${pkgver}.tar.gz"
-  "https://github.com/isage/sdl2-vita/raw/master/SDL2-${pkgver}-vita-2.patch"
+  "https://github.com/isage/sdl2-vita/raw/master/SDL2-${pkgver}-vita-${pkgrel}.patch"
  )
 sha256sums=(
   d8215b571a581be1332d2106f8036fcb03d12a70bae01e20f424976d275432bc
@@ -13,7 +13,7 @@ sha256sums=(
 
 prepare() {
   cd "SDL2-${pkgver}"
-  patch --strip=1 --input="${srcdir}/SDL2-${pkgver}-vita-2.patch"
+  patch --strip=1 --input="${srcdir}/SDL2-${pkgver}-vita-${pkgrel}.patch"
 }
 
 build() {
