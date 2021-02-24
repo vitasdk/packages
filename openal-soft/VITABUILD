@@ -1,30 +1,21 @@
 pkgname=openal-soft
-pkgver=1.19.1
+pkgver=9999
 pkgrel=1
-url="https://openal-soft.org/"
-source=(
-  "https://openal-soft.org/openal-releases/${pkgname}-${pkgver}.tar.bz2"
-  "https://raw.githubusercontent.com/isage/openal-soft/master/${pkgname}-${pkgver}-vita-0.patch"
-)
-sha256sums=(
-  5c2f87ff5188b95e0dc4769719a9d89ce435b8322b4478b95dd4b427fe84b2e9
-  SKIP
-)
-
-prepare() {
-  cd "${pkgname}-${pkgver}"
-  patch --strip=1 --input="${srcdir}/${pkgname}-${pkgver}-vita-0.patch"
-}
+url="https://github.com/Rinnegatamante/openal-soft"
+source=("git://github.com/Rinnegatamante/openal-soft.git")
+sha256sums=('SKIP')
+depends=('sdl2')
 
 build() {
-  cd "${pkgname}-${pkgver}"
-  cd build # build dir already exists in openal source
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix
-  make -j$(nproc)
+  cd $pkgname
+  make -f Makefile.vita -j$(nproc)
 }
 
 package () {
-  cd "${pkgname}-${pkgver}"
-  cd build
-  make DESTDIR=$pkgdir install
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
+  
+  cd $pkgname
+  cp libopenal.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
+  cp -a include/. $pkgdir/$VITASDK/arm-vita-eabi/include/
 }
