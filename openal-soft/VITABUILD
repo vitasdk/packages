@@ -1,10 +1,10 @@
 pkgname=openal-soft
 pkgver=1.19.1
-pkgrel=1
+pkgrel=2
 url="https://openal-soft.org/"
 source=(
   "https://openal-soft.org/openal-releases/${pkgname}-${pkgver}.tar.bz2"
-  "https://raw.githubusercontent.com/isage/openal-soft/master/${pkgname}-${pkgver}-vita-0.patch"
+  "https://raw.githubusercontent.com/isage/openal-soft/master/${pkgname}-${pkgver}-vita-1.patch"
 )
 sha256sums=(
   5c2f87ff5188b95e0dc4769719a9d89ce435b8322b4478b95dd4b427fe84b2e9
@@ -13,7 +13,7 @@ sha256sums=(
 
 prepare() {
   cd "${pkgname}-${pkgver}"
-  patch --strip=1 --input="${srcdir}/${pkgname}-${pkgver}-vita-0.patch"
+  patch --strip=1 --input="${srcdir}/${pkgname}-${pkgver}-vita-1.patch"
 }
 
 build() {
