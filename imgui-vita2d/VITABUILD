@@ -16,6 +16,6 @@ package () {
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include/imgui_vita2d
   
   cd imgui-vita2d
-  cp libimgui_vita2d $pkgdir/$VITASDK/arm-vita-eabi/lib/
+  cp libimgui_vita2d.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
   cp *.h $pkgdir/$VITASDK/arm-vita-eabi/include/imgui_vita2d
 }
