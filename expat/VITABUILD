@@ -1,9 +1,9 @@
 pkgname=expat
-pkgver=2.2.0
+pkgver=2.3.0
 pkgrel=1
 url="http://expat.sourceforge.net/"
-source=("http://downloads.sourceforge.net/project/expat/expat/${pkgver}/expat-${pkgver}.tar.bz2")
-sha256sums=('d9e50ff2d19b3538bd2127902a89987474e1a4db8e43a66a4d1a712ab9a504ff')
+source=("http://downloads.sourceforge.net/project/expat/expat/${pkgver}/expat-${pkgver}.tar.xz")
+sha256sums=('caa34f99b6e3bcea8502507eb6549a0a84510b244a748dfb287271b2d47467a9')
 
 build() {
   cd $pkgname-$pkgver
