@@ -1,0 +1,19 @@
+pkgname=fmt
+pkgver=6.2.0
+pkgrel=1
+url="https://github.com/fmtlib/fmt/"
+source=("https://github.com/fmtlib/fmt/releases/download/$pkgver/$pkgname-$pkgver.zip")
+sha256sums=('a4468d528682143dcef2f16068104e03ef50467b0170b6125c9caf777d27bf10')
+
+build() {
+  cd $pkgname-$pkgver
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DFMT_DOC=OFF -DFMT_TEST=OFF
+  make -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgver
+  cd build
+  make DESTDIR=$pkgdir install
+}
