@@ -1,0 +1,19 @@
+pkgname=FluidLite
+pkgver=1.0.9
+pkgrel=fdd05bad03cdb24d1f78b5fe3453842890c1b0e8
+url="https://github.com/divideconcept/FluidLite/"
+source=("https://github.com/divideconcept/$pkgname/archive/$pkgrel.zip")
+sha256sums=('d74164a8cd3b96648445ac504644ff43245c67bef3f4cd9cc62395f3647f4cdb')
+
+build() {
+  cd $pkgname-$pkgrel
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DFLUIDLITE_BUILD_STATIC=ON -DFLUIDLITE_BUILD_SHARED=OFF
+  make -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgrel
+  cd build
+  make DESTDIR=$pkgdir install
+}
