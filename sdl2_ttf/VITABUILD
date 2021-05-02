@@ -1,19 +1,32 @@
 pkgname=sdl2_ttf
-pkgver=9999
-pkgrel=1
-url="https://github.com/rsn8887/SDL_ttf"
-source=("git://github.com/rsn8887/SDL_ttf.git")
-sha256sums=('SKIP')
+pkgver=2.0.15
+pkgrel=2
+gitrev=9d2a04f157c4e0c206fe5df7103018d5a59c6e35
+url="https://www.libsdl.org/projects/SDL_ttf/"
+source=(
+    "https://github.com/libsdl-org/SDL_ttf/archive/${gitrev}.zip"
+    "sdl-ttf-static.patch"
+)
+sha256sums=(
+    SKIP
+    bc7119a8bbfebbab0de774a7d671894be12ffed7d20f320d099de17d7baab2cb
+)
 depends=('sdl2 freetype')
 
+prepare() {
+  cd "SDL_ttf-${gitrev}"
+  patch --strip=1 --input="${srcdir}/sdl-ttf-static.patch"
+}
+
 build() {
-  cd SDL_ttf
-  make -j$(nproc) -f Makefile.vita
+  cd "SDL_ttf-${gitrev}"
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  make -j$(nproc)
 }
 
 package () {
-  cd SDL_ttf
-  # hack: this install target ignores DESTDIR and uses VITASDK instead
-  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
-  make -f Makefile.vita VITASDK=$pkgdir/$VITASDK install 
+  cd "SDL_ttf-${gitrev}"
+  cd build
+  make DESTDIR=$pkgdir install
 }
