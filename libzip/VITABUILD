@@ -3,7 +3,7 @@ pkgver=1.4.0
 pkgrel=1
 url="https://github.com/devnoname120/libzip"
 source=("https://github.com/nih-at/libzip/archive/refs/tags/rel-1-4-0.zip" "libzip.patch")
-sha256sums=('759a89690e155ca52247638b9f97e16e48fbb6077abb7ce2d921dd5b81259940'
+sha256sums=('eee5f61bd6bd3aa54ae507de0270333b6726f70a4cc70fa7cbea0e6e0ba423ef'
             'SKIP')
 depends=('zlib')
 
