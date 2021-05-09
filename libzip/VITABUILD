@@ -13,7 +13,7 @@ prepare() {
 }
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd libzip-rel-1-4-0
   find ./ -type f -exec sed -i '/#include <memory.h>/d' '{}' \;
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
