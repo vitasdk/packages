@@ -21,6 +21,6 @@ build() {
 }
 
 package () {
-  cd ${pkgname}-${pkgver}/build
+  cd libzip-rel-1-4-0/build
   make DESTDIR=$pkgdir install
 }
