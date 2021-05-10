@@ -2,18 +2,18 @@ pkgname=libzip
 pkgver=1.4.0
 pkgrel=1
 url="https://github.com/devnoname120/libzip"
-source=("https://libzip.org/download/${pkgname}-${pkgver}.tar.gz" "libzip.patch")
-sha256sums=('759a89690e155ca52247638b9f97e16e48fbb6077abb7ce2d921dd5b81259940'
+source=("https://github.com/nih-at/libzip/archive/refs/tags/rel-1-4-0.zip" "libzip.patch")
+sha256sums=('eee5f61bd6bd3aa54ae507de0270333b6726f70a4cc70fa7cbea0e6e0ba423ef'
             'SKIP')
 depends=('zlib')
 
 prepare() {
-  cd $pkgname-$pkgver
+  cd libzip-rel-1-4-0
   patch -Np1 -i "${srcdir}/libzip.patch"
 }
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd libzip-rel-1-4-0
   find ./ -type f -exec sed -i '/#include <memory.h>/d' '{}' \;
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
@@ -21,6 +21,6 @@ build() {
 }
 
 package () {
-  cd ${pkgname}-${pkgver}/build
+  cd libzip-rel-1-4-0/build
   make DESTDIR=$pkgdir install
 }
