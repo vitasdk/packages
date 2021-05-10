@@ -8,7 +8,7 @@ sha256sums=('eee5f61bd6bd3aa54ae507de0270333b6726f70a4cc70fa7cbea0e6e0ba423ef'
 depends=('zlib')
 
 prepare() {
-  cd $pkgname-$pkgver
+  cd libzip-rel-1-4-0
   patch -Np1 -i "${srcdir}/libzip.patch"
 }
 
