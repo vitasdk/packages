@@ -1,20 +1,22 @@
-pkgname=Box2D
-pkgver=9999
+pkgname=box2d
+pkgver=2.4.1
 pkgrel=1
-url="https://github.com/Rinnegatamante/Box2D/"
-source=("git://github.com/Rinnegatamante/Box2D.git")
+url="https://box2d.org/"
+source=("https://github.com/erincatto/box2d/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
 
+prepare() {
+  cd $pkgname-$pkgver
+}
+
 build() {
-  cd $pkgname
+  cd box2d-$pkgver
+  mkdir build && cd build
+  cmake .. $CMARGS -DCMAKE_INSTALL_PREFIX=$prefix -DBOX2D_BUILD_DOCS=OFF -DBOX2D_BUILD_UNIT_TESTS=OFF -DBOX2D_BUILD_TESTBED=OFF
   make -j$(nproc)
 }
 
 package () {
-  cd $pkgname
-  mkdir -p $pkgdir/$prefix
-  mkdir -p $pkgdir/$prefix/lib
-  mkdir -p $pkgdir/$prefix/include
-  cp -r Include/* $pkgdir/$prefix/include
-  cp libbox2d.a $pkgdir/$prefix/lib
+  cd box2d-$pkgver/build
+  make DESTDIR=$pkgdir install
 }
