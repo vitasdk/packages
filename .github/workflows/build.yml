@@ -55,6 +55,7 @@ jobs:
         name: package
         path: ${{ matrix.package }}/*-arm.tar.xz
     - name: Upload release artifacts
+      if: contains(github.ref,'refs/heads/master')
       run: |
         cd ${{ matrix.package }}
         export FILE=`echo *-arm.tar.xz`
@@ -65,7 +66,8 @@ jobs:
         file: ${{ matrix.package }}/*.tar.xz
         overwrite: true
         file_glob: true
-        tag: ${{ github.ref }}      
+        tag: ${{ github.ref }}     
+        release_name: master
   build_depends:
     needs: [prepare_jobs, build]
     runs-on: ubuntu-18.04
@@ -107,6 +109,7 @@ jobs:
         name: package
         path: ${{ env.PACKAGE }}/*-arm.tar.xz
     - name: Upload release artifacts
+      if: contains(github.ref,'refs/heads/master')
       run: |
         cd ${{ env.PACKAGE }}
         export FILE=`echo *-arm.tar.xz`
@@ -118,3 +121,4 @@ jobs:
         overwrite: true
         file_glob: true
         tag: ${{ github.ref }}        
+        release_name: master
