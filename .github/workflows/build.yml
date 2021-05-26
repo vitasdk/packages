@@ -62,7 +62,7 @@ jobs:
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ matrix.package }}/*-arm.tar.xz
+        file: ${{ matrix.package }}/*.tar.xz
         overwrite: true
         file_glob: true
         tag: ${{ github.ref }}      
@@ -114,7 +114,7 @@ jobs:
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ${{ env.PACKAGE }}/*-arm.tar.xz
+        file: ${{ env.PACKAGE }}/*.tar.xz
         overwrite: true
         file_glob: true
         tag: ${{ github.ref }}        
