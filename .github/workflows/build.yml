@@ -55,7 +55,11 @@ jobs:
         name: package
         path: ${{ matrix.package }}/*-arm.tar.xz
     - name: Upload release artifacts
-      uses: svenstaro/upload-release-action@v2
+      run: |
+        cd ${{ matrix.package }}
+        export FILE=`echo *-arm.tar.xz`
+        mv $FILE ${{ matrix.package }}.tar.xz
+    - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{ matrix.package }}/*-arm.tar.xz
@@ -103,7 +107,11 @@ jobs:
         name: package
         path: ${{ env.PACKAGE }}/*-arm.tar.xz
     - name: Upload release artifacts
-      uses: svenstaro/upload-release-action@v2
+      run: |
+        cd ${{ env.PACKAGE }}
+        export FILE=`echo *-arm.tar.xz`
+        mv $FILE ${{ env.PACKAGE }}.tar.xz
+    - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{ env.PACKAGE }}/*-arm.tar.xz
