@@ -1,0 +1,20 @@
+pkgname=cpython
+pkgver=2.7
+pkgrel=1
+url="https://github.com/SonicMastr/cpython-vita"
+source=("git://github.com/SonicMastr/cpython-vita.git")
+sha256sums=('SKIP')
+depends=('openssl libzip xz zlib bzip2')
+
+build() {
+  echo ""
+}
+
+package () {
+  cd cpython-vita
+  sh build_vita.sh $pkgdir
+  sh install_extra_modules.sh $pkgdir
+  sh compile_modules_vita.sh $pkgdir
+  rm -rf $pkgdir/$prefix/bin
+  rm -rf $pkgdir/$prefix/share
+}
