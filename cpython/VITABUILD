@@ -12,9 +12,9 @@ build() {
 
 package () {
   cd cpython-vita
-  ./build_vita.sh $pkgdir
-  ./install_extra_modules.sh $pkgdir
-  ./compile_modules_vita.sh $pkgdir
+  sh build_vita.sh $pkgdir
+  sh install_extra_modules.sh $pkgdir
+  sh compile_modules_vita.sh $pkgdir
   rm -rf $pkgdir/$prefix/bin
   rm -rf $pkgdir/$prefix/share
 }
