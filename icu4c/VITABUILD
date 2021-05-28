@@ -1,0 +1,37 @@
+pkgname=icu4c
+pkgver=59.2
+pkgrel=1
+url='http://site.icu-project.org/'
+source=(
+  "https://github.com/unicode-org/icu/releases/download/release-59-2/icu4c-59_2-src.tgz"
+  "icu-59.2.patch"
+  "build_vita_armv7-a.sh"
+)
+
+sha256sums=(
+  10741648470a0ed106d5f588cc51a03574254849b28bc1c42d4c2eec628d70cd
+  4cabf7474cbd4fbe84f6e44b5bb061199833bfab36494b4e6aaef4a2f0f42d90
+  ff6be5b37eca1b81a2c852a16df1a92a12aba431c1a43078bfaa7d105e14eeb4
+)
+
+prepare() {
+  patch -p1 --input="${srcdir}/icu-59.2.patch"
+  mkdir -p "vita"
+  cp ${srcdir}/build_vita_armv7-a.sh vita
+  mkdir -p  build-linux
+  cp icu/source/config/mh-linux icu/source/config/mh-unknown
+}
+
+
+build() {
+    cd "build-linux"
+    ../icu/source/runConfigureICU Linux --enable-static --disable-shared
+    make -j$(nproc)
+    cd "../vita"
+    ./build_vita_armv7-a.sh
+}
+
+package () {
+  cd "vita"
+  make DESTDIR=$pkgdir install
+}
