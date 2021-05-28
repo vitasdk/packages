@@ -2,7 +2,7 @@ pkgname=expat
 pkgver=2.3.0
 pkgrel=1
 url="http://expat.sourceforge.net/"
-source=("http://downloads.sourceforge.net/project/expat/expat/${pkgver}/expat-${pkgver}.tar.xz")
+source=("https://github.com/libexpat/libexpat/releases/download/R_2_3_0/expat-${pkgver}.tar.xz")
 sha256sums=('caa34f99b6e3bcea8502507eb6549a0a84510b244a748dfb287271b2d47467a9')
 
 build() {
