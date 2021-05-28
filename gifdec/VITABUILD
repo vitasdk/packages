@@ -1,0 +1,21 @@
+pkgname=gifdec
+pkgver=9999
+pkgrel=1
+url="https://github.com/lecram"
+source=("git://github.com/lecram/gifdec")
+sha256sums=('SKIP')
+
+build() {
+  cd $pkgname
+  cp ${startdir}/Makefile.vita .
+  make -j$(nproc) -f Makefile.vita
+}
+
+package () {
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
+  
+  cd $pkgname
+  cp lib$pkgname.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
+  cp $pkgname.h $pkgdir/$VITASDK/arm-vita-eabi/include/
+}
