@@ -8,7 +8,7 @@ depends=('libmathneon vitaShaRK')
 
 build() {
   cd $pkgname
-  make HAVE_SBRK=1 NO_DEBUG=1 HAVE_SHARK=2 -j$(nproc)
+  make HAVE_SBRK=1 NO_DEBUG=1 -j$(nproc)
 }
 
 package () {

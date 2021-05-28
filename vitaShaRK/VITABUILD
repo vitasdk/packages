@@ -7,11 +7,6 @@ sha256sums=('c71d3e4bbecca5b608ba402fed6c14f27e4d1ce725d873c9191b1f033cceebea')
 
 build() {
   cd $pkgname-v.$pkgver
-  vita-libs-gen SceShaccCg.yml build
-  cd build
-  make install
-  cd ..
-  cp shacccg.h $VITASDK/arm-vita-eabi/include/psp2/shacccg.h
   make -j$(nproc)
 }
 
@@ -22,8 +17,5 @@ package () {
   
   cd $pkgname-v.$pkgver
   cp libvitashark.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
-  cp build/libSceShaccCg_stub.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
-  cp build/libSceShaccCg_stub_weak.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
   cp source/vitashark.h $pkgdir/$VITASDK/arm-vita-eabi/include/
-  cp shacccg.h $pkgdir/$VITASDK/arm-vita-eabi/include/psp2
 }
