@@ -1,9 +1,9 @@
 pkgname=xz
-pkgver=5.2.3
+pkgver=5.2.5
 pkgrel=1
 url="https://tukaani.org/xz/"
 source=("https://tukaani.org/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('71928b357d0a09a12a4b4c5fafca8c31c19b0e7d3b8ebb19622e96f26dbf28cb')
+sha256sums=('f6f4910fd033078738bd82bfba4f49219d03b17eb0794eb91efbae419f4aba10')
 
 build() {
   cd ${pkgname}-${pkgver}
