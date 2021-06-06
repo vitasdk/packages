@@ -1,9 +1,9 @@
 pkgname=libpng
-pkgver=1.6.36
+pkgver=1.6.37
 pkgrel=1
 url="http://www.libpng.org/pub/png/libpng.html"
-source=("http://download.sourceforge.net/libpng/libpng-${pkgver}.tar.gz")
-sha256sums=('ca13c548bde5fb6ff7117cc0bdab38808acb699c0eccb613f0e4697826e1fd7d')
+source=("https://download.sourceforge.net/libpng/$pkgname-$pkgver.tar.gz")
+sha256sums=('daeb2620d829575513e35fecc83f0d3791a620b9b93d800b763542ece9390fb4')
 depends=('zlib')
 
 build() {
