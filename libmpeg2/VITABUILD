@@ -1,9 +1,9 @@
 pkgname=libmpeg2
 pkgver=0.5.1
 pkgrel=1
-url="http://libmpeg2.sourceforge.net/downloads.html"
-source=("http://libmpeg2.sourceforge.net/files/libmpeg2-${pkgver}.tar.gz")
-sha256sums=('DEE22E893CB5FC2B2B6EBD60B88478AB8556CB3B93F9A0D7CE8F3B61851871D4')
+url="https://libmpeg2.sourceforge.io/"
+source=("https://libmpeg2.sourceforge.io/files/$pkgname-$pkgver.tar.gz")
+sha256sums=('dee22e893cb5fc2b2b6ebd60b88478ab8556cb3b93f9a0d7ce8f3b61851871d4')
 
 build() {
   cd $pkgname-$pkgver
