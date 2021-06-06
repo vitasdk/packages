@@ -1,9 +1,9 @@
 pkgname=jansson
-pkgver=2.7
+pkgver=2.13.1
 pkgrel=1
-url="http://www.digip.org/jansson/"
-source=("http://www.digip.org/jansson/releases/jansson-${pkgver}.tar.bz2")
-sha256sums=('459f2b7cf22fb676286723f26169a17cf111fbfb6f54e3dc2ec6b6f9f4a97bdc')
+url="https://digip.org/jansson/"
+source=("https://digip.org/jansson/releases/$pkgname-$pkgver.tar.gz")
+sha256sums=('f4f377da17b10201a60c1108613e78ee15df6b12016b116b6de42209f47a474f')
 
 build() {
   cd $pkgname-$pkgver
