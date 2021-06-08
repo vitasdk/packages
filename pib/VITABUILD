@@ -1,0 +1,20 @@
+pkgname=pib
+pkgver=2.0
+pkgrel=1
+url="https://github.com/SonicMastr/Pigs-In-A-Blanket"
+source=("git://github.com/SonicMastr/Pigs-In-A-Blanket.git")
+sha256sums=('SKIP')
+depends=('taihen')
+
+build() {
+  cd "Pigs-In-A-Blanket"
+  make -j$(nproc) USE_VITASDK=1
+}
+
+package () {
+  cd "Pigs-In-A-Blanket"
+  mkdir -p ${pkgdir}${VITASDK}/arm-vita-eabi/lib
+  cp -f ${VITASDK}/arm-vita-eabi/lib/libtaihen_stub.a ${pkgdir}${VITASDK}/arm-vita-eabi/lib/libtaihen_stub.a
+  cp -f ${VITASDK}/arm-vita-eabi/lib/libSceAppMgr_stub.a ${pkgdir}${VITASDK}/arm-vita-eabi/lib/libSceAppMgr_stub.a
+  make USE_VITASDK=1 DESTDIR="${pkgdir}" install
+}
