@@ -5,14 +5,11 @@ url="https://box2d.org/"
 source=("https://github.com/erincatto/box2d/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
 
-prepare() {
-  cd $pkgname-$pkgver
-}
-
 build() {
   cd box2d-$pkgver
   mkdir build && cd build
-  cmake .. $CMARGS -DCMAKE_INSTALL_PREFIX=$prefix -DBOX2D_BUILD_DOCS=OFF -DBOX2D_BUILD_UNIT_TESTS=OFF -DBOX2D_BUILD_TESTBED=OFF
+  cmake .. $CMARGS -DCMAKE_INSTALL_PREFIX=$prefix \
+    -DBOX2D_BUILD_DOCS=OFF -DBOX2D_BUILD_UNIT_TESTS=OFF -DBOX2D_BUILD_TESTBED=OFF
   make -j$(nproc)
 }
 
