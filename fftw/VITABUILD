@@ -1,8 +1,8 @@
 pkgname=fftw
 pkgver=3.3.5
 pkgrel=1
-url="http://www.fftw.org/"
-source=("http://www.fftw.org/fftw-${pkgver}.tar.gz")
+url="https://www.fftw.org/"
+source=("https://www.fftw.org/fftw-${pkgver}.tar.gz")
 sha256sums=('8ecfe1b04732ec3f5b7d279fdb8efcad536d555f9d1e8fabd027037d45ea8bcf')
 
 build() {
