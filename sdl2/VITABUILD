@@ -9,6 +9,7 @@ source=(
 sha256sums=(
   SKIP
 )
+depends=('pib')
 
 build() {
   cd "SDL-${gitrev}"
