@@ -1,14 +1,14 @@
 pkgname=jsoncpp
-pkgver=1.8.4
+pkgver=1.9.4
 pkgrel=1
 url="https://github.com/open-source-parsers/jsoncpp"
-source=("https://github.com/open-source-parsers/jsoncpp/archive/$pkgver.tar.gz")
-sha256sums=('c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6')
+source=("https://codeload.github.com/open-source-parsers/$pkgname/tar.gz/refs/tags/$pkgver")
+sha256sums=('e34a628a8142643b976c7233ef381457efad79468c67cb1ae0b83a33d7493999')
 
 build() {
   cd $pkgname-$pkgver
   mkdir -p build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_INCLUDEDIR=include/jsoncpp -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF -DBUILD_OBJECT_LIBS=OFF -DCMAKE_INSTALL_INCLUDEDIR=include/jsoncpp -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF
   make -j$(nproc)
 }
 

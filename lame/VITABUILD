@@ -1,7 +1,7 @@
 pkgname=lame
 pkgver=3.100
 pkgrel=1
-url="https://lame.sourceforge.net/"
+url="https://lame.sourceforge.io/"
 source=("https://sourceforge.net/projects/lame/files/lame/$pkgver/lame-$pkgver.tar.gz")
 sha256sums=('ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e')
 
