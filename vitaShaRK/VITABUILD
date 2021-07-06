@@ -1,9 +1,9 @@
 pkgname=vitaShaRK
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
 url="https://github.com/Rinnegatamante/$pkgname"
 source=("https://github.com/Rinnegatamante/$pkgname/archive/v.$pkgver.tar.gz")
-sha256sums=('c71d3e4bbecca5b608ba402fed6c14f27e4d1ce725d873c9191b1f033cceebea')
+sha256sums=('925445e34673f7535562336617264d4d93011aaa806771691d70d5c74d874f8b')
 
 build() {
   cd $pkgname-v.$pkgver
@@ -13,7 +13,6 @@ build() {
 package () {
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
-  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include/psp2
   
   cd $pkgname-v.$pkgver
   cp libvitashark.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
