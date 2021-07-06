@@ -4,6 +4,7 @@ pkgrel=1
 url="https://github.com/hyln9/vita-libdl"
 source=("git+https://github.com/hyln9/vita-libdl.git#commit=bf46551882c344e5aebee07f15267e2ca93d78a5")
 sha256sums=('SKIP')
+depends=('taihen')
 
 pkgver() {
   cd vita-libdl
