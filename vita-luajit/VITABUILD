@@ -1,0 +1,25 @@
+pkgname=vita-luajit
+pkgver=9999
+pkgrel=1
+url="https://github.com/hyln9/vita-luajit"
+source=("git+https://github.com/hyln9/$pkgname.git#commit=0f0252ab8615bc4b097da0bfe0bf10d0666a3dcd")
+sha256sums=('SKIP')
+depends=('vita-libdl')
+
+build() {
+  cd $pkgname/src
+  make HOST_CC="gcc -m32" CROSS=arm-vita-eabi- TARGET_SYS=PSP2 TARGET_FLAGS="-marm -fno-optimize-sibling-calls" PREFIX="ux0:/data/luajit"
+}
+
+package () {
+  cd $pkgname/src
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib/ $pkgdir/$VITASDK/arm-vita-eabi/include/
+  cp libluajit.a $pkgdir/$VITASDK/arm-vita-eabi/lib/libluajit.a
+  cp lua.h $VITASDK/arm-vita-eabi/include/lua.h
+  cp lualib.h $VITASDK/arm-vita-eabi/include/lualib.h
+  cp lauxlib.h $VITASDK/arm-vita-eabi/include/lauxlib.h
+  cp luaconf.h $VITASDK/arm-vita-eabi/include/luaconf.h
+  cp lua.hpp $VITASDK/arm-vita-eabi/include/lua.hpp
+  cp luajit.h $VITASDK/arm-vita-eabi/include/luajit.h
+}
+
