@@ -1,14 +1,25 @@
 pkgname=vita-luajit
-pkgver=9999
+pkgver=2.0.5
 pkgrel=1
 url="https://github.com/hyln9/vita-luajit"
-source=("git+https://github.com/hyln9/$pkgname.git#commit=0f0252ab8615bc4b097da0bfe0bf10d0666a3dcd")
-sha256sums=('SKIP')
+source=(
+  "git+https://github.com/hyln9/$pkgname.git#commit=0f0252ab8615bc4b097da0bfe0bf10d0666a3dcd"
+  "https://github.com/Stary2001/vita-luajit/raw/adf293b7dd6acab164ebf8a8807698ebc78c34e9/luajit.patch"
+)
+sha256sums=(
+  'SKIP'
+  'f4f3612c787973e1ae9f62d0633bc78b0c098354ead307a6deed446981bf1c99'
+)
 depends=('vita-libdl')
 
+prepare() {
+  cd $pkgname
+  patch -p1 < ../luajit.patch
+}
+
 build() {
-  cd $pkgname/src
-  make HOST_CC="gcc -m32" CROSS=arm-vita-eabi- TARGET_SYS=PSP2 TARGET_FLAGS="-marm -fno-optimize-sibling-calls" PREFIX="ux0:/data/luajit"
+  cd $pkgname
+  make CFLAGS="-DLUAJIT_USE_SYSMALLOC -DLJ_FFI_STUB -DLUAJIT_DISABLE_JIT" HOST_CC="gcc -m32" CROSS=arm-vita-eabi- TARGET=arm BUILDMODE=static TARGET_SYS=PSP2 PREFIX="ux0:/data/luajit" TARGET_FLAGS="-fno-optimize-sibling-calls"
 }
 
 package () {
