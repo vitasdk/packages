@@ -1,10 +1,15 @@
 pkgname=libzip
-pkgver=1.7.3
+pkgver=1.8.0
 pkgrel=1
 url="https://libzip.org/"
-source=("https://libzip.org/download/$pkgname-$pkgver.tar.xz")
-sha256sums=('a60473ffdb7b4260c08bfa19c2ccea0438edac11193c3afbbb1f17fbcf6c6132')
+source=("https://libzip.org/download/$pkgname-$pkgver.tar.xz" "libzip.patch")
+sha256sums=('f0763bda24ba947e80430be787c4b068d8b6aa6027a26a19923f0acfa3dac97e', 'SKIP')
 depends=('zlib')
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch -Np1 -i "${srcdir}/libzip.patch"
+}
 
 build() {
   cd $pkgname-$pkgver

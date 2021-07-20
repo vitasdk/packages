@@ -1,0 +1,33 @@
+diff --git a/lib/zip_mkstempm.c b/lib/zip_mkstempm.c
+--- a/lib/zip_mkstempm.c
++++ b/lib/zip_mkstempm.c
+@@ -80,10 +80,10 @@
+         }
+ 
+         if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
+-            if (mode != -1) {
++            //if (mode != -1) {
+                 /* open() honors umask(), which we don't want in this case */
+-                (void)chmod(path, (mode_t)mode);
+-            }
++            //    (void)chmod(path, (mode_t)mode);
++            //}
+             return fd;
+         }
+         if (errno != EEXIST) {
+diff --git a/lib/zip_random_unix.c b/lib/zip_random_unix.c
+--- a/lib/zip_random_unix.c
++++ b/lib/zip_random_unix.c
+@@ -94,10 +94,10 @@
+     }
+ 
+     if (!seeded) {
+-        srandom((unsigned int)time(NULL));
++        srand((unsigned int)time(NULL));
+     }
+ 
+-    return (zip_uint32_t)random();
++    return (zip_uint32_t)rand();
+ }
+ #endif
+ 
