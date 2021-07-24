@@ -1,18 +1,20 @@
 pkgname=libwebp
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 url="https://developers.google.com/speed/webp"
 source=("https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-$pkgver.tar.gz")
 sha256sums=('2fc8bbde9f97f2ab403c0224fb9ca62b2e6852cbc519e91ceaa7c153ffd88a0c')
 
 build() {
   cd libwebp-$pkgver
- ./configure --host=arm-vita-eabi  --prefix=$VITASDK/arm-vita-eabi/ --disable-shared --enable-static --enable-neon --disable-libwebpdemux
+  sed -i "s/POSITION_INDEPENDENT_CODE ON/POSITION_INDEPENDENT_CODE OFF/" CMakeLists.txt
+
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DWEBP_BUILD_ANIM_UTILS=OFF -DWEBP_BUILD_CWEBP=OFF -DWEBP_BUILD_DWEBP=OFF -DWEBP_BUILD_GIF2WEBP=OFF -DWEBP_BUILD_IMG2WEBP=OFF -DWEBP_BUILD_VWEBP=OFF -DWEBP_BUILD_WEBPINFO=OFF -DWEBP_BUILD_WEBPMUX=OFF -DWEBP_BUILD_EXTRAS=OFF
   make -j$(nproc)
 }
 
 package() {
-  cd libwebp-$pkgver
+  cd libwebp-$pkgver/build
   make DESTDIR="$pkgdir" install
 }
-
