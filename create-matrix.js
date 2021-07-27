@@ -52,7 +52,9 @@ directories.forEach(directory => {
         if (KV.length > 1 && (KV[0].trim() == 'depends' || KV[0].trim() == 'makedepends')) {
 
             const dependencies = KV[1].trim().replace("(", "").replace(")", "").replace(/\'||\)/g, "").split(' ');
-            dependant.set(directory, dependencies);
+            if (dependencies[0] != '') {
+                dependant.set(directory, dependencies);
+            }
 
             break;
         }
