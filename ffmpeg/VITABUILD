@@ -37,9 +37,9 @@ build() {
 		--cpu=cortex-a9 \
 		--disable-armv6t2 \
 		--target-os=none \
-		--extra-cflags=" -Wl,-q -O2 -ftree-vectorize -mfpu=neon -fomit-frame-pointer -ffast-math -march=armv7-a -mfloat-abi=hard " \
-		--extra-cxxflags=" -Wl,-q -O2 -ftree-vectorize -mfpu=neon -fomit-frame-pointer -ffast-math -fno-rtti -fno-exceptions -std=gnu++11 -march=armv7-a -mfloat-abi=hard " \
-		--extra-ldflags=" -march=armv7-a -mfloat-abi=hard -L$VITASDK/lib " \
+		--extra-cflags=" -Wl,-q -O2 -ftree-vectorize -fomit-frame-pointer -ffast-math -D_BSD_SOURCE" \
+		--extra-cxxflags=" -Wl,-q -O2 -ftree-vectorize -fomit-frame-pointer -ffast-math -fno-rtti -fno-exceptions -std=gnu++11 -D_BSD_SOURCE" \
+		--extra-ldflags=" -L$VITASDK/lib " \
 		--disable-bzlib \
 		--disable-iconv \
 		--disable-lzma \
