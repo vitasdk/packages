@@ -10,8 +10,8 @@ source=(
 
 sha256sums=(
   10741648470a0ed106d5f588cc51a03574254849b28bc1c42d4c2eec628d70cd
-  4cabf7474cbd4fbe84f6e44b5bb061199833bfab36494b4e6aaef4a2f0f42d90
-  ff6be5b37eca1b81a2c852a16df1a92a12aba431c1a43078bfaa7d105e14eeb4
+  'SKIP'
+  'SKIP'
 )
 
 prepare() {
