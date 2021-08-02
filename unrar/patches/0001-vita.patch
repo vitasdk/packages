@@ -243,7 +243,7 @@ index 1b0813f..76b9a7f 100644
  #define _stdfunction 
  #define _forceinline inline
  
-+#ifdef __vita__
++#if defined(__vita__) && !defined(LITTLE_ENDIAN)
 +#define LITTLE_ENDIAN
 +#endif
 +
