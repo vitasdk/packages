@@ -1,9 +1,9 @@
 pkgname=onigmo
-pkgver=6.0.0
+pkgver=6.2.0
 pkgrel=1
 url="https://github.com/k-takata/Onigmo"
 source=("https://github.com/k-takata/Onigmo/releases/download/Onigmo-${pkgver}/onigmo-${pkgver}.tar.gz")
-sha256sums=('c6c08f75a78e0ec87dd594f1e16decfd5953eed930f8fc34d98f39a0f06f7ad9')
+sha256sums=('c648496b5339953b925ebf44b8de356feda8d3428fa07dc1db95bfe2570feb76')
 
 build() {
   cd $pkgname-$pkgver
