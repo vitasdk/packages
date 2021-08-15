@@ -55,3 +55,21 @@ index fb7263dcfe..ebcf73a882 100644
  #else
      retVal = mkdir(pathname, S_IRWXU | (S_IROTH | S_IXOTH) | (S_IROTH | S_IXOTH));
  #endif
+
+--- a/icu/source/common/unicode/putil.h
++++ b/icu/source/common/unicode/putil.h
+@@ -126,13 +126,6 @@
+ #   define U_FILE_SEP_STRING "\\"
+ #   define U_FILE_ALT_SEP_STRING "/"
+ #   define U_PATH_SEP_STRING ";"
+-#elif defined(__vita__)
+-#   define U_FILE_SEP_CHAR '/'
+-#   define U_FILE_ALT_SEP_CHAR '/'
+-#   define U_PATH_SEP_CHAR ';'
+-#   define U_FILE_SEP_STRING "/"
+-#   define U_FILE_ALT_SEP_STRING "/"
+-#   define U_PATH_SEP_STRING ";"
+ #else
+ #   define U_FILE_SEP_CHAR '/'
+ #   define U_FILE_ALT_SEP_CHAR '/'
+ 
