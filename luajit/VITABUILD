@@ -12,18 +12,18 @@ depends=('vita-libdl')
 
 build() {
   cd vita-luajit/src
-  make CFLAGS="-DLUAJIT_USE_SYSMALLOC -DLJ_FFI_STUB -DLUAJIT_DISABLE_JIT" HOST_CC="gcc -m32" CROSS=arm-vita-eabi- TARGET=arm BUILDMODE=static TARGET_SYS=PSP2 PREFIX="${VITASDK}/arm-vita-eabi" TARGET_FLAGS="-fno-optimize-sibling-calls"
+  make HOST_CC="gcc -m32" CROSS=arm-vita-eabi- TARGET_SYS=PSP2 TARGET_FLAGS="-marm -fno-optimize-sibling-calls" PREFIX="ux0:/data/luajit"
 }
 
 package () {
   cd vita-luajit/src
-  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
-  cp libluajit.a $pkgdir/$VITASDK/arm-vita-eabi/lib/libluajit.a
-  cp lua.h $pkgdir/$VITASDK/arm-vita-eabi/include/lua.h
-  cp lualib.h $pkgdir/$VITASDK/arm-vita-eabi/include/lualib.h
-  cp lauxlib.h $pkgdir/$VITASDK/arm-vita-eabi/include/lauxlib.h
-  cp luaconf.h $pkgdir/$VITASDK/arm-vita-eabi/include/luaconf.h
-  cp lua.hpp $pkgdir/$VITASDK/arm-vita-eabi/include/lua.hpp
-  cp luajit.h $pkgdir/$VITASDK/arm-vita-eabi/include/luajit.h  
+  mkdir -p $pkgdir/$prefix/{lib,include}
+  cp libluajit.a $pkgdir/$prefix/lib/libluajit.a
+  cp lua.h $pkgdir/$prefix/include/lua.h
+  cp lualib.h $pkgdir/$prefix/include/lualib.h
+  cp lauxlib.h $pkgdir/$prefix/include/lauxlib.h
+  cp luaconf.h $pkgdir/$prefix/include/luaconf.h
+  cp lua.hpp $pkgdir/$prefix/include/lua.hpp
+  cp luajit.h $pkgdir/$prefix/include/luajit.h  
 }
 
