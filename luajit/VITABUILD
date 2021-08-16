@@ -17,13 +17,13 @@ build() {
 
 package () {
   cd vita-luajit/src
-  mkdir -p $pkgdir/$prefix/{lib,include}
+  mkdir -p $pkgdir/$prefix/{lib,include/luajit-2.0}
   cp libluajit.a $pkgdir/$prefix/lib/libluajit.a
-  cp lua.h $pkgdir/$prefix/include/lua.h
-  cp lualib.h $pkgdir/$prefix/include/lualib.h
-  cp lauxlib.h $pkgdir/$prefix/include/lauxlib.h
-  cp luaconf.h $pkgdir/$prefix/include/luaconf.h
-  cp lua.hpp $pkgdir/$prefix/include/lua.hpp
-  cp luajit.h $pkgdir/$prefix/include/luajit.h  
+  cp lua.h $pkgdir/$prefix/include/luajit-2.0/lua.h
+  cp lualib.h $pkgdir/$prefix/include/luajit-2.0/lualib.h
+  cp lauxlib.h $pkgdir/$prefix/include/luajit-2.0/lauxlib.h
+  cp luaconf.h $pkgdir/$prefix/include/luajit-2.0/luaconf.h
+  cp lua.hpp $pkgdir/$prefix/include/luajit-2.0/lua.hpp
+  cp luajit.h $pkgdir/$prefix/include/luajit-2.0/luajit.h  
 }
 
