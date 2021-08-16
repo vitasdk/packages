@@ -17,6 +17,13 @@ build() {
 
 package () {
   cd $pkgname
-  make PREFIX=$prefix DESTDIR=$pkgdir install
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
+  cp libluajit.a $pkgdir/$VITASDK/arm-vita-eabi/lib/libluajit.a
+  cp lua.h $pkgdir/$VITASDK/arm-vita-eabi/include/lua.h
+  cp lualib.h $pkgdir/$VITASDK/arm-vita-eabi/include/lualib.h
+  cp lauxlib.h $pkgdir/$VITASDK/arm-vita-eabi/include/lauxlib.h
+  cp luaconf.h $pkgdir/$VITASDK/include/luaconf.h
+  cp lua.hpp $pkgdir/$VITASDK/arm-vita-eabi/include/lua.hpp
+  cp luajit.h $pkgdir/$VITASDK/arm-vita-eabi/include/luajit.h  
 }
 
