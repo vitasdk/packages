@@ -1,9 +1,9 @@
-pkgname=vita-luajit
+pkgname=luajit
 pkgver=2.0.5
 pkgrel=1
 url="https://github.com/hyln9/vita-luajit"
 source=(
-  "git+https://github.com/hyln9/$pkgname.git#commit=0f0252ab8615bc4b097da0bfe0bf10d0666a3dcd"
+  "git+https://github.com/hyln9/vita-luajit.git#commit=0f0252ab8615bc4b097da0bfe0bf10d0666a3dcd"
 )
 sha256sums=(
   'SKIP'
@@ -11,18 +11,18 @@ sha256sums=(
 depends=('vita-libdl')
 
 build() {
-  cd $pkgname
+  cd vita-luajit/src
   make CFLAGS="-DLUAJIT_USE_SYSMALLOC -DLJ_FFI_STUB -DLUAJIT_DISABLE_JIT" HOST_CC="gcc -m32" CROSS=arm-vita-eabi- TARGET=arm BUILDMODE=static TARGET_SYS=PSP2 PREFIX="${VITASDK}/arm-vita-eabi" TARGET_FLAGS="-fno-optimize-sibling-calls"
 }
 
 package () {
-  cd $pkgname
+  cd vita-luajit/src
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
   cp libluajit.a $pkgdir/$VITASDK/arm-vita-eabi/lib/libluajit.a
   cp lua.h $pkgdir/$VITASDK/arm-vita-eabi/include/lua.h
   cp lualib.h $pkgdir/$VITASDK/arm-vita-eabi/include/lualib.h
   cp lauxlib.h $pkgdir/$VITASDK/arm-vita-eabi/include/lauxlib.h
-  cp luaconf.h $pkgdir/$VITASDK/include/luaconf.h
+  cp luaconf.h $pkgdir/$VITASDK/arm-vita-eabi/include/luaconf.h
   cp lua.hpp $pkgdir/$VITASDK/arm-vita-eabi/include/lua.hpp
   cp luajit.h $pkgdir/$VITASDK/arm-vita-eabi/include/luajit.h  
 }
