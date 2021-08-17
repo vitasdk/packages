@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c01ec25..4b353ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -668,16 +668,6 @@ if(WITH_TURBOJPEG)
+     if(NOT MSVC)
+       set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
+     endif()
+-
+-    add_executable(tjunittest-static tjunittest.c tjutil.c md5/md5.c
+-      md5/md5hl.c)
+-    target_link_libraries(tjunittest-static turbojpeg-static)
+-
+-    add_executable(tjbench-static tjbench.c tjutil.c)
+-    target_link_libraries(tjbench-static turbojpeg-static)
+-    if(UNIX)
+-      target_link_libraries(tjbench-static m)
+-    endif()
+   endif()
+ endif()
+ 
+@@ -1464,8 +1454,6 @@ if(WITH_TURBOJPEG)
+       else()
+         set(DIR ${CMAKE_CURRENT_BINARY_DIR})
+       endif()
+-      install(PROGRAMS ${DIR}/tjbench-static${EXE}
+-        DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME tjbench${EXE})
+     endif()
+   endif()
+   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/turbojpeg.h
