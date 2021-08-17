@@ -1,9 +1,9 @@
 pkgname=quirc
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
 url="https://github.com/dlbeer/quirc/"
 source=("https://github.com/dlbeer/quirc/archive/v${pkgver}.tar.gz" "Makefile.vita")
-sha256sums=('91bba64ffca5b84aa953b88d5f5ccc9507275345c200fd581dca24fbf66b3706' 'SKIP')
+sha256sums=('5102ccb57639cb355642c1f8af0d815026c948d85d99bf9b86be5746e759f8e6' 'SKIP')
 
 build() {
   cd $pkgname-$pkgver
