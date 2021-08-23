@@ -8,7 +8,7 @@ depends=('libogg')
 
 build() {
   cd $pkgname-$pkgver
-  export CFLAGS="-Wl,-q -O3 -mfpu=neon -mcpu=cortex-a9 -march=armv7-a -mfloat-abi=hard -mvectorize-with-neon-quad"
+  export CFLAGS="-Wl,-q -O3 -mfpu=neon -mvectorize-with-neon-quad"
   export CXXFLAGS=$CFLAGS
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic
   make -j$(nproc) -C src/libFLAC
