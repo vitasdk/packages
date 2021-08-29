@@ -1,0 +1,20 @@
+pkgname=libsamplerate
+pkgver=0.2.1
+pkgrel=1
+url="https://github.com/libsndfile/libsamplerate"
+source=("https://github.com/libsndfile/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('c28dc9fd587f250114d35aab180e41551935e37c84e7641c31d225cda5eb5fab')
+
+build() {
+  cd $pkgname-$pkgver
+  sed -i "s/add_subdirectory(examples)/#add_subdirectory(examples)/" CMakeLists.txt
+  sed -i "s/add_subdirectory(tests)/#add_subdirectory(tests)/" CMakeLists.txt
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  make -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
