@@ -1,15 +1,9 @@
 pkgname=tinyxml2
-pkgver=8.0.0
+pkgver=9.0.0
 pkgrel=1
 url="http://leethomason.github.io/tinyxml2"
-source=("https://github.com/leethomason/tinyxml2/archive/${pkgver}.tar.gz" "0001-vita.patch")
-sha256sums=('6ce574fbb46751842d23089485ae73d3db12c1b6639cda7721bf3a7ee862012c'
-	'8e9a8db89d7cbf10d678b884df2d0f88aa884eea6c492cbc4e2373cd57cca37e')
-
-prepare() {
-  cd $pkgname-$pkgver
-  patch -Np1 -i "${srcdir}/0001-vita.patch"
-}
+source=("https://github.com/leethomason/tinyxml2/archive/${pkgver}.tar.gz")
+sha256sums=('cc2f1417c308b1f6acc54f88eb70771a0bf65f76282ce5c40e54cfe52952702c')
 
 build() {
   cd $pkgname-$pkgver
