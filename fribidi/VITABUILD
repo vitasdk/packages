@@ -1,0 +1,27 @@
+pkgname=libfribidi
+pkgver=1.0.4
+pkgrel=1
+url="https://github.com/fribidi/fribidi"
+source=("https://github.com/fribidi/fribidi/releases/download/v$pkgver/fribidi-$pkgver.tar.bz2")
+sha256sums=('94bdfe553e004d8bd095b109e182682311dd511740d5083326d1582f1df237be')
+
+prepare() {
+  cd fribidi-$pkgver
+  # patch out binaries
+  sed '/^SUBDIRS/ s/bin //' -i Makefile.am
+  ./autogen.sh
+}
+
+build() {
+  cd fribidi-$pkgver
+
+  ./configure --host=arm-vita-eabi  --prefix=$VITASDK/arm-vita-eabi/ --disable-shared --enable-static
+
+  make -j$(nproc)
+}
+
+package() {
+  cd fribidi-$pkgver
+
+  make DESTDIR="$pkgdir" install
+}
