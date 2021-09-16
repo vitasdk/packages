@@ -2,17 +2,17 @@ pkgname=libpng
 pkgver=1.6.37
 pkgrel=1
 url="http://www.libpng.org/pub/png/libpng.html"
-source=("https://download.sourceforge.net/libpng/$pkgname-$pkgver.tar.gz")
-sha256sums=('daeb2620d829575513e35fecc83f0d3791a620b9b93d800b763542ece9390fb4')
+source=("git+https://git.code.sf.net/p/libpng/code#tag=v$pkgver")
+sha256sums=('SKIP')
 depends=('zlib')
 
 build() {
-  cd $pkgname-$pkgver
+  cd code
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-arm-neon
   make -j$(nproc)
 }
 
 package () {
-  cd $pkgname-$pkgver
+  cd code
   make DESTDIR=$pkgdir install
 }
