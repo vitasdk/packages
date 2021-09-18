@@ -18,5 +18,7 @@ build() {
 package () {
   cd ${pkgname}
   mkdir -p ${pkgdir}/$VITASDK/arm-vita-eabi/lib
+  mkdir -p ${pkgdir}/$VITASDK/arm-vita-eabi/include
   cp libunrar.a ${pkgdir}/$VITASDK/arm-vita-eabi/lib
+  cp dll.hpp ${pkgdir}/$VITASDK/arm-vita-eabi/include/unrar.h
 }
