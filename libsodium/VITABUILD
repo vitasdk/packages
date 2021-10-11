@@ -5,10 +5,15 @@ url="https://doc.libsodium.org/"
 source=("https://download.libsodium.org/libsodium/releases/libsodium-${pkgver}.tar.gz")
 sha256sums=('6f504490b342a4f8a4c4a02fc9b866cbef8622d5df4e5452b46be121e46636c1')
 
+prepare() {
+  cd libsodium-$pkgver
+  # disable -fPIC. Libsodium configure has no flag for that
+  sed 's/fPIC=yes/fPIC=no/' -i configure
+}
+
 build() {
   cd libsodium-$pkgver
-  export CFLAGS='-Os'
-  ./configure --host=arm-vita-eabi --prefix=$prefix
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-pie --without-pic --disable-shared --enable-static
   make -j$(nproc)
 }
 
