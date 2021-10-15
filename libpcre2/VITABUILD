@@ -1,0 +1,24 @@
+pkgname=libpcre2
+pkgver=10.38
+pkgrel=1
+url='https://www.pcre.org/'
+source=("https://github.com/PhilipHazel/pcre2/releases/download/pcre2-${pkgver}/pcre2-${pkgver}.tar.gz")
+sha256sums=('f45762aedc88aa91ad7cbb4f339001836328b7413b024ef4652a68747e766c92')
+
+build() {
+  cd pcre2-$pkgver
+
+  # Disable building programs & tests.
+  sed -i 's/^bin_PROGRAMS = .*//' Makefile.in
+  sed -i 's/^TESTS = .*//' Makefile.in
+  sed -i 's/^noinst_PROGRAMS = .*//' Makefile.in
+
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-pcre2-16 --enable-pcre2-32
+
+  make -j$(nproc)
+}
+
+package() {
+  cd pcre2-$pkgver
+  make DESTDIR="$pkgdir" install
+}
