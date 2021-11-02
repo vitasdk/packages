@@ -1,20 +1,24 @@
 pkgname=libimagequant
-pkgver=9999
+pkgver=2.16.0
 pkgrel=1
-url="https://github.com/Rinnegatamante/libimagequant"
-source=("git://github.com/Rinnegatamante/libimagequant.git")
+url="https://github.com/ImageOptim/libimagequant"
+source=("git+https://github.com/ImageOptim/libimagequant.git#tag=2.16.0")
 sha256sums=('SKIP')
+
+prepare() {
+  cd $pkgname
+  sed '/^all:/ s/shared//' -i ./Makefile
+  sed 's/install -m 644 \$(SHAREDLIBVER)/#/' -i ./Makefile
+  sed 's/ln -sf/#/' -i ./Makefile
+}
 
 build() {
   cd $pkgname
-  make -j$(nproc)
+  CC=arm-vita-eabi-gcc ./configure --prefix=$VITASDK/arm-vita-eabi/ --disable-sse
+  make -j$(nproc) static
 }
 
 package () {
   cd $pkgname
-  mkdir -p $pkgdir/$prefix
-  mkdir -p $pkgdir/$prefix/lib
-  mkdir -p $pkgdir/$prefix/include
-  cp libimagequant.a $pkgdir/$prefix/lib
-  cp libimagequant.h $pkgdir/$prefix/include
+  make DESTDIR="$pkgdir" install
 }
