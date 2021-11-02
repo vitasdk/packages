@@ -2,7 +2,7 @@ pkgname=sdl2_net
 pkgver=9999
 pkgrel=1
 url="https://github.com/rsn8887/SDL_net"
-source=("git://github.com/rsn8887/SDL_net.git")
+source=("git+https://github.com/rsn8887/SDL_net.git")
 sha256sums=('SKIP')
 depends=('sdl2')
 

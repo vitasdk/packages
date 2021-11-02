@@ -2,7 +2,7 @@ pkgname=libmikmod
 pkgver=9999
 pkgrel=1
 url="https://github.com/usineur/mikmod"
-source=("git://github.com/usineur/mikmod.git#branch=vita")
+source=("git+https://github.com/usineur/mikmod.git#branch=vita")
 sha256sums=('SKIP')
 
 build() {

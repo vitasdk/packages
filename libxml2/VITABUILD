@@ -2,7 +2,7 @@ pkgname=libxml2
 pkgver=v2.9.8
 pkgrel=1
 url="http://xmlsoft.org/"
-source=("git://github.com/GNOME/libxml2.git#tag=${pkgver}")
+source=("git+https://github.com/GNOME/libxml2.git#tag=${pkgver}")
 sha256sums=('SKIP')
 depends=('zlib')
 

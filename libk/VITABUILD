@@ -2,7 +2,7 @@ pkgname=libk
 pkgver=9999
 pkgrel=2
 url="https://github.com/DaveeFTW/libk"
-source=("git://github.com/DaveeFTW/libk.git#branch=dev")
+source=("git+https://github.com/DaveeFTW/libk.git#branch=dev")
 sha256sums=('SKIP')
 
 build() {

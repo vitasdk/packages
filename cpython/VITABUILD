@@ -2,7 +2,7 @@ pkgname=cpython
 pkgver=2.7
 pkgrel=1
 url="https://github.com/SonicMastr/cpython-vita"
-source=("git://github.com/SonicMastr/cpython-vita.git")
+source=("git+https://github.com/SonicMastr/cpython-vita.git")
 sha256sums=('SKIP')
 depends=('openssl libzip xz zlib bzip2')
 
