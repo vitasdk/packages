@@ -2,7 +2,7 @@ pkgname=vitaGL
 pkgver=9999
 pkgrel=1
 url="https://github.com/Rinnegatamante"
-source=("git://github.com/Rinnegatamante/vitaGL.git")
+source=("git+https://github.com/Rinnegatamante/vitaGL.git")
 sha256sums=('SKIP')
 depends=('libmathneon vitaShaRK')
 

@@ -2,7 +2,7 @@ pkgname=libmad
 pkgver=0.15.1b
 pkgrel=1
 url="https://github.com/cpasjuste/libmad-psp2"
-source=("git://github.com/cpasjuste/libmad-psp2.git#branch=master")
+source=("git+https://github.com/cpasjuste/libmad-psp2.git#branch=master")
 sha256sums=('SKIP')
 
 build() {

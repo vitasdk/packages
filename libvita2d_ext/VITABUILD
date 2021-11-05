@@ -2,7 +2,7 @@ pkgname=libvita2d_ext
 pkgver=9999
 pkgrel=1
 url="https://github.com/frangarcj/libvita2d_ext"
-source=("git://github.com/frangarcj/libvita2d_ext.git")
+source=("git+https://github.com/frangarcj/libvita2d_ext.git")
 sha256sums=('SKIP')
 depends=('libvita2d')
 
