@@ -1,27 +1,16 @@
 pkgname=sdl
-pkgver=1.2.15
+pkgver=1.2.16
 pkgrel=1
 url='https://www.libsdl.org'
-source=(
-  "https://www.libsdl.org/release/SDL-${pkgver}.tar.gz"
-  "https://github.com/isage/sdl2-vita/raw/master/SDL-${pkgver}-vita-0.patch"
-)
-sha256sums=(
-  d6d316a793e5e348155f0dd93b979798933fb98aa1edebcc108829d6474aad00
-  SKIP
-)
-
-prepare() {
-  cd "SDL-${pkgver}"
-  patch --strip=1 --input="${srcdir}/SDL-${pkgver}-vita-0.patch"
-}
+source=("git+https://github.com/Northfear/SDL-1.2-vita.git")
+sha256sums=('SKIP')
 
 build() {
-  cd "SDL-${pkgver}"
-  make -j$(nproc) -f Makefile.vita.vita
+  cd "SDL-1.2-vita"
+  make -j$(nproc) -f Makefile.vita
 }
 
 package () {
-  cd "SDL-${pkgver}"
-  make -f Makefile.vita.vita DESTDIR="${pkgdir}" install
+  cd "SDL-1.2-vita"
+  make -f Makefile.vita DESTDIR="${pkgdir}" install
 }
