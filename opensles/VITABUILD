@@ -1,0 +1,20 @@
+pkgname=opensles
+pkgver=9999
+pkgrel=1
+url="https://github.com/frangarcj/opensles"
+source=("git+https://github.com/frangarcj/opensles.git")
+sha256sums=('SKIP')
+depends=('libsndfile')
+
+build() {
+  cd $pkgname/lib$pkgname
+  make -j$(nproc)
+}
+
+package () {
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
+  
+  cd $pkgname/lib$pkgname
+  make DESTDIR="$pkgdir" install
+}
