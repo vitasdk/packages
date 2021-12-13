@@ -1,17 +1,18 @@
-pkgname=libsigc++
-pkgver=2.10
+pkgname=libsigc++-3.0
+pkgver=3.0.7
 pkgrel=1
 url="https://libsigcplusplus.github.io/libsigcplusplus/"
-source=("git+https://github.com/libsigcplusplus/libsigcplusplus.git")
-sha256sums=('SKIP')
+source=("https://github.com/libsigcplusplus/libsigcplusplus/releases/download/${pkgver}/libsigc++-${pkgver}.tar.xz")
+sha256sums=('bfbe91c0d094ea6bbc6cbd3909b7d98c6561eea8b6d9c0c25add906a6e83d733')
 
 build() {
-  cd libsigcplusplus
-  ./autogen.sh --host=arm-vita-eabi --prefix=$prefix
+  cd libsigc++-$pkgver
+  cmake . -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+        -DCMAKE_BUILD_TYPE=Release
   make -j$(nproc)
 }
 
 package () {
-  cd libsigcplusplus
+  cd libsigc++-$pkgver
   make DESTDIR=$pkgdir install
 }

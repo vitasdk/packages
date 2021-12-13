@@ -1,17 +1,17 @@
-pkgname=libsigc++
-pkgver=2.10
+pkgname=libsigc++-2.0
+pkgver=2.10.0
 pkgrel=1
 url="https://libsigcplusplus.github.io/libsigcplusplus/"
-source=("git+https://github.com/libsigcplusplus/libsigcplusplus.git#branch=libsigc++-2-10")
-sha256sums=('SKIP')
+source=("https://github.com/libsigcplusplus/libsigcplusplus/releases/download/${pkgver}/libsigcplusplus-${pkgver}.tar.xz")
+sha256sums=('f843d6346260bfcb4426259e314512b99e296e8ca241d771d21ac64f28298d81')
 
 build() {
-  cd libsigcplusplus
-  ./autogen.sh --host=arm-vita-eabi --prefix=$prefix
+  cd libsigc++-$pkgver
+  ./configure --host=arm-vita-eabi --prefix=$prefix
   make -j$(nproc)
 }
 
 package () {
-  cd libsigcplusplus
+  cd libsigc++-$pkgver
   make DESTDIR=$pkgdir install
 }
