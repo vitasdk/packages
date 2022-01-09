@@ -8,7 +8,7 @@ sha256sums=('cf4ae0dc0334266c710dfd1de188b575348ae2dfbbba2dccd7392f14bdb206f2')
 build() {
   cd minizip-ng-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DMZ_COMPAT=OFF
   make -j$(nproc)
 }
 
