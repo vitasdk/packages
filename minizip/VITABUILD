@@ -1,14 +1,14 @@
 pkgname=minizip
-pkgver=3.0.2
+pkgver=3.0.4
 pkgrel=1
 url="https://github.com/zlib-ng/minizip-ng"
 source=("https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip")
-sha256sums=('519fc56a76f64559a0d8e55b6715bca00b4edb24ee2fb9b6ef307ee2e79a05e1')
+sha256sums=('cf4ae0dc0334266c710dfd1de188b575348ae2dfbbba2dccd7392f14bdb206f2')
 
 build() {
   cd minizip-ng-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DMZ_COMPAT=OFF
   make -j$(nproc)
 }
 
