@@ -1,10 +1,10 @@
 pkgname=physfs
 pkgver=3.0.2
-pkgrel=3
+pkgrel=4
 url='https://icculus.org/physfs/'
 source=(
   "https://icculus.org/physfs/downloads/physfs-${pkgver}.tar.bz2"
-  "https://github.com/isage/physfs/raw/master/physfs-${pkgver}-vita-2.patch"
+  "https://github.com/isage/physfs/raw/master/physfs-${pkgver}-vita-3.patch"
  )
 sha256sums=(
   304df76206d633df5360e738b138c94e82ccf086e50ba84f456d3f8432f9f863
@@ -13,7 +13,7 @@ sha256sums=(
 
 prepare() {
   cd "physfs-${pkgver}"
-  patch --strip=1 --input="${srcdir}/physfs-${pkgver}-vita-2.patch"
+  patch --strip=1 --input="${srcdir}/physfs-${pkgver}-vita-3.patch"
 }
 
 build() {
