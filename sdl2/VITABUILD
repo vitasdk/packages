@@ -1,20 +1,17 @@
 pkgname=sdl2
 pkgver=2.0.21
-pkgrel=3
-gitrev=ecd922b5cf9a6acff91f952b8da3068c776e57a1
+pkgrel=4
+gitrev=4d76c9cb46491064b1817bd69f78d59783546ee5
 url='https://www.libsdl.org'
 source=(
   "https://github.com/libsdl-org/SDL/archive/${gitrev}.tar.gz"
-  "https://github.com/libsdl-org/SDL/pull/4660.patch"
  )
 sha256sums=(
-  SKIP
   SKIP
 )
 
 prepare() {
   cd "SDL-${gitrev}"
-  patch -p1 -i "${srcdir}/4660.patch" # allow disabling back touchpad mouse emulation
 }
 
 build() {
