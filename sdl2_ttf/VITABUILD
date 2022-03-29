@@ -1,21 +1,18 @@
 pkgname=sdl2_ttf
-pkgver=2.0.15
-pkgrel=2
-gitrev=9d2a04f157c4e0c206fe5df7103018d5a59c6e35
+pkgver=2.0.18
+pkgrel=1
+gitrev=3e702ed9bf400b0a72534f144b8bec46ee0416cb
 url="https://www.libsdl.org/projects/SDL_ttf/"
 source=(
     "https://github.com/libsdl-org/SDL_ttf/archive/${gitrev}.zip"
-    "sdl-ttf-static.patch"
 )
 sha256sums=(
     SKIP
-    bc7119a8bbfebbab0de774a7d671894be12ffed7d20f320d099de17d7baab2cb
 )
 depends=('sdl2 freetype')
 
 prepare() {
   cd "SDL_ttf-${gitrev}"
-  patch --strip=1 --input="${srcdir}/sdl-ttf-static.patch"
 }
 
 build() {
