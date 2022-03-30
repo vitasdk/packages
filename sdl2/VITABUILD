@@ -1,7 +1,7 @@
 pkgname=sdl2
 pkgver=2.0.21
-pkgrel=4
-gitrev=4d76c9cb46491064b1817bd69f78d59783546ee5
+pkgrel=5
+gitrev=cbdb67b4f655000de35acb5629ddb08cc6761e8a
 url='https://www.libsdl.org'
 source=(
   "https://github.com/libsdl-org/SDL/archive/${gitrev}.tar.gz"
