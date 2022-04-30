@@ -1,9 +1,9 @@
 pkgname=unrar
-pkgver=5.4.5
+pkgver=6.1.6
 pkgrel=1
 url="http://www.rarlab.com"
 source=("http://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz")
-sha256sums=('e470c584332422893fb52e049f2cbd99e24dc6c6da971008b4e2ae4284f8796c')
+sha256sums=('67f4ab891c062218c2badfaac9c8cab5c8bfd5e96dabfca56c8faa3d209a801d')
 
 prepare() {
   cd ${pkgname}
