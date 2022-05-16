@@ -1,6 +1,6 @@
 pkgname=sdl_gfx
 pkgver=2.0.26
-pkgrel=1
+pkgrel=2
 url="https://www.ferzkopp.net/joomla/content/view/19/14/"
 source=("https://www.ferzkopp.net/Software/SDL_gfx-2.0/SDL_gfx-${pkgver}.tar.gz")
 sha256sums=('7ceb4ffb6fc63ffba5f1290572db43d74386cd0781c123bc912da50d34945446')
@@ -8,14 +8,11 @@ depends=('sdl')
 
 build() {
   cd SDL_gfx-${pkgver}
-  cp ${startdir}/Makefile.vita .
-  make -j$(nproc) -f Makefile.vita
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic --enable-mmx=no
+  make -j$(nproc)
 }
 
 package () {
   cd SDL_gfx-${pkgver}
-  # hack: this install target ignores DESTDIR and uses VITASDK instead
-  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
-  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include/SDL
-  make -f Makefile.vita VITASDK=$pkgdir/$VITASDK install
+  make DESTDIR=$pkgdir install
 }

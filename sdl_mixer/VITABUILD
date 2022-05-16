@@ -1,20 +1,20 @@
 pkgname=sdl_mixer
 pkgver=1.2.12
-pkgrel=1
+pkgrel=2
 url="https://www.libsdl.org/projects/SDL_mixer/release-1.2.html"
-source=("https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-${pkgver}.tar.gz" Makefile.vita sdl-mixer-timidity.patch)
+source=("https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-${pkgver}.tar.gz" sdl-mixer-timidity.patch noplayers.patch)
 sha256sums=(1644308279a975799049e4826af2cfc787cad2abb11aa14562e402521f86992a SKIP SKIP)
 depends=('sdl' 'libvorbis' 'libmikmod' 'libmodplug' 'mpg123' 'flac')
 
 build() {
-  cp "${srcdir}/Makefile.vita" "SDL_mixer-${pkgver}"
   cd "SDL_mixer-${pkgver}"
   patch --strip=1 --input="${srcdir}/sdl-mixer-timidity.patch"
-  make -j$(nproc) -f Makefile.vita clean
-  make -j$(nproc) -f Makefile.vita
+  patch --strip=1 --input="${srcdir}/noplayers.patch"
+  PATH="$VITASDK/arm-vita-eabi/bin:$PATH" LIBS="-lvorbis -logg -lm" ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic --disable-music-cmd
+  make -j$(nproc)
 }
 
 package () {
   cd "SDL_mixer-${pkgver}"
-  make -f Makefile.vita DESTDIR="${pkgdir}" install
+  make DESTDIR=$pkgdir install
 }

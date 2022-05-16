@@ -1,20 +1,24 @@
 pkgname=sdl2_net
-pkgver=9999
+pkgver=2.0.1
 pkgrel=1
-url="https://github.com/rsn8887/SDL_net"
-source=("git+https://github.com/rsn8887/SDL_net.git")
-sha256sums=('SKIP')
+url="https://github.com/libsdl-org/SDL_net/"
+gitrev=6e513e390d18ad7950d9082863bfe33a0c62fd71
+source=("https://github.com/libsdl-org/SDL_net/archive/${gitrev}.tar.gz" "vita.patch")
+sha256sums=('SKIP' 'SKIP')
 depends=('sdl2')
 
+prepare() {
+  cd "SDL_net-${gitrev}"
+  patch -Np1 -i "${srcdir}/vita.patch"
+}
+
 build() {
-  cd SDL_net
-  make -j$(nproc) -f Makefile.vita clean
-  make -j$(nproc) -f Makefile.vita
+  cd "SDL_net-${gitrev}"
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic
+  make -j$(nproc)
 }
 
 package () {
-  cd SDL_net
-  # hack: this install target ignores DESTDIR and uses VITASDK instead
-  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{lib,include}
-  make -f Makefile.vita VITASDK=$pkgdir/$VITASDK install
+  cd "SDL_net-${gitrev}"
+  make DESTDIR=$pkgdir install
 }
