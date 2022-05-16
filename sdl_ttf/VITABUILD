@@ -10,7 +10,7 @@ source=(
 sha256sums=(
     'SKIP'
 )
-depends=('sdl freetype')
+depends=('sdl freetype libpng')
 
 build() {
   cd SDL_ttf-${gitrev}
