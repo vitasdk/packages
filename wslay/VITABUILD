@@ -1,0 +1,18 @@
+pkgname=wslay
+pkgver=1.1.1
+pkgrel=1
+url="https://github.com/tatsuhiro-t/wslay"
+source=("https://github.com/tatsuhiro-t/wslay/releases/download/release-${pkgver}/wslay-${pkgver}.tar.gz")
+sha256sums=('90ce68c6dfd614722d44fbb14563a3f6dacc68b548b20ae382ac4f4952c55268')
+build() {
+  cd wslay-$pkgver
+
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  make -j$(nproc)
+}
+
+package() {
+  cd wslay-$pkgver
+
+  make DESTDIR="$pkgdir" install
+}
