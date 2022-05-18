@@ -1,0 +1,8 @@
+using gcc : arm : arm-vita-eabi-gcc : <linkflags>"-lstdc++ -lc -lm" ;
+
+
+# Stop on first error
+option.set runtime-link : static ;
+option.set threading : multi ;
+option.set link : static ;
+option.set variant : release ;
