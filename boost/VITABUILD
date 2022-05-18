@@ -11,8 +11,7 @@ build() {
   cd ${pkgname}_${pkgulver}
   patch -Np1 -i "${srcdir}/vita.patch"
   cp "${srcdir}/user-config.jam" .
-  #./bootstrap.sh --with-icu=$VITASDK/arm-vita-eabi --prefix=$pkgdir/$VITASDK/arm-vita-eabi --with-libraries=atomic,chrono,container,context,contract,coroutine,date_time,exception,fiber,filesystem,graph,graph_parallel,headers,json,locale,log,math,program_options,random,regex,serialization,system,test,thread,timer,type_erasure,wave
-  ./bootstrap.sh --with-icu=$VITASDK/arm-vita-eabi --prefix=$pkgdir/$VITASDK/arm-vita-eabi --with-libraries=iostreams
+  ./bootstrap.sh --with-icu=$VITASDK/arm-vita-eabi --prefix=$pkgdir/$VITASDK/arm-vita-eabi --with-libraries=atomic,chrono,container,context,contract,coroutine,date_time,exception,fiber,filesystem,graph,graph_parallel,headers,iostreams,json,locale,log,math,program_options,random,regex,serialization,system,test,thread,timer,type_erasure,wave
   ./b2 --user-config=./user-config.jam runtime-link=static threading=multi link=static variant=release define=BOOST_LOG_WITHOUT_IPC -sICU_ICUUC_NAME=icuuc -sICU_ICUDT_NAME=icudata -sICU_ICUIN_NAME=icui18n
 }
 

@@ -1,3 +1,56 @@
+diff --git a/boost/align/aligned_alloc.hpp b/boost/align/aligned_alloc.hpp
+index 1d81a1337..416c8083e 100644
+--- a/boost/align/aligned_alloc.hpp
++++ b/boost/align/aligned_alloc.hpp
+@@ -28,6 +28,8 @@ Distributed under the Boost Software License, Version 1.0.
+ #include <boost/align/detail/aligned_alloc_msvc.hpp>
+ #elif defined(__MINGW32__)
+ #include <boost/align/detail/aligned_alloc_mingw.hpp>
++#elif defined(__vita__)
++#include <boost/align/detail/aligned_alloc_vita.hpp>
+ #elif MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+ #include <boost/align/detail/aligned_alloc_posix.hpp>
+ #elif MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
+diff --git a/boost/align/detail/aligned_alloc_vita.hpp b/boost/align/detail/aligned_alloc_vita.hpp
+new file mode 100644
+index 000000000..4119fbd9b
+--- /dev/null
++++ b/boost/align/detail/aligned_alloc_vita.hpp
+@@ -0,0 +1,34 @@
++/*
++Copyright 2014 Glen Joseph Fernandes
++(glenjofe@gmail.com)
++
++Distributed under the Boost Software License, Version 1.0.
++(http://www.boost.org/LICENSE_1_0.txt)
++*/
++#ifndef BOOST_ALIGN_DETAIL_ALIGNED_ALLOC_ANDROID_HPP
++#define BOOST_ALIGN_DETAIL_ALIGNED_ALLOC_ANDROID_HPP
++
++#include <boost/align/detail/is_alignment.hpp>
++#include <boost/assert.hpp>
++#include <malloc.h>
++
++namespace boost {
++namespace alignment {
++
++inline void*
++aligned_alloc(std::size_t alignment, std::size_t size) BOOST_NOEXCEPT
++{
++    BOOST_ASSERT(detail::is_alignment(alignment));
++    return ::memalign(alignment, size);
++}
++
++inline void
++aligned_free(void* ptr) BOOST_NOEXCEPT
++{
++    ::free(ptr);
++}
++
++} /* alignment */
++} /* boost */
++
++#endif
 diff --git a/boost/asio/detail/config.hpp b/boost/asio/detail/config.hpp
 index 298bd7f32..f998b0a1c 100644
 --- a/boost/asio/detail/config.hpp
@@ -319,10 +372,10 @@ index 767254760..1c55ceec5 100644
  
    if (state->read_descriptor_ != -1)
 diff --git a/boost/asio/detail/impl/socket_ops.ipp b/boost/asio/detail/impl/socket_ops.ipp
-index 83bf30f62..82c5c6dcb 100644
+index 83bf30f62..3a12aa466 100644
 --- a/boost/asio/detail/impl/socket_ops.ipp
 +++ b/boost/asio/detail/impl/socket_ops.ipp
-@@ -41,6 +41,14 @@
+@@ -41,6 +41,12 @@
  #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
         // || defined(__MACH__) && defined(__APPLE__)
  
@@ -330,14 +383,12 @@ index 83bf30f62..82c5c6dcb 100644
 +typedef int SceNetId;
 +# include <netinet/in.h>
 +# include <sys/param.h>
-+#define NI_MAXHOST      1025
-+#define NI_MAXSERV      32
 +#endif
 +
  #include <boost/asio/detail/push_options.hpp>
  
  namespace boost {
-@@ -118,7 +126,7 @@ socket_type accept(socket_type s, socket_addr_type* addr,
+@@ -118,7 +124,7 @@ socket_type accept(socket_type s, socket_addr_type* addr,
    if (new_s == invalid_socket)
      return new_s;
  
@@ -346,7 +397,7 @@ index 83bf30f62..82c5c6dcb 100644
    int optval = 1;
    int result = ::setsockopt(new_s, SOL_SOCKET,
        SO_NOSIGPIPE, &optval, sizeof(optval));
-@@ -336,6 +344,9 @@ int close(socket_type s, state_type& state,
+@@ -336,6 +342,9 @@ int close(socket_type s, state_type& state,
        int flags = ::fcntl(s, F_GETFL, 0);
        if (flags >= 0)
          ::fcntl(s, F_SETFL, flags & ~O_NONBLOCK);
@@ -356,7 +407,7 @@ index 83bf30f62..82c5c6dcb 100644
  # else // defined(__SYMBIAN32__) || defined(__EMSCRIPTEN__)
        ioctl_arg_type arg = 0;
        ::ioctl(s, FIONBIO, &arg);
-@@ -377,6 +388,10 @@ bool set_user_non_blocking(socket_type s,
+@@ -377,6 +386,10 @@ bool set_user_non_blocking(socket_type s,
      result = ::fcntl(s, F_SETFL, flag);
      get_last_error(ec, result < 0);
    }
@@ -367,7 +418,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else
    ioctl_arg_type arg = (value ? 1 : 0);
    int result = ::ioctl(s, FIONBIO, &arg);
-@@ -431,6 +446,10 @@ bool set_internal_non_blocking(socket_type s,
+@@ -431,6 +444,10 @@ bool set_internal_non_blocking(socket_type s,
      result = ::fcntl(s, F_SETFL, flag);
      get_last_error(ec, result < 0);
    }
@@ -378,7 +429,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else
    ioctl_arg_type arg = (value ? 1 : 0);
    int result = ::ioctl(s, FIONBIO, &arg);
-@@ -557,7 +576,8 @@ bool non_blocking_connect(socket_type s, boost::system::error_code& ec)
+@@ -557,7 +574,8 @@ bool non_blocking_connect(socket_type s, boost::system::error_code& ec)
    // get spurious readiness notifications from the reactor.
  #if defined(BOOST_ASIO_WINDOWS) \
    || defined(__CYGWIN__) \
@@ -388,7 +439,7 @@ index 83bf30f62..82c5c6dcb 100644
    fd_set write_fds;
    FD_ZERO(&write_fds);
    FD_SET(s, &write_fds);
-@@ -606,7 +626,7 @@ bool non_blocking_connect(socket_type s, boost::system::error_code& ec)
+@@ -606,7 +624,7 @@ bool non_blocking_connect(socket_type s, boost::system::error_code& ec)
  int socketpair(int af, int type, int protocol,
      socket_type sv[2], boost::system::error_code& ec)
  {
@@ -397,7 +448,7 @@ index 83bf30f62..82c5c6dcb 100644
    (void)(af);
    (void)(type);
    (void)(protocol);
-@@ -640,6 +660,10 @@ bool sockatmark(socket_type s, boost::system::error_code& ec)
+@@ -640,6 +658,10 @@ bool sockatmark(socket_type s, boost::system::error_code& ec)
    if (ec.value() == ENOTTY)
      ec = boost::asio::error::not_socket;
  # endif // defined(ENOTTY)
@@ -408,7 +459,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else // defined(SIOCATMARK)
    int value = ::sockatmark(s);
    get_last_error(ec, result < 0);
-@@ -659,6 +683,8 @@ size_t available(socket_type s, boost::system::error_code& ec)
+@@ -659,6 +681,8 @@ size_t available(socket_type s, boost::system::error_code& ec)
    ioctl_arg_type value = 0;
  #if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
    int result = ::ioctlsocket(s, FIONREAD, &value);
@@ -417,7 +468,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
    int result = ::ioctl(s, FIONREAD, &value);
  #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
-@@ -1823,7 +1849,7 @@ socket_type socket(int af, int type, int protocol,
+@@ -1823,7 +1847,7 @@ socket_type socket(int af, int type, int protocol,
    }
  
    return s;
@@ -426,7 +477,7 @@ index 83bf30f62..82c5c6dcb 100644
    socket_type s = ::socket(af, type, protocol);
    get_last_error(ec, s == invalid_socket);
    if (s == invalid_socket)
-@@ -2118,6 +2144,10 @@ int getsockname(socket_type s, socket_addr_type* addr,
+@@ -2118,6 +2142,10 @@ int getsockname(socket_type s, socket_addr_type* addr,
  int ioctl(socket_type s, state_type& state, int cmd,
      ioctl_arg_type* arg, boost::system::error_code& ec)
  {
@@ -437,7 +488,7 @@ index 83bf30f62..82c5c6dcb 100644
    if (s == invalid_socket)
    {
      ec = boost::asio::error::bad_descriptor;
-@@ -2157,6 +2187,7 @@ int ioctl(socket_type s, state_type& state, int cmd,
+@@ -2157,6 +2185,7 @@ int ioctl(socket_type s, state_type& state, int cmd,
    }
  
    return result;
@@ -445,7 +496,7 @@ index 83bf30f62..82c5c6dcb 100644
  }
  
  int select(int nfds, fd_set* readfds, fd_set* writefds,
-@@ -2211,7 +2242,8 @@ int poll_read(socket_type s, state_type state,
+@@ -2211,7 +2240,8 @@ int poll_read(socket_type s, state_type state,
  
  #if defined(BOOST_ASIO_WINDOWS) \
    || defined(__CYGWIN__) \
@@ -455,7 +506,7 @@ index 83bf30f62..82c5c6dcb 100644
    fd_set fds;
    FD_ZERO(&fds);
    FD_SET(s, &fds);
-@@ -2263,7 +2295,8 @@ int poll_write(socket_type s, state_type state,
+@@ -2263,7 +2293,8 @@ int poll_write(socket_type s, state_type state,
  
  #if defined(BOOST_ASIO_WINDOWS) \
    || defined(__CYGWIN__) \
@@ -465,7 +516,7 @@ index 83bf30f62..82c5c6dcb 100644
    fd_set fds;
    FD_ZERO(&fds);
    FD_SET(s, &fds);
-@@ -2315,7 +2348,8 @@ int poll_error(socket_type s, state_type state,
+@@ -2315,7 +2346,8 @@ int poll_error(socket_type s, state_type state,
  
  #if defined(BOOST_ASIO_WINDOWS) \
    || defined(__CYGWIN__) \
@@ -475,7 +526,7 @@ index 83bf30f62..82c5c6dcb 100644
    fd_set fds;
    FD_ZERO(&fds);
    FD_SET(s, &fds);
-@@ -2366,7 +2400,8 @@ int poll_connect(socket_type s, int msec, boost::system::error_code& ec)
+@@ -2366,7 +2398,8 @@ int poll_connect(socket_type s, int msec, boost::system::error_code& ec)
  
  #if defined(BOOST_ASIO_WINDOWS) \
    || defined(__CYGWIN__) \
@@ -485,7 +536,7 @@ index 83bf30f62..82c5c6dcb 100644
    fd_set write_fds;
    FD_ZERO(&write_fds);
    FD_SET(s, &write_fds);
-@@ -2500,10 +2535,15 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
+@@ -2500,10 +2533,15 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
  
    return result == socket_error_retval ? 0 : dest;
  #else // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
@@ -501,7 +552,7 @@ index 83bf30f62..82c5c6dcb 100644
    if (result != 0 && af == BOOST_ASIO_OS_DEF(AF_INET6) && scope_id != 0)
    {
      using namespace std; // For strcat and sprintf.
-@@ -2518,6 +2558,7 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
+@@ -2518,6 +2556,7 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
        sprintf(if_name + 1, "%lu", scope_id);
      strcat(dest, if_name);
    }
@@ -509,7 +560,7 @@ index 83bf30f62..82c5c6dcb 100644
    return result;
  #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
  }
-@@ -2753,10 +2794,16 @@ int inet_pton(int af, const char* src, void* dest,
+@@ -2753,10 +2792,16 @@ int inet_pton(int af, const char* src, void* dest,
      src_ptr = src_buf;
    }
  
@@ -526,7 +577,7 @@ index 83bf30f62..82c5c6dcb 100644
    if (result > 0 && is_v6 && scope_id)
    {
      using namespace std; // For strchr and atoi.
-@@ -2774,6 +2821,7 @@ int inet_pton(int af, const char* src, void* dest,
+@@ -2774,6 +2819,7 @@ int inet_pton(int af, const char* src, void* dest,
          *scope_id = atoi(if_name + 1);
      }
    }
@@ -534,7 +585,7 @@ index 83bf30f62..82c5c6dcb 100644
    return result;
  #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
  }
-@@ -2809,6 +2857,23 @@ int gethostname(char* name, int namelen, boost::system::error_code& ec)
+@@ -2809,6 +2855,23 @@ int gethostname(char* name, int namelen, boost::system::error_code& ec)
          boost::system::system_category());
      return -1;
    }
@@ -558,26 +609,15 @@ index 83bf30f62..82c5c6dcb 100644
  #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
    int result = ::gethostname(name, namelen);
    get_last_error(ec, result != 0);
-@@ -2843,6 +2908,18 @@ inline boost::system::error_code translate_netdb_error(int error)
+@@ -2843,6 +2906,7 @@ inline boost::system::error_code translate_netdb_error(int error)
    }
  }
  
-+#if defined(__vita__)
-+struct hostent
-+{
-+    char *h_name;
-+    char **h_aliases;
-+    int h_addrtype;
-+    int h_length;
-+    char **h_addr_list;
-+    char *h_addr;
-+};
-+#endif
 +
  inline hostent* gethostbyaddr(const char* addr, int length, int af,
      hostent* result, char* buffer, int buflength, boost::system::error_code& ec)
  {
-@@ -2875,6 +2952,49 @@ inline hostent* gethostbyaddr(const char* addr, int length, int af,
+@@ -2875,6 +2939,49 @@ inline hostent* gethostbyaddr(const char* addr, int length, int af,
      return 0;
    *result = *retval;
    return retval;
@@ -627,7 +667,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else
    hostent* retval = 0;
    int error = 0;
-@@ -2931,6 +3051,39 @@ inline hostent* gethostbyname(const char* name, int af, struct hostent* result,
+@@ -2931,6 +3038,39 @@ inline hostent* gethostbyname(const char* name, int af, struct hostent* result,
      return 0;
    *result = *retval;
    return retval;
@@ -667,7 +707,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else
    (void)(ai_flags);
    if (af != BOOST_ASIO_OS_DEF(AF_INET))
-@@ -2974,6 +3127,7 @@ inline int gai_nsearch(const char* host,
+@@ -2974,6 +3114,7 @@ inline int gai_nsearch(const char* host,
    int search_count = 0;
    if (host == 0 || host[0] == '\0')
    {
@@ -675,7 +715,7 @@ index 83bf30f62..82c5c6dcb 100644
      if (hints->ai_flags & AI_PASSIVE)
      {
        // No host and AI_PASSIVE implies wildcard bind.
-@@ -3002,6 +3156,7 @@ inline int gai_nsearch(const char* host,
+@@ -3002,6 +3143,7 @@ inline int gai_nsearch(const char* host,
        }
      }
      else
@@ -683,7 +723,7 @@ index 83bf30f62..82c5c6dcb 100644
      {
        // No host and not AI_PASSIVE means connect to local host.
        switch (hints->ai_family)
-@@ -3249,6 +3404,8 @@ inline int gai_serv(addrinfo_type* aihead,
+@@ -3249,6 +3391,8 @@ inline int gai_serv(addrinfo_type* aihead,
    }
    else
    {
@@ -692,7 +732,7 @@ index 83bf30f62..82c5c6dcb 100644
      // Try service name with TCP first, then UDP.
      if (hints->ai_socktype == 0 || hints->ai_socktype == SOCK_STREAM)
      {
-@@ -3272,6 +3429,7 @@ inline int gai_serv(addrinfo_type* aihead,
+@@ -3272,6 +3416,7 @@ inline int gai_serv(addrinfo_type* aihead,
          num_found += rc;
        }
      }
@@ -700,7 +740,7 @@ index 83bf30f62..82c5c6dcb 100644
    }
  
    if (num_found == 0)
-@@ -3631,6 +3789,8 @@ inline boost::system::error_code getnameinfo_emulation(
+@@ -3631,6 +3776,8 @@ inline boost::system::error_code getnameinfo_emulation(
      }
      else
      {
@@ -709,7 +749,7 @@ index 83bf30f62..82c5c6dcb 100644
  #if defined(BOOST_ASIO_HAS_PTHREADS)
        static ::pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
        ::pthread_mutex_lock(&mutex);
-@@ -3655,6 +3815,7 @@ inline boost::system::error_code getnameinfo_emulation(
+@@ -3655,6 +3802,7 @@ inline boost::system::error_code getnameinfo_emulation(
  #if defined(BOOST_ASIO_HAS_PTHREADS)
        ::pthread_mutex_unlock(&mutex);
  #endif // defined(BOOST_ASIO_HAS_PTHREADS)
@@ -717,7 +757,7 @@ index 83bf30f62..82c5c6dcb 100644
      }
    }
  
-@@ -3911,6 +4072,8 @@ u_long_type network_to_host_long(u_long_type value)
+@@ -3911,6 +4059,8 @@ u_long_type network_to_host_long(u_long_type value)
      | (static_cast<u_long_type>(value_p[2]) << 8)
      | static_cast<u_long_type>(value_p[3]);
    return result;
@@ -726,7 +766,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
    return ntohl(value);
  #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
-@@ -3926,6 +4089,8 @@ u_long_type host_to_network_long(u_long_type value)
+@@ -3926,6 +4076,8 @@ u_long_type host_to_network_long(u_long_type value)
    result_p[2] = static_cast<unsigned char>((value >> 8) & 0xFF);
    result_p[3] = static_cast<unsigned char>(value & 0xFF);
    return result;
@@ -735,7 +775,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
    return htonl(value);
  #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
-@@ -3938,6 +4103,8 @@ u_short_type network_to_host_short(u_short_type value)
+@@ -3938,6 +4090,8 @@ u_short_type network_to_host_short(u_short_type value)
    u_short_type result = (static_cast<u_short_type>(value_p[0]) << 8)
      | static_cast<u_short_type>(value_p[1]);
    return result;
@@ -744,7 +784,7 @@ index 83bf30f62..82c5c6dcb 100644
  #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
    return ntohs(value);
  #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
-@@ -3951,6 +4118,8 @@ u_short_type host_to_network_short(u_short_type value)
+@@ -3951,6 +4105,8 @@ u_short_type host_to_network_short(u_short_type value)
    result_p[0] = static_cast<unsigned char>((value >> 8) & 0xFF);
    result_p[1] = static_cast<unsigned char>(value & 0xFF);
    return result;
@@ -908,7 +948,7 @@ index 382fb3461..8d6606108 100644
  #include <boost/asio/detail/socket_types.hpp>
  
 diff --git a/boost/asio/detail/socket_types.hpp b/boost/asio/detail/socket_types.hpp
-index 4099deec3..bd4fddd00 100644
+index 4099deec3..c6b73e5d2 100644
 --- a/boost/asio/detail/socket_types.hpp
 +++ b/boost/asio/detail/socket_types.hpp
 @@ -56,13 +56,18 @@
@@ -946,8 +986,8 @@ index 4099deec3..bd4fddd00 100644
  #  include <netinet/tcp.h>
  # endif
  # include <arpa/inet.h>
-+#if !defined(__vita__)
  # include <netdb.h>
++#if !defined(__vita__)
  # include <net/if.h>
 +#endif
  # include <limits.h>
