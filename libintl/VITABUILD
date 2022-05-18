@@ -1,0 +1,20 @@
+pkgname=linintl
+pkgver=0.21
+pkgrel=1
+url="https://www.gnu.org/software/gettext/"
+source=("https://ftp.gnu.org/pub/gnu/gettext/gettext-${pkgver}.tar.gz")
+sha256sums=('c77d0da3102aec9c07f43671e60611ebff89a996ef159497ce8e59d075786b12')
+
+build() {
+  cd gettext-$pkgver/gettext-runtime
+
+  ./configure --host=arm-vita-eabi  --prefix=$VITASDK/arm-vita-eabi/ --disable-shared --enable-static --without-emacs --without-lispdir --enable-nls --with-included-gettext --disable-c++ --disable-libasprintf --disable-java
+
+  make -j$(nproc) -C intl
+}
+
+package() {
+  cd gettext-$pkgver/gettext-runtime
+
+  make DESTDIR="$pkgdir" install -C intl
+}

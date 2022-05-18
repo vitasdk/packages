@@ -1,0 +1,27 @@
+pkgname=libvpx
+pkgver=1.11.0
+pkgrel=1
+url='https://chromium.googlesource.com/webm/libvpx'
+source=("https://github.com/webmproject/libvpx/archive/v$pkgver.tar.gz" "libvpx.patch")
+sha256sums=(
+  '965e51c91ad9851e2337aebcc0f517440c637c506f3a03948062e3d5ea129a83'
+  'SKIP'
+)
+
+build() {
+  cd libvpx-$pkgver
+
+  patch -p1 -i $srcdir/libvpx.patch
+
+  CROSS=arm-vita-eabi- ./configure --target=armv7-linux-gcc --prefix=$prefix --disable-shared --enable-static --disable-examples --disable-tools --disable-docs --disable-unit-tests 
+
+  make -j$(nproc)
+
+}
+
+package() {
+  cd libvpx-$pkgver
+
+  make DESTDIR="$pkgdir" install
+}
+

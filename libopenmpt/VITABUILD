@@ -1,0 +1,18 @@
+pkgname=libopenmpt
+pkgver=0.5.14
+pkgrel=1
+url="https://lib.openmpt.org/"
+source=("https://lib.openmpt.org/files/${pkgname}/src/${pkgname}-${pkgver}+release.autotools.tar.gz")
+sha256sums=('a979c1a763dcb420d40004eaeadd5532153b63493e6bfb71362204ee8a75abdc')
+depends=('zlib libvorbis libogg mpg123')
+
+build() {
+  cd ${pkgname}-${pkgver}+release.autotools
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-examples --disable-tests --disable-openmpt123
+  make -j$(nproc)
+}
+
+package () {
+  cd ${pkgname}-${pkgver}+release.autotools
+  make DESTDIR=$pkgdir install
+}
