@@ -1,27 +1,26 @@
 pkgname=sdl_ttf
 pkgver=2.0.11.1
-pkgrel=1
+pkgrel=2
 gitrev=eba26b54b5ce7f1c99a75a116c4719a432354f90
 url="https://www.libsdl.org/projects/SDL_ttf/"
 source=(
     "https://github.com/libsdl-org/SDL_ttf/archive/${gitrev}.zip"
-    Makefile.vita
 )
 
 sha256sums=(
     'SKIP'
-    2462beb3f9389cdfd503dbcd13f46af39eb6a12686339dd6eb46371ed20ee26e
 )
-depends=('sdl freetype')
+depends=('sdl freetype libpng')
 
 build() {
-  cp "${srcdir}/Makefile.vita" "SDL_ttf-${gitrev}"
   cd SDL_ttf-${gitrev}
-  make -j$(nproc) -f Makefile.vita
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic
+  make -j$(nproc)
+
 }
 
 package () {
   cd SDL_ttf-${gitrev}
-  make -f Makefile.vita DESTDIR=$pkgdir install
+  make DESTDIR=$pkgdir install
 }
 

@@ -1,0 +1,13 @@
+diff --git a/Makefile.in b/Makefile.in
+index 3d10565..2ef991c 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -47,7 +47,7 @@ LT_RELEASE  = @LT_RELEASE@
+ LT_REVISION = @LT_REVISION@
+ LT_LDFLAGS  = -no-undefined -rpath $(libdir) -release $(LT_RELEASE) -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ 
+-all: $(srcdir)/configure Makefile $(objects) $(objects)/$(TARGET) $(objects)/playwave$(EXE) $(objects)/playmus$(EXE)
++all: $(srcdir)/configure Makefile $(objects) $(objects)/$(TARGET)
+ 
+ $(srcdir)/configure: $(srcdir)/configure.in
+ 	@echo "Warning, configure.in is out of date"

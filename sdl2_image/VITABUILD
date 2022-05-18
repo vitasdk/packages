@@ -1,19 +1,18 @@
 pkgname=sdl2_image
 pkgver=2.0.5
-pkgrel=1
+pkgrel=2
 url="https://www.libsdl.org/projects/SDL_image/"
-source=("https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.tar.gz" Makefile.vita)
-sha256sums=(bdd5f6e026682f7d7e1be0b6051b209da2f402a2dd8bd1c4bd9c25ad263108d0 SKIP)
+source=("https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.tar.gz")
+sha256sums=(bdd5f6e026682f7d7e1be0b6051b209da2f402a2dd8bd1c4bd9c25ad263108d0)
 depends=('sdl2 libpng libwebp libjpeg-turbo zlib')
 
 build() {
-  cp "${srcdir}/Makefile.vita" "SDL2_image-${pkgver}"
   cd "SDL2_image-${pkgver}"
-  make -j$(nproc) -f Makefile.vita clean
-  make -j$(nproc) -f Makefile.vita
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic
+  make -j$(nproc)
 }
 
 package () {
   cd "SDL2_image-${pkgver}"
-  make -f Makefile.vita DESTDIR="${pkgdir}" install
+  make DESTDIR=$pkgdir install
 }
