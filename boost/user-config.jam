@@ -1,4 +1,4 @@
-using gcc : arm : arm-vita-eabi-gcc : <linkflags>"-lstdc++ -lc -lm" ;
+using gcc : arm : arm-vita-eabi-g++ ;
 
 
 # Stop on first error
