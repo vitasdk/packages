@@ -1,0 +1,16 @@
+pkgname=libzstd
+pkgver=1.4.4
+pkgrel=1
+url='https://zstd.net'
+source=("https://github.com/facebook/zstd/releases/download/v$pkgver/zstd-$pkgver.tar.gz")
+sha256sums=('59ef70ebb757ffe74a7b3fe9c305e2ba3350021a918d168a046c6300aeea9315')
+build() {
+  cd zstd-$pkgver/lib
+
+  make CC=arm-vita-eabi-gcc PREFIX=${prefix} libzstd.a libzstd.pc
+}
+
+package() {
+  cd zstd-$pkgver/lib
+  make DESTDIR="$pkgdir" PREFIX=${prefix} install-pc install-static install-includes
+}
