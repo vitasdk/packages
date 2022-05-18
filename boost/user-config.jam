@@ -1,0 +1,8 @@
+using gcc : arm : arm-vita-eabi-g++ ;
+
+
+# Stop on first error
+option.set runtime-link : static ;
+option.set threading : multi ;
+option.set link : static ;
+option.set variant : release ;

@@ -1,0 +1,1513 @@
+diff --git a/boost/align/aligned_alloc.hpp b/boost/align/aligned_alloc.hpp
+index 1d81a1337..416c8083e 100644
+--- a/boost/align/aligned_alloc.hpp
++++ b/boost/align/aligned_alloc.hpp
+@@ -28,6 +28,8 @@ Distributed under the Boost Software License, Version 1.0.
+ #include <boost/align/detail/aligned_alloc_msvc.hpp>
+ #elif defined(__MINGW32__)
+ #include <boost/align/detail/aligned_alloc_mingw.hpp>
++#elif defined(__vita__)
++#include <boost/align/detail/aligned_alloc_vita.hpp>
+ #elif MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+ #include <boost/align/detail/aligned_alloc_posix.hpp>
+ #elif MAC_OS_X_VERSION_MIN_REQUIRED >= 1060
+diff --git a/boost/align/detail/aligned_alloc_vita.hpp b/boost/align/detail/aligned_alloc_vita.hpp
+new file mode 100644
+index 000000000..4119fbd9b
+--- /dev/null
++++ b/boost/align/detail/aligned_alloc_vita.hpp
+@@ -0,0 +1,34 @@
++/*
++Copyright 2014 Glen Joseph Fernandes
++(glenjofe@gmail.com)
++
++Distributed under the Boost Software License, Version 1.0.
++(http://www.boost.org/LICENSE_1_0.txt)
++*/
++#ifndef BOOST_ALIGN_DETAIL_ALIGNED_ALLOC_ANDROID_HPP
++#define BOOST_ALIGN_DETAIL_ALIGNED_ALLOC_ANDROID_HPP
++
++#include <boost/align/detail/is_alignment.hpp>
++#include <boost/assert.hpp>
++#include <malloc.h>
++
++namespace boost {
++namespace alignment {
++
++inline void*
++aligned_alloc(std::size_t alignment, std::size_t size) BOOST_NOEXCEPT
++{
++    BOOST_ASSERT(detail::is_alignment(alignment));
++    return ::memalign(alignment, size);
++}
++
++inline void
++aligned_free(void* ptr) BOOST_NOEXCEPT
++{
++    ::free(ptr);
++}
++
++} /* alignment */
++} /* boost */
++
++#endif
+diff --git a/boost/asio/detail/config.hpp b/boost/asio/detail/config.hpp
+index 298bd7f32..f998b0a1c 100644
+--- a/boost/asio/detail/config.hpp
++++ b/boost/asio/detail/config.hpp
+@@ -119,6 +119,10 @@
+ #      define BOOST_ASIO_HAS_MOVE 1
+ #    endif // defined(__ICL) && (__ICL >= 1500)
+ #  endif // defined(__INTEL_CXX11_MODE__)
++#  if defined(__vita__)
++#   define BOOST_ASIO_HAS_MOVE 1
++#  endif // defined(__vita__)
++
+ # endif // !defined(BOOST_ASIO_DISABLE_MOVE)
+ #endif // !defined(BOOST_ASIO_HAS_MOVE)
+ 
+@@ -184,6 +188,9 @@
+ #    define BOOST_ASIO_HAS_VARIADIC_TEMPLATES 1
+ #   endif // (_MSC_VER >= 1900)
+ #  endif // defined(BOOST_ASIO_MSVC)
++#  if defined(__vita__)
++#    define BOOST_ASIO_HAS_VARIADIC_TEMPLATES 1
++#  endif
+ # endif // !defined(BOOST_ASIO_DISABLE_VARIADIC_TEMPLATES)
+ #endif // !defined(BOOST_ASIO_HAS_VARIADIC_TEMPLATES)
+ #if !defined(BOOST_ASIO_ELLIPSIS)
+@@ -212,6 +219,9 @@
+ #   define BOOST_ASIO_DELETED = delete
+ #  endif // (_MSC_VER >= 1900)
+ # endif // defined(BOOST_ASIO_MSVC)
++# if defined(__vita__)
++#  define BOOST_ASIO_DELETED = delete
++# endif // defined(__vita__)
+ # if !defined(BOOST_ASIO_DELETED)
+ #  define BOOST_ASIO_DELETED
+ # endif // !defined(BOOST_ASIO_DELETED)
+@@ -236,6 +246,9 @@
+ #    define BOOST_ASIO_HAS_CONSTEXPR 1
+ #   endif // (_MSC_VER >= 1900)
+ #  endif // defined(BOOST_ASIO_MSVC)
++#  if defined(__vita__)
++#   define BOOST_ASIO_HAS_CONSTEXPR 1
++#  endif // defined(__vita__)
+ # endif // !defined(BOOST_ASIO_DISABLE_CONSTEXPR)
+ #endif // !defined(BOOST_ASIO_HAS_CONSTEXPR)
+ #if !defined(BOOST_ASIO_CONSTEXPR)
+@@ -302,6 +315,10 @@
+ #    define BOOST_ASIO_HAS_NOEXCEPT 1
+ #   endif // (_MSC_VER >= 1900)
+ #  endif // defined(BOOST_ASIO_MSVC)
++#  if defined(__vita__)
++#   define BOOST_ASIO_NOEXCEPT noexcept(true)
++#   define BOOST_ASIO_NOEXCEPT_OR_NOTHROW noexcept(true)
++#  endif // defined(__vita__)
+ # endif // !defined(BOOST_ASIO_DISABLE_NOEXCEPT)
+ # if !defined(BOOST_ASIO_NOEXCEPT)
+ # endif // !defined(BOOST_ASIO_NOEXCEPT)
+@@ -368,6 +385,9 @@
+ #    define BOOST_ASIO_HAS_DECLTYPE 1
+ #   endif // (_MSC_VER >= 1800)
+ #  endif // defined(BOOST_ASIO_MSVC)
++#  if defined(__vita__)
++#   define BOOST_ASIO_HAS_DECLTYPE 1
++#  endif // defined(__vita__)
+ # endif // !defined(BOOST_ASIO_DISABLE_DECLTYPE)
+ #endif // !defined(BOOST_ASIO_HAS_DECLTYPE)
+ 
+@@ -1440,7 +1460,8 @@
+    || defined(__NetBSD__) \
+    || defined(__OpenBSD__) \
+    || defined(__linux__) \
+-   || defined(__HAIKU__)
++   || defined(__HAIKU__) \
++   || defined(__vita__)
+ #   define BOOST_ASIO_HAS_UNISTD_H 1
+ #  endif
+ # endif // !defined(BOOST_ASIO_HAS_BOOST_CONFIG)
+@@ -1511,7 +1532,8 @@
+ # if defined(BOOST_ASIO_HAS_IOCP) \
+   || !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+ #  if !defined(__SYMBIAN32__)
+ #   if !defined(BOOST_ASIO_DISABLE_SERIAL_PORT)
+ #    define BOOST_ASIO_HAS_SERIAL_PORT 1
+@@ -1566,7 +1588,8 @@
+ # if !defined(BOOST_ASIO_DISABLE_POSIX_STREAM_DESCRIPTOR)
+ #  if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+ #   define BOOST_ASIO_HAS_POSIX_STREAM_DESCRIPTOR 1
+ #  endif // !defined(BOOST_ASIO_WINDOWS)
+          //   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
+@@ -1599,7 +1622,8 @@
+ # if defined(BOOST_ASIO_HAS_IOCP) \
+   || !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+ #  if !defined(__SYMBIAN32__)
+ #   if !defined(BOOST_ASIO_DISABLE_PIPE)
+ #    define BOOST_ASIO_HAS_PIPE 1
+@@ -1616,7 +1640,8 @@
+ # if !defined(BOOST_ASIO_DISABLE_SIGACTION)
+ #  if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+ #   define BOOST_ASIO_HAS_SIGACTION 1
+ #  endif // !defined(BOOST_ASIO_WINDOWS)
+          //   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
+@@ -1627,9 +1652,9 @@
+ // Can use signal().
+ #if !defined(BOOST_ASIO_HAS_SIGNAL)
+ # if !defined(BOOST_ASIO_DISABLE_SIGNAL)
+-#  if !defined(UNDER_CE)
++#  if !defined(UNDER_CE) && !defined(__vita__)
+ #   define BOOST_ASIO_HAS_SIGNAL 1
+-#  endif // !defined(UNDER_CE)
++#  endif // !defined(UNDER_CE) && !defined(__vita__)
+ # endif // !defined(BOOST_ASIO_DISABLE_SIGNAL)
+ #endif // !defined(BOOST_ASIO_HAS_SIGNAL)
+ 
+@@ -1650,6 +1675,7 @@
+ #   else // defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
+ #    define BOOST_ASIO_HAS_GETADDRINFO 1
+ #   endif // defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
++#  elif defined(__vita__)
+ #  else // defined(__MACH__) && defined(__APPLE__)
+ #   define BOOST_ASIO_HAS_GETADDRINFO 1
+ #  endif // defined(__MACH__) && defined(__APPLE__)
+@@ -1842,7 +1868,8 @@
+ // Support for POSIX ssize_t typedef.
+ #if !defined(BOOST_ASIO_DISABLE_SSIZE_T)
+ # if defined(__linux__) \
+-   || (defined(__MACH__) && defined(__APPLE__))
++   || (defined(__MACH__) && defined(__APPLE__)) \
++   || defined(__vita__)
+ #  define BOOST_ASIO_HAS_SSIZE_T 1
+ # endif // defined(__linux__)
+         //   || (defined(__MACH__) && defined(__APPLE__))
+diff --git a/boost/asio/detail/impl/null_event.ipp b/boost/asio/detail/impl/null_event.ipp
+index e36344d5d..242aeed23 100644
+--- a/boost/asio/detail/impl/null_event.ipp
++++ b/boost/asio/detail/impl/null_event.ipp
+@@ -17,7 +17,7 @@
+ 
+ #include <boost/asio/detail/config.hpp>
+ 
+-#if defined(BOOST_ASIO_WINDOWS_RUNTIME)
++#if defined(BOOST_ASIO_WINDOWS_RUNTIME) || defined(__vita__)
+ # include <thread>
+ #elif defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+ # include <boost/asio/detail/socket_types.hpp>
+@@ -39,7 +39,7 @@ namespace detail {
+ 
+ void null_event::do_wait()
+ {
+-#if defined(BOOST_ASIO_WINDOWS_RUNTIME)
++#if defined(BOOST_ASIO_WINDOWS_RUNTIME) || defined(__vita__)
+   std::this_thread::sleep_until((std::chrono::steady_clock::time_point::max)());
+ #elif defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+   ::Sleep(INFINITE);
+diff --git a/boost/asio/detail/impl/posix_thread.ipp b/boost/asio/detail/impl/posix_thread.ipp
+index 4193302dc..f5d36c2e0 100644
+--- a/boost/asio/detail/impl/posix_thread.ipp
++++ b/boost/asio/detail/impl/posix_thread.ipp
+@@ -46,7 +46,7 @@ void posix_thread::join()
+ 
+ std::size_t posix_thread::hardware_concurrency()
+ {
+-#if defined(_SC_NPROCESSORS_ONLN)
++#if defined(_SC_NPROCESSORS_ONLN) && !defined(__vita__)
+   long result = sysconf(_SC_NPROCESSORS_ONLN);
+   if (result > 0)
+     return result;
+diff --git a/boost/asio/detail/impl/signal_set_service.ipp b/boost/asio/detail/impl/signal_set_service.ipp
+index 767254760..1c55ceec5 100644
+--- a/boost/asio/detail/impl/signal_set_service.ipp
++++ b/boost/asio/detail/impl/signal_set_service.ipp
+@@ -68,7 +68,8 @@ void boost_asio_signal_handler(int signal_number)
+ {
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  || defined(__CYGWIN__)
++  || defined(__CYGWIN__) \
++  || defined(__vita__)
+   signal_set_service::deliver_signal(signal_number);
+ #else // defined(BOOST_ASIO_WINDOWS)
+       //   || defined(BOOST_ASIO_WINDOWS_RUNTIME)
+@@ -90,7 +91,8 @@ void boost_asio_signal_handler(int signal_number)
+ 
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+ class signal_set_service::pipe_read_op :
+ # if defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
+   public io_uring_operation
+@@ -164,7 +166,8 @@ signal_set_service::signal_set_service(execution_context& context)
+     scheduler_(boost::asio::use_service<scheduler_impl>(context)),
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+ # if defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
+     io_uring_service_(boost::asio::use_service<io_uring_service>(context)),
+ # else // defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
+@@ -180,7 +183,8 @@ signal_set_service::signal_set_service(execution_context& context)
+ 
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+ # if defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
+   io_uring_service_.init_task();
+ # else // defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
+@@ -224,7 +228,8 @@ void signal_set_service::notify_fork(execution_context::fork_event fork_ev)
+ {
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+   signal_state* state = get_signal_state();
+   static_mutex::scoped_lock lock(state->mutex_);
+ 
+@@ -349,7 +354,7 @@ boost::system::error_code signal_set_service::add(
+       if (::signal(signal_number, boost_asio_signal_handler) == SIG_ERR)
+ # endif // defined(BOOST_ASIO_HAS_SIGACTION)
+       {
+-# if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
++# if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__vita__)
+         ec = boost::asio::error::invalid_argument;
+ # else // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+         ec = boost::system::error_code(errno,
+@@ -419,7 +424,7 @@ boost::system::error_code signal_set_service::remove(
+       if (::signal(signal_number, SIG_DFL) == SIG_ERR)
+ # endif // defined(BOOST_ASIO_HAS_SIGACTION)
+       {
+-# if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
++# if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__vita__)
+         ec = boost::asio::error::invalid_argument;
+ # else // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+         ec = boost::system::error_code(errno,
+@@ -473,7 +478,7 @@ boost::system::error_code signal_set_service::clear(
+       if (::signal(reg->signal_number_, SIG_DFL) == SIG_ERR)
+ # endif // defined(BOOST_ASIO_HAS_SIGACTION)
+       {
+-# if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
++# if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__vita__)
+         ec = boost::asio::error::invalid_argument;
+ # else // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+         ec = boost::system::error_code(errno,
+@@ -569,7 +574,7 @@ void signal_set_service::add_service(signal_set_service* service)
+   signal_state* state = get_signal_state();
+   static_mutex::scoped_lock lock(state->mutex_);
+ 
+-#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__)
++#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__) && !defined(__vita__)
+   // If this is the first service to be created, open a new pipe.
+   if (state->service_list_ == 0)
+     open_descriptors();
+@@ -600,7 +605,8 @@ void signal_set_service::add_service(signal_set_service* service)
+ 
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+   // Register for pipe readiness notifications.
+   int read_descriptor = state->read_descriptor_;
+   lock.unlock();
+@@ -626,7 +632,8 @@ void signal_set_service::remove_service(signal_set_service* service)
+   {
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+     // Disable the pipe readiness notifications.
+     int read_descriptor = state->read_descriptor_;
+     lock.unlock();
+@@ -655,7 +662,7 @@ void signal_set_service::remove_service(signal_set_service* service)
+     service->next_ = 0;
+     service->prev_ = 0;
+ 
+-#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__)
++#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__) && !defined(__vita__)
+     // If this is the last service to be removed, close the pipe.
+     if (state->service_list_ == 0)
+       close_descriptors();
+@@ -667,7 +674,8 @@ void signal_set_service::open_descriptors()
+ {
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+   signal_state* state = get_signal_state();
+ 
+   int pipe_fds[2];
+@@ -699,7 +707,8 @@ void signal_set_service::close_descriptors()
+ {
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+   signal_state* state = get_signal_state();
+ 
+   if (state->read_descriptor_ != -1)
+diff --git a/boost/asio/detail/impl/socket_ops.ipp b/boost/asio/detail/impl/socket_ops.ipp
+index 83bf30f62..3a12aa466 100644
+--- a/boost/asio/detail/impl/socket_ops.ipp
++++ b/boost/asio/detail/impl/socket_ops.ipp
+@@ -41,6 +41,12 @@
+ #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+        // || defined(__MACH__) && defined(__APPLE__)
+ 
++#if defined(__vita__)
++typedef int SceNetId;
++# include <netinet/in.h>
++# include <sys/param.h>
++#endif
++
+ #include <boost/asio/detail/push_options.hpp>
+ 
+ namespace boost {
+@@ -118,7 +124,7 @@ socket_type accept(socket_type s, socket_addr_type* addr,
+   if (new_s == invalid_socket)
+     return new_s;
+ 
+-#if defined(__MACH__) && defined(__APPLE__) || defined(__FreeBSD__)
++#if (defined(__MACH__) && defined(__APPLE__) || defined(__FreeBSD__)) && !defined(__vita__)
+   int optval = 1;
+   int result = ::setsockopt(new_s, SOL_SOCKET,
+       SO_NOSIGPIPE, &optval, sizeof(optval));
+@@ -336,6 +342,9 @@ int close(socket_type s, state_type& state,
+       int flags = ::fcntl(s, F_GETFL, 0);
+       if (flags >= 0)
+         ::fcntl(s, F_SETFL, flags & ~O_NONBLOCK);
++# elif defined(__vita__)
++      int flag = 0;
++      setsockopt(s, SCE_NET_SOL_SOCKET,  SCE_NET_SO_NBIO, &flag, sizeof(flag));
+ # else // defined(__SYMBIAN32__) || defined(__EMSCRIPTEN__)
+       ioctl_arg_type arg = 0;
+       ::ioctl(s, FIONBIO, &arg);
+@@ -377,6 +386,10 @@ bool set_user_non_blocking(socket_type s,
+     result = ::fcntl(s, F_SETFL, flag);
+     get_last_error(ec, result < 0);
+   }
++#elif defined(__vita__)
++   int flag = (value ? 1 : 0);
++   int result = setsockopt(s, SCE_NET_SOL_SOCKET,  SCE_NET_SO_NBIO, &flag, sizeof(flag));
++   get_last_error(ec, result < 0);
+ #else
+   ioctl_arg_type arg = (value ? 1 : 0);
+   int result = ::ioctl(s, FIONBIO, &arg);
+@@ -431,6 +444,10 @@ bool set_internal_non_blocking(socket_type s,
+     result = ::fcntl(s, F_SETFL, flag);
+     get_last_error(ec, result < 0);
+   }
++#elif defined(__vita__)
++   int flag = (value ? 1 : 0);
++   int result = setsockopt(s, SCE_NET_SOL_SOCKET,  SCE_NET_SO_NBIO, &flag, sizeof(flag));
++   get_last_error(ec, result < 0);
+ #else
+   ioctl_arg_type arg = (value ? 1 : 0);
+   int result = ::ioctl(s, FIONBIO, &arg);
+@@ -557,7 +574,8 @@ bool non_blocking_connect(socket_type s, boost::system::error_code& ec)
+   // get spurious readiness notifications from the reactor.
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__vita__)
+   fd_set write_fds;
+   FD_ZERO(&write_fds);
+   FD_SET(s, &write_fds);
+@@ -606,7 +624,7 @@ bool non_blocking_connect(socket_type s, boost::system::error_code& ec)
+ int socketpair(int af, int type, int protocol,
+     socket_type sv[2], boost::system::error_code& ec)
+ {
+-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
++#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__vita__)
+   (void)(af);
+   (void)(type);
+   (void)(protocol);
+@@ -640,6 +658,10 @@ bool sockatmark(socket_type s, boost::system::error_code& ec)
+   if (ec.value() == ENOTTY)
+     ec = boost::asio::error::not_socket;
+ # endif // defined(ENOTTY)
++#elif defined(__vita__)
++  // sockatmark not available
++  int value = 0;
++  ec = boost::system::error_code();
+ #else // defined(SIOCATMARK)
+   int value = ::sockatmark(s);
+   get_last_error(ec, result < 0);
+@@ -659,6 +681,8 @@ size_t available(socket_type s, boost::system::error_code& ec)
+   ioctl_arg_type value = 0;
+ #if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+   int result = ::ioctlsocket(s, FIONREAD, &value);
++#elif defined(__vita__)
++  int result = 0;
+ #else // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+   int result = ::ioctl(s, FIONREAD, &value);
+ #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+@@ -1823,7 +1847,7 @@ socket_type socket(int af, int type, int protocol,
+   }
+ 
+   return s;
+-#elif defined(__MACH__) && defined(__APPLE__) || defined(__FreeBSD__)
++#elif (defined(__MACH__) && defined(__APPLE__) || defined(__FreeBSD__)) && !defined(__vita__)
+   socket_type s = ::socket(af, type, protocol);
+   get_last_error(ec, s == invalid_socket);
+   if (s == invalid_socket)
+@@ -2118,6 +2142,10 @@ int getsockname(socket_type s, socket_addr_type* addr,
+ int ioctl(socket_type s, state_type& state, int cmd,
+     ioctl_arg_type* arg, boost::system::error_code& ec)
+ {
++#if defined(__vita__)
++    ec = asio::error::operation_not_supported;
++    return -1;
++#else
+   if (s == invalid_socket)
+   {
+     ec = boost::asio::error::bad_descriptor;
+@@ -2157,6 +2185,7 @@ int ioctl(socket_type s, state_type& state, int cmd,
+   }
+ 
+   return result;
++#endif
+ }
+ 
+ int select(int nfds, fd_set* readfds, fd_set* writefds,
+@@ -2211,7 +2240,8 @@ int poll_read(socket_type s, state_type state,
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__vita__)
+   fd_set fds;
+   FD_ZERO(&fds);
+   FD_SET(s, &fds);
+@@ -2263,7 +2293,8 @@ int poll_write(socket_type s, state_type state,
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__vita__)
+   fd_set fds;
+   FD_ZERO(&fds);
+   FD_SET(s, &fds);
+@@ -2315,7 +2346,8 @@ int poll_error(socket_type s, state_type state,
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__vita__)
+   fd_set fds;
+   FD_ZERO(&fds);
+   FD_SET(s, &fds);
+@@ -2366,7 +2398,8 @@ int poll_connect(socket_type s, int msec, boost::system::error_code& ec)
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__vita__)
+   fd_set write_fds;
+   FD_ZERO(&write_fds);
+   FD_SET(s, &write_fds);
+@@ -2500,10 +2533,15 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
+ 
+   return result == socket_error_retval ? 0 : dest;
+ #else // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
++#if defined(__vita__)
++  const char* result = sceNetInetNtop(af, src, dest, static_cast<int>(length));
++#else
+   const char* result = ::inet_ntop(af, src, dest, static_cast<int>(length));
++#endif
+   get_last_error(ec, true);
+   if (result == 0 && !ec)
+     ec = boost::asio::error::invalid_argument;
++#if !defined(__vita__)
+   if (result != 0 && af == BOOST_ASIO_OS_DEF(AF_INET6) && scope_id != 0)
+   {
+     using namespace std; // For strcat and sprintf.
+@@ -2518,6 +2556,7 @@ const char* inet_ntop(int af, const void* src, char* dest, size_t length,
+       sprintf(if_name + 1, "%lu", scope_id);
+     strcat(dest, if_name);
+   }
++#endif
+   return result;
+ #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+ }
+@@ -2753,10 +2792,16 @@ int inet_pton(int af, const char* src, void* dest,
+     src_ptr = src_buf;
+   }
+ 
++#if defined(__vita__)
++  int result = sceNetInetPton(af, src_ptr, dest);
++#else
+   int result = ::inet_pton(af, src_ptr, dest);
++#endif
+   get_last_error(ec, true);
+   if (result <= 0 && !ec)
+     ec = boost::asio::error::invalid_argument;
++
++#if !defined(__vita__)
+   if (result > 0 && is_v6 && scope_id)
+   {
+     using namespace std; // For strchr and atoi.
+@@ -2774,6 +2819,7 @@ int inet_pton(int af, const char* src, void* dest,
+         *scope_id = atoi(if_name + 1);
+     }
+   }
++#endif
+   return result;
+ #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+ }
+@@ -2809,6 +2855,23 @@ int gethostname(char* name, int namelen, boost::system::error_code& ec)
+         boost::system::system_category());
+     return -1;
+   }
++#elif defined(__vita__)
++  const char* localname = "localhost";
++  size_t locallen = ::strlen(localname) + 1;
++  int result = 0;
++  if (namelen < locallen)
++  {
++      result = -1;
++  }
++  else
++  {
++    if (namelen < locallen)
++        ::memcpy(name, localname, namelen);
++    else
++        ::memcpy(name, localname, locallen);
++  }
++  get_last_error(ec, result != 0);
++  return result;
+ #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+   int result = ::gethostname(name, namelen);
+   get_last_error(ec, result != 0);
+@@ -2843,6 +2906,7 @@ inline boost::system::error_code translate_netdb_error(int error)
+   }
+ }
+ 
++
+ inline hostent* gethostbyaddr(const char* addr, int length, int af,
+     hostent* result, char* buffer, int buflength, boost::system::error_code& ec)
+ {
+@@ -2875,6 +2939,49 @@ inline hostent* gethostbyaddr(const char* addr, int length, int af,
+     return 0;
+   *result = *retval;
+   return retval;
++#elif defined(__vita__)
++
++  static struct hostent *he = []() -> hostent *{
++      static struct hostent he;
++      // One time allocation for the name.
++      he.h_name = new char[SCE_NET_RESOLVER_HOSTNAME_LEN_MAX + 1];
++      return &he;
++  }();
++
++  static char *aliases[1] = { NULL };
++  static char *addr_list[2] = { NULL, NULL };
++  static struct SceNetInAddr sce_addr;
++
++  memset(he->h_name, 0, SCE_NET_RESOLVER_HOSTNAME_LEN_MAX + 1);
++
++  SceNetId netID = -1;
++
++  netID = sceNetResolverCreate("gethostbyaddr resolver", NULL, 0);
++  if (netID < 0)
++  {
++      return NULL;
++  }
++
++  if (sceNetInetPton(SCE_NET_AF_INET, addr, &sce_addr.s_addr) <= 0)
++  {
++      sceNetResolverDestroy(netID);
++      return NULL;
++  }
++
++  if (sceNetResolverStartAton(netID, &sce_addr, he->h_name, SCE_NET_RESOLVER_HOSTNAME_LEN_MAX + 1, 0, 0, 0) < 0)
++  {
++      sceNetResolverDestroy(netID);
++      return NULL;
++  }
++
++  he->h_aliases = aliases;
++  he->h_length = 4;
++  he->h_addr_list = addr_list;
++  he->h_addrtype = AF_INET;
++
++  sceNetResolverDestroy(netID);
++
++  return he;
+ #else
+   hostent* retval = 0;
+   int error = 0;
+@@ -2931,6 +3038,39 @@ inline hostent* gethostbyname(const char* name, int af, struct hostent* result,
+     return 0;
+   *result = *retval;
+   return retval;
++#elif defined(__vita__)
++  static struct hostent he;
++  static char *aliases[1] = { NULL };
++  static char *addr_list[2] = { NULL, NULL };
++  static struct SceNetInAddr addr;
++
++  SceNetId netID = -1;
++  int returnValue = -1;
++
++  netID = sceNetResolverCreate("gethostbyname resolver", NULL, 0);
++  if (netID < 0)
++  {
++      return NULL;
++  }
++
++  returnValue = sceNetResolverStartNtoa(netID, name, &addr, 0, 0, 0);
++  if (returnValue < 0)
++  {
++      sceNetResolverDestroy(netID);
++      return NULL;
++  }
++
++  addr_list[0] = (char *)&addr;
++
++  he.h_name = (char *)name;
++  he.h_aliases = aliases;
++  he.h_length = 4;
++  he.h_addr_list = addr_list;
++  he.h_addrtype = AF_INET;
++
++  sceNetResolverDestroy(netID);
++
++  return &he;
+ #else
+   (void)(ai_flags);
+   if (af != BOOST_ASIO_OS_DEF(AF_INET))
+@@ -2974,6 +3114,7 @@ inline int gai_nsearch(const char* host,
+   int search_count = 0;
+   if (host == 0 || host[0] == '\0')
+   {
++#if !defined(__vita__)
+     if (hints->ai_flags & AI_PASSIVE)
+     {
+       // No host and AI_PASSIVE implies wildcard bind.
+@@ -3002,6 +3143,7 @@ inline int gai_nsearch(const char* host,
+       }
+     }
+     else
++#endif
+     {
+       // No host and not AI_PASSIVE means connect to local host.
+       switch (hints->ai_family)
+@@ -3249,6 +3391,8 @@ inline int gai_serv(addrinfo_type* aihead,
+   }
+   else
+   {
++#if defined(__vita__)
++#else
+     // Try service name with TCP first, then UDP.
+     if (hints->ai_socktype == 0 || hints->ai_socktype == SOCK_STREAM)
+     {
+@@ -3272,6 +3416,7 @@ inline int gai_serv(addrinfo_type* aihead,
+         num_found += rc;
+       }
+     }
++#endif
+   }
+ 
+   if (num_found == 0)
+@@ -3631,6 +3776,8 @@ inline boost::system::error_code getnameinfo_emulation(
+     }
+     else
+     {
++#if defined(__vita__)
++#else
+ #if defined(BOOST_ASIO_HAS_PTHREADS)
+       static ::pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+       ::pthread_mutex_lock(&mutex);
+@@ -3655,6 +3802,7 @@ inline boost::system::error_code getnameinfo_emulation(
+ #if defined(BOOST_ASIO_HAS_PTHREADS)
+       ::pthread_mutex_unlock(&mutex);
+ #endif // defined(BOOST_ASIO_HAS_PTHREADS)
++#endif // defined(__vita__)
+     }
+   }
+ 
+@@ -3911,6 +4059,8 @@ u_long_type network_to_host_long(u_long_type value)
+     | (static_cast<u_long_type>(value_p[2]) << 8)
+     | static_cast<u_long_type>(value_p[3]);
+   return result;
++#elif defined(__vita__)
++  return sceNetNtohl(value);
+ #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+   return ntohl(value);
+ #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+@@ -3926,6 +4076,8 @@ u_long_type host_to_network_long(u_long_type value)
+   result_p[2] = static_cast<unsigned char>((value >> 8) & 0xFF);
+   result_p[3] = static_cast<unsigned char>(value & 0xFF);
+   return result;
++#elif defined(__vita__)
++  return sceNetHtonl(value);
+ #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+   return htonl(value);
+ #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+@@ -3938,6 +4090,8 @@ u_short_type network_to_host_short(u_short_type value)
+   u_short_type result = (static_cast<u_short_type>(value_p[0]) << 8)
+     | static_cast<u_short_type>(value_p[1]);
+   return result;
++#elif defined(__vita__)
++  return sceNetNtohs(value);
+ #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+   return ntohs(value);
+ #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+@@ -3951,6 +4105,8 @@ u_short_type host_to_network_short(u_short_type value)
+   result_p[0] = static_cast<unsigned char>((value >> 8) & 0xFF);
+   result_p[1] = static_cast<unsigned char>(value & 0xFF);
+   return result;
++#elif defined(__vita__)
++  return sceNetHtons(value);
+ #else // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+   return htons(value);
+ #endif // defined(BOOST_ASIO_WINDOWS_RUNTIME)
+diff --git a/boost/asio/detail/impl/socket_select_interrupter.ipp b/boost/asio/detail/impl/socket_select_interrupter.ipp
+index d79df6519..1e8bdfaf3 100644
+--- a/boost/asio/detail/impl/socket_select_interrupter.ipp
++++ b/boost/asio/detail/impl/socket_select_interrupter.ipp
+@@ -21,7 +21,8 @@
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__vita__)
+ 
+ #include <cstdlib>
+ #include <boost/asio/detail/socket_holder.hpp>
+@@ -91,7 +92,7 @@ void socket_select_interrupter::open_descriptors()
+   socket_holder server(socket_ops::accept(acceptor.get(), 0, 0, ec));
+   if (server.get() == invalid_socket)
+     boost::asio::detail::throw_error(ec, "socket_select_interrupter");
+-  
++#if !defined(__vita__)
+   ioctl_arg_type non_blocking = 1;
+   socket_ops::state_type client_state = 0;
+   if (socket_ops::ioctl(client.get(), client_state,
+@@ -111,7 +112,7 @@ void socket_select_interrupter::open_descriptors()
+   opt = 1;
+   socket_ops::setsockopt(server.get(), server_state,
+       IPPROTO_TCP, TCP_NODELAY, &opt, sizeof(opt), ec);
+-
++#endif
+   read_descriptor_ = server.release();
+   write_descriptor_ = client.release();
+ }
+diff --git a/boost/asio/detail/io_control.hpp b/boost/asio/detail/io_control.hpp
+index cbf6d45d1..4ef0decfb 100644
+--- a/boost/asio/detail/io_control.hpp
++++ b/boost/asio/detail/io_control.hpp
+@@ -45,7 +45,11 @@ public:
+   // Get the name of the IO control command.
+   int name() const
+   {
++#if defined(__vita__)
++    return 0;
++#else
+     return static_cast<int>(BOOST_ASIO_OS_DEF(FIONREAD));
++#endif
+   }
+ 
+   // Set the value of the I/O control command.
+diff --git a/boost/asio/detail/posix_signal_blocker.hpp b/boost/asio/detail/posix_signal_blocker.hpp
+index abd126e01..b0f3a4466 100644
+--- a/boost/asio/detail/posix_signal_blocker.hpp
++++ b/boost/asio/detail/posix_signal_blocker.hpp
+@@ -38,34 +38,42 @@ public:
+   posix_signal_blocker()
+     : blocked_(false)
+   {
++#if !defined(__vita__)
+     sigset_t new_mask;
+     sigfillset(&new_mask);
+     blocked_ = (pthread_sigmask(SIG_BLOCK, &new_mask, &old_mask_) == 0);
++#endif
+   }
+ 
+   // Destructor restores the previous signal mask.
+   ~posix_signal_blocker()
+   {
++#if !defined(__vita__)
+     if (blocked_)
+       pthread_sigmask(SIG_SETMASK, &old_mask_, 0);
++#endif
+   }
+ 
+   // Block all signals for the calling thread.
+   void block()
+   {
++#if !defined(__vita__)
+     if (!blocked_)
+     {
+       sigset_t new_mask;
+       sigfillset(&new_mask);
+       blocked_ = (pthread_sigmask(SIG_BLOCK, &new_mask, &old_mask_) == 0);
+     }
++#endif
+   }
+ 
+   // Restore the previous signal mask.
+   void unblock()
+   {
++#if !defined(__vita__)
+     if (blocked_)
+       blocked_ = (pthread_sigmask(SIG_SETMASK, &old_mask_, 0) != 0);
++#endif
+   }
+ 
+ private:
+diff --git a/boost/asio/detail/select_interrupter.hpp b/boost/asio/detail/select_interrupter.hpp
+index 485a66b94..a18252865 100644
+--- a/boost/asio/detail/select_interrupter.hpp
++++ b/boost/asio/detail/select_interrupter.hpp
+@@ -19,7 +19,7 @@
+ 
+ #if !defined(BOOST_ASIO_WINDOWS_RUNTIME)
+ 
+-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__SYMBIAN32__)
++#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__SYMBIAN32__) || defined(__vita__)
+ # include <boost/asio/detail/socket_select_interrupter.hpp>
+ #elif defined(BOOST_ASIO_HAS_EVENTFD)
+ # include <boost/asio/detail/eventfd_select_interrupter.hpp>
+@@ -31,7 +31,7 @@ namespace boost {
+ namespace asio {
+ namespace detail {
+ 
+-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__SYMBIAN32__)
++#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__SYMBIAN32__) || defined(__vita__)
+ typedef socket_select_interrupter select_interrupter;
+ #elif defined(BOOST_ASIO_HAS_EVENTFD)
+ typedef eventfd_select_interrupter select_interrupter;
+diff --git a/boost/asio/detail/signal_set_service.hpp b/boost/asio/detail/signal_set_service.hpp
+index 97431cad5..9a1ae245b 100644
+--- a/boost/asio/detail/signal_set_service.hpp
++++ b/boost/asio/detail/signal_set_service.hpp
+@@ -34,7 +34,7 @@
+ # include <boost/asio/detail/scheduler.hpp>
+ #endif // defined(BOOST_ASIO_HAS_IOCP)
+ 
+-#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__)
++#if !defined(BOOST_ASIO_WINDOWS) && !defined(__CYGWIN__) && !defined(__vita__)
+ # if defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
+ #  include <boost/asio/detail/io_uring_service.hpp>
+ # else // defined(BOOST_ASIO_HAS_IO_URING_AS_DEFAULT)
+@@ -201,7 +201,8 @@ private:
+ 
+ #if !defined(BOOST_ASIO_WINDOWS) \
+   && !defined(BOOST_ASIO_WINDOWS_RUNTIME) \
+-  && !defined(__CYGWIN__)
++  && !defined(__CYGWIN__) \
++  && !defined(__vita__)
+   // The type used for processing pipe readiness notifications.
+   class pipe_read_op;
+ 
+diff --git a/boost/asio/detail/socket_select_interrupter.hpp b/boost/asio/detail/socket_select_interrupter.hpp
+index 382fb3461..8d6606108 100644
+--- a/boost/asio/detail/socket_select_interrupter.hpp
++++ b/boost/asio/detail/socket_select_interrupter.hpp
+@@ -21,7 +21,8 @@
+ 
+ #if defined(BOOST_ASIO_WINDOWS) \
+   || defined(__CYGWIN__) \
+-  || defined(__SYMBIAN32__)
++  || defined(__SYMBIAN32__) \
++  || defined(__vita__)
+ 
+ #include <boost/asio/detail/socket_types.hpp>
+ 
+diff --git a/boost/asio/detail/socket_types.hpp b/boost/asio/detail/socket_types.hpp
+index 4099deec3..c6b73e5d2 100644
+--- a/boost/asio/detail/socket_types.hpp
++++ b/boost/asio/detail/socket_types.hpp
+@@ -56,13 +56,18 @@
+ # endif // !defined(BOOST_ASIO_NO_DEFAULT_LINKED_LIBS)
+ # include <boost/asio/detail/old_win_sdk_compat.hpp>
+ #else
++#if !defined(__vita__)
+ # include <sys/ioctl.h>
+-# if (defined(__MACH__) && defined(__APPLE__)) \
++#endif
++# if defined(__vita__)
++#  include <boost/asio/detail/vita_compat.hpp>
++# endif
++# if ((defined(__MACH__) && defined(__APPLE__)) \
+    || defined(__FreeBSD__) || defined(__NetBSD__) \
+    || defined(__OpenBSD__) || defined(__linux__) \
+-   || defined(__EMSCRIPTEN__)
++   || defined(__EMSCRIPTEN__)) && !defined(__vita__)
+ #  include <poll.h>
+-# elif !defined(__SYMBIAN32__)
++# elif !defined(__SYMBIAN32__) && !defined(__vita__)
+ #  include <sys/poll.h>
+ # endif
+ # include <sys/types.h>
+@@ -75,15 +80,19 @@
+ #  include <sys/select.h>
+ # endif
+ # include <sys/socket.h>
++#if !defined(__vita__)
+ # include <sys/uio.h>
+ # include <sys/un.h>
++#endif
+ # include <netinet/in.h>
+ # if !defined(__SYMBIAN32__)
+ #  include <netinet/tcp.h>
+ # endif
+ # include <arpa/inet.h>
+ # include <netdb.h>
++#if !defined(__vita__)
+ # include <net/if.h>
++#endif
+ # include <limits.h>
+ # if defined(__sun)
+ #  include <sys/filio.h>
+@@ -291,11 +300,42 @@ typedef int socket_type;
+ const int invalid_socket = -1;
+ const int socket_error_retval = -1;
+ const int max_addr_v4_str_len = INET_ADDRSTRLEN;
+-#if defined(INET6_ADDRSTRLEN)
++#if defined(INET6_ADDRSTRLEN) && !defined(__vita__)
+ const int max_addr_v6_str_len = INET6_ADDRSTRLEN + 1 + IF_NAMESIZE;
+ #else // defined(INET6_ADDRSTRLEN)
+ const int max_addr_v6_str_len = 256;
+ #endif // defined(INET6_ADDRSTRLEN)
++#if defined(__vita__)
++typedef int ioctl_arg_type;
++typedef uint32_t u_long_type;
++typedef uint16_t u_short_type;
++struct in4_addr_type { u_long_type s_addr; };
++struct in4_mreq_type { in4_addr_type imr_multiaddr, imr_interface; };
++
++typedef in6_addr in6_addr_type;
++
++struct in6_mreq_type {
++    in6_addr_type ipv6mr_multiaddr;
++    unsigned long ipv6mr_interface;
++};
++
++typedef sockaddr socket_addr_type;
++typedef sockaddr_in sockaddr_in4_type;
++typedef sockaddr_in6 sockaddr_in6_type;
++
++struct sockaddr_storage_type {
++    int ss_family;
++    unsigned char ss_bytes[128 - sizeof(int)];
++};
++struct addrinfo_type {
++    int ai_flags;
++    int ai_family, ai_socktype, ai_protocol;
++    int ai_addrlen; void* ai_addr;
++    char* ai_canonname; addrinfo_type* ai_next;
++};
++struct linger_type { u_short_type l_onoff, l_linger; };
++struct sockaddr_un_type { u_short_type sun_family; char sun_path[108]; };
++#else
+ typedef sockaddr socket_addr_type;
+ typedef in_addr in4_addr_type;
+ # if defined(__hpux)
+@@ -319,6 +359,7 @@ typedef ::linger linger_type;
+ typedef int ioctl_arg_type;
+ typedef uint32_t u_long_type;
+ typedef uint16_t u_short_type;
++#endif // defined(__vita__)
+ #if defined(BOOST_ASIO_HAS_SSIZE_T)
+ typedef ssize_t signed_size_type;
+ #else // defined(BOOST_ASIO_HAS_SSIZE_T)
+@@ -348,6 +389,9 @@ typedef int signed_size_type;
+ # define BOOST_ASIO_OS_DEF_SHUT_RD SHUT_RD
+ # define BOOST_ASIO_OS_DEF_SHUT_WR SHUT_WR
+ # define BOOST_ASIO_OS_DEF_SHUT_RDWR SHUT_RDWR
++# if defined(__vita__)
++#  define SOMAXCONN 4096
++# endif
+ # define BOOST_ASIO_OS_DEF_SOMAXCONN SOMAXCONN
+ # define BOOST_ASIO_OS_DEF_SOL_SOCKET SOL_SOCKET
+ # define BOOST_ASIO_OS_DEF_SO_BROADCAST SO_BROADCAST
+diff --git a/boost/asio/detail/vita_compat.hpp b/boost/asio/detail/vita_compat.hpp
+new file mode 100644
+index 000000000..e67d8e5c8
+--- /dev/null
++++ b/boost/asio/detail/vita_compat.hpp
+@@ -0,0 +1,104 @@
++//
++// detail/vita_compat.hpp
++// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++//
++// Copyright (c) 2003-2021 Christopher M. Kohlhoff (chris at kohlhoff dot com)
++//
++// Distributed under the Boost Software License, Version 1.0. (See accompanying
++// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
++//
++
++#ifndef ASIO_DETAIL_VITA_COMPAT_HPP
++#define ASIO_DETAIL_VITA_COMPAT_HPP
++
++#if defined(_MSC_VER) && (_MSC_VER >= 1200)
++# pragma once
++#endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
++
++#include <boost/asio/detail/config.hpp>
++
++#if defined(__vita__)
++
++#include <boost/asio/detail/push_options.hpp>
++
++namespace boost {
++namespace asio {
++namespace detail {
++
++#if !defined(AI_PASSIVE)
++# define AI_PASSIVE 0x1
++#endif
++
++#if !defined(AI_CANONNAME)
++# define AI_CANONNAME 0x2
++#endif
++
++#if !defined(AI_NUMERICHOST)
++# define AI_NUMERICHOST 0x4
++#endif
++
++#if !defined(NI_NOFQDN)
++# define NI_NOFQDN 0x01
++#endif
++
++#if !defined(NI_NUMERICHOST)
++# define NI_NUMERICHOST 0x02
++#endif
++
++#if !defined(NI_NAMEREQD)
++# define NI_NAMEREQD 0x04
++#endif
++
++#if !defined(NI_NUMERICSERV)
++# define NI_NUMERICSERV 0x08
++#endif
++
++#if !defined(NI_DGRAM)
++# define NI_DGRAM 0x10
++#endif
++
++#if !defined(IPPROTO_IPV6)
++# define IPPROTO_IPV6 41
++#endif
++
++#if !defined(IPV6_UNICAST_HOPS)
++# define IPV6_UNICAST_HOPS 4
++#endif
++
++#if !defined(IPV6_MULTICAST_IF)
++# define IPV6_MULTICAST_IF 9
++#endif
++
++#if !defined(IPV6_MULTICAST_HOPS)
++# define IPV6_MULTICAST_HOPS 10
++#endif
++
++#if !defined(IPV6_MULTICAST_LOOP)
++# define IPV6_MULTICAST_LOOP 11
++#endif
++
++#if !defined(IPV6_JOIN_GROUP)
++# define IPV6_JOIN_GROUP 12
++#endif
++
++#if !defined(IPV6_LEAVE_GROUP)
++# define IPV6_LEAVE_GROUP 13
++#endif
++
++} // namespace detail
++} // namespace asio
++} // namespace boost
++
++#include <boost/asio/detail/pop_options.hpp>
++
++#if !defined(IPV6_V6ONLY)
++# define IPV6_V6ONLY 27
++#endif
++
++#if !defined(IPPROTO_ICMPV6)
++# define IPPROTO_ICMPV6 58
++#endif
++
++#endif // defined(__vita__)
++
++#endif // ASIO_DETAIL_VITA_COMPAT_HPP
+diff --git a/boost/asio/error.hpp b/boost/asio/error.hpp
+index 7481c7316..6d2b334f0 100644
+--- a/boost/asio/error.hpp
++++ b/boost/asio/error.hpp
+@@ -23,6 +23,27 @@
+   || defined(__CYGWIN__) \
+   || defined(BOOST_ASIO_WINDOWS_RUNTIME)
+ # include <winerror.h>
++#elif defined(__vita__)
++// Defines from netdb.h
++#define HOST_NOT_FOUND  1 /* Authoritive Answer Host not found */
++#define TRY_AGAIN       2 /* Non-Authoritive Host not found, or SERVERFAIL */
++#define NO_RECOVERY     3 /* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
++#define NO_DATA         4 /* Valid name, no data record of requested type */
++#define NO_ADDRESS      NO_DATA         /* no address, look for MX record */
++
++#define         EAI_ADDRFAMILY   -1 /* address family for hostname not supported */
++#define         EAI_AGAIN   -2 /* temporary failure in name resolution */
++#define         EAI_BADFLAGS   -3 /* invalid value for ai_flags */
++#define         EAI_FAIL   -4 /* non-recoverable failure in name resolution */
++#define         EAI_FAMILY   -5 /* ai_family not supported */
++#define         EAI_MEMORY   -6 /* memory allocation failure */
++#define         EAI_NODATA   -7 /* no address associated with hostname */
++#define         EAI_NONAME   -8 /* hostname nor servname provided, or not known */
++#define         EAI_SERVICE   -9 /* servname not supported for ai_socktype */
++#define         EAI_SOCKTYPE   -10 /* ai_socktype not supported */
++#define         EAI_SYSTEM   -11 /* system error returned in errno */
++#define         EAI_BADHINTS   -12
++#define         EAI_PROTOCOL   -13
+ #else
+ # include <cerrno>
+ # include <netdb.h>
+diff --git a/boost/asio/socket_base.hpp b/boost/asio/socket_base.hpp
+index 0b661f3a7..ae41b7247 100644
+--- a/boost/asio/socket_base.hpp
++++ b/boost/asio/socket_base.hpp
+@@ -72,8 +72,10 @@ public:
+       message_out_of_band = BOOST_ASIO_OS_DEF(MSG_OOB));
+   BOOST_ASIO_STATIC_CONSTANT(int,
+       message_do_not_route = BOOST_ASIO_OS_DEF(MSG_DONTROUTE));
++#if !defined(__vita__)
+   BOOST_ASIO_STATIC_CONSTANT(int,
+       message_end_of_record = BOOST_ASIO_OS_DEF(MSG_EOR));
++#endif
+ #endif
+ 
+   /// Wait types.
+@@ -155,8 +157,10 @@ public:
+ #if defined(GENERATING_DOCUMENTATION)
+   typedef implementation_defined debug;
+ #else
++#if !defined(__vita__)
+   typedef boost::asio::detail::socket_option::boolean<
+     BOOST_ASIO_OS_DEF(SOL_SOCKET), BOOST_ASIO_OS_DEF(SO_DEBUG)> debug;
++#endif
+ #endif
+ 
+   /// Socket option to prevent routing, use local interfaces only.
+@@ -188,9 +192,11 @@ public:
+ #if defined(GENERATING_DOCUMENTATION)
+   typedef implementation_defined do_not_route;
+ #else
++#if !defined(__vita__)
+   typedef boost::asio::detail::socket_option::boolean<
+     BOOST_ASIO_OS_DEF(SOL_SOCKET), BOOST_ASIO_OS_DEF(SO_DONTROUTE)>
+       do_not_route;
++#endif
+ #endif
+ 
+   /// Socket option to send keep-alives.
+@@ -462,9 +468,11 @@ public:
+ #if defined(GENERATING_DOCUMENTATION)
+   typedef implementation_defined out_of_band_inline;
+ #else
++#if !defined(__vita__)
+   typedef boost::asio::detail::socket_option::boolean<
+     BOOST_ASIO_OS_DEF(SOL_SOCKET), BOOST_ASIO_OS_DEF(SO_OOBINLINE)>
+       out_of_band_inline;
++#endif
+ #endif
+ 
+   /// Socket option to report aborted connections on accept.
+diff --git a/boost/config/detail/select_platform_config.hpp b/boost/config/detail/select_platform_config.hpp
+index dbff74aaf..3f6fae910 100644
+--- a/boost/config/detail/select_platform_config.hpp
++++ b/boost/config/detail/select_platform_config.hpp
+@@ -93,6 +93,10 @@
+ // Web assembly:
+ #  define BOOST_PLATFORM_CONFIG "boost/config/platform/wasm.hpp"
+ 
++#elif defined (__vita__)
++// PSVita:
++#  define BOOST_PLATFORM_CONFIG "boost/config/platform/vita.hpp"
++
+ #else
+ 
+ #  if defined(unix) \
+diff --git a/boost/config/platform/vita.hpp b/boost/config/platform/vita.hpp
+new file mode 100644
+index 000000000..f117084e0
+--- /dev/null
++++ b/boost/config/platform/vita.hpp
+@@ -0,0 +1,29 @@
++//  (C) Copyright John Maddock 2001 - 2003. 
++//  (C) Copyright Darin Adler 2001. 
++//  (C) Copyright Douglas Gregor 2002. 
++//  Use, modification and distribution are subject to the 
++//  Boost Software License, Version 1.0. (See accompanying file 
++//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
++
++//  See http://www.boost.org for most recent version.
++
++//  generic Vita config options:
++
++#define BOOST_PLATFORM "Vita"
++
++#define BOOST_HAS_PTHREADS
++
++// boilerplate code:
++#define BOOST_HAS_UNISTD_H
++#define BOOST_HAS_GETTIMEOFDAY
++#define BOOST_LOG_NO_ASIO
++#define BOOST_LOG_NO_GETPWUID_R
++#define BOOST_LOG_NO_GETPGRP
++#define BOOST_LOG_NO_GETSID
++#include <boost/config/detail/posix_features.hpp>
++
++
++
++
++
++
+diff --git a/libs/container/src/dlmalloc_2_8_6.c b/libs/container/src/dlmalloc_2_8_6.c
+index 9aa1e5a5c..6f5a125c7 100644
+--- a/libs/container/src/dlmalloc_2_8_6.c
++++ b/libs/container/src/dlmalloc_2_8_6.c
+@@ -577,6 +577,16 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
+ #endif  /* HAVE_MORECORE */
+ #endif  /* DARWIN */
+ 
++#ifdef __vita__
++#define HAVE_MMAP 0
++#define HAVE_MORECORE 0
++#define LACKS_SYS_MMAN_H
++#ifndef MALLOC_FAILURE_ACTION
++#define MALLOC_FAILURE_ACTION
++#endif /* MALLOC_FAILURE_ACTION */
++#endif  /* __vita__ */
++
++
+ #ifndef LACKS_SYS_TYPES_H
+ #include <sys/types.h>  /* For size_t */
+ #endif  /* LACKS_SYS_TYPES_H */
+diff --git a/libs/filesystem/src/directory.cpp b/libs/filesystem/src/directory.cpp
+index ba2731632..6fafda4b2 100644
+--- a/libs/filesystem/src/directory.cpp
++++ b/libs/filesystem/src/directory.cpp
+@@ -220,7 +220,7 @@ error_code dir_itr_first(void*& handle, void*& buffer, const char* dir, std::str
+ // *result set to NULL on end of directory
+ inline int readdir_r_simulator(DIR* dirp, void*& buffer, struct dirent** result)
+ {
+-#if defined(BOOST_FILESYSTEM_USE_READDIR_R)
++#if defined(BOOST_FILESYSTEM_USE_READDIR_R) && !defined(__vita__)
+     errno = 0;
+ 
+     if (::sysconf(_SC_THREAD_SAFE_FUNCTIONS) >= 0)
+diff --git a/libs/filesystem/src/operations.cpp b/libs/filesystem/src/operations.cpp
+index 71672e5e1..2c772276e 100644
+--- a/libs/filesystem/src/operations.cpp
++++ b/libs/filesystem/src/operations.cpp
+@@ -38,6 +38,14 @@
+ #endif
+ #include <cerrno>
+ 
++#ifdef __vita__
++#include <psp2/io/fcntl.h>
++#include <psp2/io/stat.h>
++#include <psp2/io/dirent.h>
++#include <psp2/io/devctl.h>
++#include <psp2/rtc.h>
++#endif
++
+ #ifdef BOOST_POSIX_API
+ 
+ #include <sys/types.h>
+@@ -2391,12 +2399,16 @@ void create_directory_symlink(path const& to, path const& from, system::error_co
+         ec->clear();
+ 
+ #if defined(BOOST_POSIX_API)
++#if defined(__vita__)
++    emit_error(ENOSYS, to, from, ec, "boost::filesystem::create_directory_symlink");
++#else
+     int err = ::symlink(to.c_str(), from.c_str());
+     if (BOOST_UNLIKELY(err < 0))
+     {
+         err = errno;
+         emit_error(err, to, from, ec, "boost::filesystem::create_directory_symlink");
+     }
++#endif
+ #else
+     // see if actually supported by Windows runtime dll
+     if (!create_symbolic_link_api)
+@@ -2420,8 +2432,11 @@ void create_hard_link(path const& to, path const& from, error_code* ec)
+     if (error(!create_hard_link_api ? BOOST_ERROR_NOT_SUPPORTED : 0, to, from, ec, "boost::filesystem::create_hard_link"))
+         return;
+ #endif
+-
++#if defined(__vita__)
++    emit_error(BOOST_ERROR_NOT_SUPPORTED, to, from, ec, "boost::filesystem::create_hard_link");
++#else
+     error(!BOOST_CREATE_HARD_LINK(from.c_str(), to.c_str()) ? BOOST_ERRNO : 0, to, from, ec, "boost::filesystem::create_hard_link");
++#endif
+ }
+ 
+ BOOST_FILESYSTEM_DECL
+@@ -2431,12 +2446,16 @@ void create_symlink(path const& to, path const& from, error_code* ec)
+         ec->clear();
+ 
+ #if defined(BOOST_POSIX_API)
++#if defined(__vita__)
++    emit_error(ENOSYS, to, from, ec, "boost::filesystem::create_symlink");
++#else
+     int err = ::symlink(to.c_str(), from.c_str());
+     if (BOOST_UNLIKELY(err < 0))
+     {
+         err = errno;
+         emit_error(err, to, from, ec, "boost::filesystem::create_symlink");
+     }
++#endif
+ #else
+     // see if actually supported by Windows runtime dll
+     if (!create_symbolic_link_api)
+@@ -2940,6 +2959,29 @@ void last_write_time(path const& p, const std::time_t new_time, system::error_co
+ 
+ #if defined(BOOST_POSIX_API)
+ 
++#if defined(__vita__)
++    char *real = ::realpath(p.c_str(), NULL);
++    SceUID fd = ::sceIoOpen(real, SCE_O_RDONLY, 0666);
++    if (BOOST_UNLIKELY(fd < 0))
++    {
++        free(real);
++        emit_error(BOOST_ERRNO, p, ec, "boost::filesystem::last_write_time");
++        return;
++    }
++    free(real);
++
++    struct SceIoStat st = {0};
++    sceRtcSetTime_t(&st.st_mtime, new_time);
++    int ret = ::sceIoChstatByFd(fd, &st,  SCE_CST_MT);
++    ::sceIoClose(fd);
++    if (BOOST_UNLIKELY(ret < 0))
++    {
++        emit_error(BOOST_ERRNO, p, ec, "boost::filesystem::last_write_time");
++        return;
++    }
++    return;
++#else
++
+ #if _POSIX_C_SOURCE >= 200809L
+ 
+     struct timespec times[2] = {};
+@@ -2971,7 +3013,7 @@ void last_write_time(path const& p, const std::time_t new_time, system::error_co
+         emit_error(BOOST_ERRNO, p, ec, "boost::filesystem::last_write_time");
+ 
+ #endif // _POSIX_C_SOURCE >= 200809L
+-
++#endif
+ #else // defined(BOOST_POSIX_API)
+ 
+     handle_wrapper hw(
+@@ -3044,7 +3086,8 @@ void permissions(path const& p, perms prms, system::error_code* ec)
+     !(defined(linux) || defined(__linux) || defined(__linux__)) && \
+     !(defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < 101000) && \
+     !(defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 80000) && \
+-    !(defined(__QNX__) && (_NTO_VERSION <= 700))
++    !(defined(__QNX__) && (_NTO_VERSION <= 700)) && \
++    !(defined(__vita__))
+     if (::fchmodat(AT_FDCWD, p.c_str(), mode_cast(prms), !(prms & symlink_perms) ? 0 : AT_SYMLINK_NOFOLLOW))
+ #else // fallback if fchmodat() not supported
+     if (::chmod(p.c_str(), mode_cast(prms)))
+@@ -3090,6 +3133,11 @@ path read_symlink(path const& p, system::error_code* ec)
+     path symlink_path;
+ 
+ #ifdef BOOST_POSIX_API
++#ifdef __vita__
++        const int err = EINVAL;
++        BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::read_symlink", p, error_code(err, system_category())));
++        ec->assign(err, system_category());
++#else
+     const char* const path_str = p.c_str();
+     char small_buf[small_path_size];
+     ssize_t result = ::readlink(path_str, small_buf, sizeof(small_buf));
+@@ -3136,7 +3184,7 @@ path read_symlink(path const& p, system::error_code* ec)
+             }
+         }
+     }
+-
++#endif
+ #else
+ 
+     handle_wrapper h(
+diff --git a/libs/iostreams/src/mapped_file.cpp b/libs/iostreams/src/mapped_file.cpp
+index 918a5d4c6..145e9bbbc 100644
+--- a/libs/iostreams/src/mapped_file.cpp
++++ b/libs/iostreams/src/mapped_file.cpp
+@@ -9,7 +9,7 @@
+ // knows that we are building the library (possibly exporting code), rather
+ // than using it (possibly importing code).
+ #define BOOST_IOSTREAMS_SOURCE
+-
++#if !defined(__vita__)
+ #include <cassert>
+ #include <stdexcept>
+ #include <boost/iostreams/detail/config/rtl.hpp>
+@@ -497,3 +497,4 @@ mapped_file_sink::mapped_file_sink(const mapped_file_sink& other)
+ //----------------------------------------------------------------------------//
+ 
+ } } // End namespaces iostreams, boost.
++#endif // defined(__vita__)
+diff --git a/tools/build/src/tools/gcc.jam b/tools/build/src/tools/gcc.jam
+index 47a113223..7324a7917 100644
+--- a/tools/build/src/tools/gcc.jam
++++ b/tools/build/src/tools/gcc.jam
+@@ -397,7 +397,7 @@ local rule compile-link-flags ( * )
+     # The default system libraries include pthread functions.  No additional libraries or CFLAGS are necessary to use this API.
+     local no-threading = android beos haiku sgi darwin vxworks iphone appletv ;
+     local threading-generic-os = [ set.difference $(all-os) : $(no-threading) $(bsd) windows cygwin solaris qnx ] ;
+-    threading-flags <target-os>$(threading-generic-os) : -pthread : rt ;
++    threading-flags <target-os>$(threading-generic-os) : -pthread ;
+ }
+ 
+ {
+diff --git a/tools/build/src/tools/gcc.py b/tools/build/src/tools/gcc.py
+index 020efb6f5..87e97fc5e 100644
+--- a/tools/build/src/tools/gcc.py
++++ b/tools/build/src/tools/gcc.py
+@@ -718,7 +718,7 @@ elif bjam.variable('UNIX'):
+         pass
+     else:
+         flags('gcc', 'OPTIONS', ['<threading>multi'], ['-pthread'])
+-        flags('gcc', 'FINDLIBS-SA', [], ['rt'])
++#        flags('gcc', 'FINDLIBS-SA', [], ['rt'])
+ 
+ def cpu_flags(toolset, variable, architecture, instruction_set, values, default=None):
+     #FIXME: for some reason this fails.  Probably out of date feature code
