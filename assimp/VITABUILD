@@ -1,0 +1,27 @@
+pkgname=assimp
+pkgver=5.2.4
+pkgrel=1
+url="https://github.com/assimp/assimp"
+source=("https://github.com/assimp/assimp/archive/refs/tags/v${pkgver}.tar.gz" "assimp-no-pic.patch")
+sha256sums=("SKIP" "889b624aee41e5e5bc2c5439262940a419509463d8e6d96e07c8818a9fdc5b99")
+
+prepare() {
+  cd assimp-$pkgver
+  patch -p1 < ../assimp-no-pic.patch
+}
+
+build() {
+  cd assimp-$pkgver
+  mkdir build && cd build
+
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+    -DASSIMP_NO_EXPORT=ON -DBUILD_SHARED_LIBS=OFF -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -DASSIMP_BUILD_SAMPLES=OFF \
+    -DASSIMP_BUILD_ZLIB=ON -DASSIMP_BUILD_TESTS=OFF -DASSIMP_WARNINGS_AS_ERRORS=OFF
+
+  make -j$(nproc)
+}
+
+package () {
+  cd assimp-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
