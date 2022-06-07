@@ -1,8 +1,8 @@
-pkgname=tiniest_obj_loader
+pkgname=libtoloader
 pkgver=9999
 pkgrel=1
 url="https://github.com/Rinnegatamante"
-source=("git+https://github.com/Rinnegatamante/tiniest_obj_loader.git")
+source=("git+https://github.com/Rinnegatamante/$pkgname.git")
 sha256sums=('SKIP')
 
 build() {
@@ -15,6 +15,6 @@ package () {
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
   
   cd $pkgname
-  cp libtoloader.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
+  cp $pkgname.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
   cp source/$pkgname.h $pkgdir/$VITASDK/arm-vita-eabi/include/
 }
