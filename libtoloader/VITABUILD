@@ -1,7 +1,7 @@
 pkgname=libtoloader
 pkgver=9999
 pkgrel=1
-url="https://github.com/Rinnegatamante"
+url="https://github.com/Rinnegatamante/libtoloader"
 source=("git+https://github.com/Rinnegatamante/$pkgname.git")
 sha256sums=('SKIP')
 
