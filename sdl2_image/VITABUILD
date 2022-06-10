@@ -8,7 +8,8 @@ depends=('sdl2 libpng libwebp libjpeg-turbo zlib')
 
 prepare() {
   cd "SDL2_image-${pkgver}"
-  patch -p1 < ../pkgconfig.patch
+  patch --strip=1 --input="${srcdir}/pkgconfig.patch"
+
 }
 
 build() {

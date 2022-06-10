@@ -11,11 +11,15 @@ sha256sums=(
 )
 depends=('sdl' 'libvorbis' 'libmikmod' 'libmodplug' 'mpg123' 'flac')
 
-build() {
+prepare() {
   cd "SDL_mixer-${pkgver}"
   patch --strip=1 --input="${srcdir}/sdl-mixer-timidity.patch"
   patch --strip=1 --input="${srcdir}/noplayers.patch"
   patch --strip=1 --input="${srcdir}/pkgconfig.patch"
+}
+
+build() {
+  cd "SDL_mixer-${pkgver}"
   PATH="$VITASDK/arm-vita-eabi/bin:$PATH" LIBS="-lvorbis -logg -lm" ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic --disable-music-cmd
   make -j$(nproc)
 }
