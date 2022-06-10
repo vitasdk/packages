@@ -1,0 +1,9 @@
+diff --git a/SDL2_mixer.pc.in b/SDL2_mixer.pc.in
+index 48869b4..ab114ce 100644
+--- a/SDL2_mixer.pc.in
++++ b/SDL2_mixer.pc.in
+@@ -10,3 +10,4 @@ Requires: sdl2 >= @SDL_VERSION@
+ Libs: -L${libdir} -lSDL2_mixer
+ Cflags: -I${includedir}/SDL2
+ 
++Requires.private: flac vorbisfile vorbis opusfile ogg opus libmikmod libmpg123
