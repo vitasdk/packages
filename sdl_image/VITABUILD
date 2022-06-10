@@ -2,13 +2,22 @@ pkgname=sdl_image
 pkgver=1.2.12
 pkgrel=2
 url="https://www.libsdl.org/projects/SDL_image/release-1.2.html"
-source=("https://www.libsdl.org/projects/SDL_image/release/SDL_image-${pkgver}.tar.gz" noprog.patch)
-sha256sums=(0b90722984561004de84847744d566809dbb9daf732a9e503b91a1b5a84e5699 SKIP)
+source=("https://www.libsdl.org/projects/SDL_image/release/SDL_image-${pkgver}.tar.gz" noprog.patch pkgconfig.patch)
+sha256sums=(
+    0b90722984561004de84847744d566809dbb9daf732a9e503b91a1b5a84e5699
+    1b015943b51cf5b2424a58a183180bd43c417f275ae9888e15141e54ebbf1ccf
+    22576ad8cc2ab197c0406467eba53f75ca5203b97e680779879bf95e67b5a694
+)
 depends=('sdl libpng libjpeg-turbo libwebp zlib')
+
+prepare() {
+  cd "SDL_image-${pkgver}"
+  patch --strip=1 --input="${srcdir}/noprog.patch"
+  patch --strip=1 --input="${srcdir}/pkgconfig.patch"
+}
 
 build() {
   cd "SDL_image-${pkgver}"
-  patch --strip=1 --input="${srcdir}/noprog.patch"
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic
   make #-j$(nproc)
 }

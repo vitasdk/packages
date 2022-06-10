@@ -1,0 +1,10 @@
+diff --git a/SDL_image.pc.in b/SDL_image.pc.in
+index 1b841eb..d33eb60 100644
+--- a/SDL_image.pc.in
++++ b/SDL_image.pc.in
+@@ -10,3 +10,4 @@ Requires: sdl >= @SDL_VERSION@
+ Libs: -L${libdir} -lSDL_image
+ Cflags: -I${includedir}/SDL
+ 
++Requires.private: libpng libjpeg libwebp libz
+\ No newline at end of file
