@@ -1,0 +1,19 @@
+pkgname=SceShaccCgExt
+pkgver=1.0
+pkgrel=1
+url="https://github.com/bythos14/$pkgname"
+source=("https://github.com/bythos14/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('0e4c15987c730446daa7225860189275be03cfb067dad1fe2e73d8169cfb1c3f')
+depends=('taihen')
+
+build() {
+  cd $pkgname-$pkgver
+  mkdir build && cd build
+  cmake ..
+  make -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}

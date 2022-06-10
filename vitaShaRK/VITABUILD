@@ -1,9 +1,10 @@
 pkgname=vitaShaRK
-pkgver=1.3
+pkgver=1.4
 pkgrel=1
 url="https://github.com/Rinnegatamante/$pkgname"
-source=("https://github.com/Rinnegatamante/$pkgname/archive/v.$pkgver.tar.gz")
-sha256sums=('a70997338f8257103b3ef814c617c7860884f8daa81a09c6ea2235dac5f85462')
+source=("https://github.com/Rinnegatamante/$pkgname/archive/refs/tags/v.$pkgver.tar.gz")
+sha256sums=('daf872610b521d5496495b2036223f98f1aeb5b5b038c72b0fee4c4b2f5c2646')
+depends=('taihen SceShaccCgExt')
 
 build() {
   cd $pkgname-v.$pkgver

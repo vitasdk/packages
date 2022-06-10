@@ -4,7 +4,7 @@ pkgrel=1
 url="https://github.com/Rinnegatamante"
 source=("git+https://github.com/Rinnegatamante/vitaGL.git")
 sha256sums=('SKIP')
-depends=('libmathneon vitaShaRK')
+depends=('libmathneon vitaShaRK taihen SceShaccCgExt')
 
 build() {
   cd $pkgname
