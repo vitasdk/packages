@@ -1,9 +1,9 @@
 pkgname=SceShaccCgExt
-pkgver=1.0
+pkgver=1.0.1
 pkgrel=1
 url="https://github.com/bythos14/$pkgname"
 source=("https://github.com/bythos14/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('0e4c15987c730446daa7225860189275be03cfb067dad1fe2e73d8169cfb1c3f')
+sha256sums=('a1cda9f3d637032cc597f2f4fdbc17813e5c7c90943a7d44c2e35f013c8dbc0b')
 depends=('taihen')
 
 build() {
