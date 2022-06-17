@@ -30,11 +30,103 @@ index 0000000..9f9eb98
 +clean:
 +	@rm -rf $(TARGET) $(OBJS)
 +	@echo "Cleaned up!"
+diff --git a/arcread.cpp b/arcread.cpp
+index 1a401f4..4f230a1 100644
+--- a/arcread.cpp
++++ b/arcread.cpp
+@@ -1319,6 +1319,7 @@ void Archive::ConvertAttributes()
+   // We restore native Unix attributes as is, because it can be backup.
+   static mode_t mask = (mode_t) -1;
+ 
++#ifndef __vita__
+   if (mask == (mode_t) -1)
+   {
+     // umask call returns the current umask value. Argument (022) is not
+@@ -1328,6 +1329,9 @@ void Archive::ConvertAttributes()
+     // Restore the original umask value, which was changed to 022 above.
+     umask(mask);
+   }
++#else
++  mask = 022;
++#endif
+ 
+   switch(FileHead.HSType)
+   {
+diff --git a/extinfo.cpp b/extinfo.cpp
+index 5cb90a4..cd3c577 100644
+--- a/extinfo.cpp
++++ b/extinfo.cpp
+@@ -9,7 +9,9 @@
+ #endif
+ 
+ #ifdef _UNIX
++#ifndef __vita__
+ #include "uowners.cpp"
++#endif
+ #ifdef SAVE_LINKS
+ #include "ulinks.cpp"
+ #endif
+@@ -26,11 +28,13 @@ void SetExtraInfo20(CommandData *Cmd,Archive &Arc,wchar *Name)
+   switch(Arc.SubBlockHead.SubType)
+   {
+ #ifdef _UNIX
++#ifndef __vita__
+     case UO_HEAD:
+       if (Cmd->ProcessOwners)
+         ExtractUnixOwner20(Arc,Name);
+       break;
+ #endif
++#endif
+ #ifdef _WIN_ALL
+     case NTACL_HEAD:
+       if (Cmd->ProcessOwners)
+@@ -49,10 +53,12 @@ void SetExtraInfo20(CommandData *Cmd,Archive &Arc,wchar *Name)
+ void SetExtraInfo(CommandData *Cmd,Archive &Arc,wchar *Name)
+ {
+ #ifdef _UNIX
++#ifndef __vita__
+   if (!Cmd->Test && Cmd->ProcessOwners && Arc.Format==RARFMT15 &&
+       Arc.SubHead.CmpName(SUBHEAD_TYPE_UOWNER))
+     ExtractUnixOwner30(Arc,Name);
+ #endif
++#endif
+ #ifdef _WIN_ALL
+   if (!Cmd->Test && Cmd->ProcessOwners && Arc.SubHead.CmpName(SUBHEAD_TYPE_ACL))
+     ExtractACL(Arc,Name);
+@@ -66,9 +72,11 @@ void SetExtraInfo(CommandData *Cmd,Archive &Arc,wchar *Name)
+ void SetFileHeaderExtra(CommandData *Cmd,Archive &Arc,wchar *Name)
+ {
+ #ifdef _UNIX
++#ifndef __vita__
+    if (Cmd->ProcessOwners && Arc.Format==RARFMT50 && Arc.FileHead.UnixOwnerSet)
+      SetUnixOwner(Arc,Name);
+ #endif
++#endif
+ }
+ 
+ 
 diff --git a/file.cpp b/file.cpp
-index e7b584d..6d4cf9b 100644
+index e7b584d..127541f 100644
 --- a/file.cpp
 +++ b/file.cpp
-@@ -700,6 +700,7 @@ void File::SetCloseFileTime(RarTime *ftm,RarTime *fta)
+@@ -116,6 +116,7 @@ bool File::Open(const wchar *Name,uint Mode)
+   WideToChar(Name,NameA,ASIZE(NameA));
+ 
+   int handle=open(NameA,flags);
++#if !defined(__vita__)
+ #ifdef LOCK_EX
+ 
+ #ifdef _OSF_SOURCE
+@@ -128,6 +129,8 @@ bool File::Open(const wchar *Name,uint Mode)
+   }
+ 
+ #endif
++#endif
++
+   if (handle==-1)
+     hNewFile=FILE_BAD_HANDLE;
+   else
+@@ -700,6 +703,7 @@ void File::SetCloseFileTime(RarTime *ftm,RarTime *fta)
  
  void File::SetCloseFileTimeByName(const wchar *Name,RarTime *ftm,RarTime *fta)
  {
@@ -42,7 +134,7 @@ index e7b584d..6d4cf9b 100644
  #ifdef _UNIX
    bool setm=ftm!=NULL && ftm->IsSet();
    bool seta=fta!=NULL && fta->IsSet();
-@@ -729,6 +730,7 @@ void File::SetCloseFileTimeByName(const wchar *Name,RarTime *ftm,RarTime *fta)
+@@ -729,6 +733,7 @@ void File::SetCloseFileTimeByName(const wchar *Name,RarTime *ftm,RarTime *fta)
  #endif
    }
  #endif
@@ -63,7 +155,7 @@ index 883c26e..5e53f5d 100644
    wchar Root[NM];
    GetFilePath(Name,Root,ASIZE(Root));
 diff --git a/os.hpp b/os.hpp
-index 7df3c6c..9a5a9f5 100644
+index 7df3c6c..69c17c4 100644
 --- a/os.hpp
 +++ b/os.hpp
 @@ -147,7 +147,7 @@
@@ -75,7 +167,18 @@ index 7df3c6c..9a5a9f5 100644
      #include <sys/statvfs.h>
  #endif
  #include <pwd.h>
-@@ -215,7 +215,7 @@
+@@ -169,8 +169,10 @@
+ 
+ 
+ #ifdef  S_IFLNK
++#if !defined(__vita__)
+ #define SAVE_LINKS
+ #endif
++#endif
+ 
+ #if defined(__linux) || defined(__FreeBSD__)
+ #include <sys/time.h>
+@@ -215,7 +217,7 @@
  #endif
  
  // Unlike Apple x64, utimensat shall be available in all Apple M1 systems.
