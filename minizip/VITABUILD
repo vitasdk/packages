@@ -4,11 +4,17 @@ pkgrel=1
 url="https://github.com/zlib-ng/minizip-ng"
 source=("https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip")
 sha256sums=('cf4ae0dc0334266c710dfd1de188b575348ae2dfbbba2dccd7392f14bdb206f2')
+depends=('openssl')
+
+prepare() {
+  cd minizip-ng-$pkgver
+  patch -p1 < ../../no-symlink-pic.patch
+}
 
 build() {
   cd minizip-ng-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DMZ_COMPAT=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DUNIX=1
   make -j$(nproc)
 }
 

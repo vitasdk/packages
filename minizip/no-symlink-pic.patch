@@ -1,0 +1,46 @@
+Common subdirectories: minizip-ng-3.0.4/.github and minizip-ng-3.0.4-vita/.github
+diff -u minizip-ng-3.0.4/CMakeLists.txt minizip-ng-3.0.4-vita/CMakeLists.txt
+--- minizip-ng-3.0.4/CMakeLists.txt	2021-11-29 11:58:24.000000000 -0600
++++ minizip-ng-3.0.4-vita/CMakeLists.txt	2022-07-07 21:49:24.382149900 -0500
+@@ -711,7 +711,7 @@
+     set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME lib${PROJECT_NAME})
+ endif()
+ if(NOT RISCOS)
+-    set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE 1)
++    set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE 0)
+ endif()
+ if(MZ_LZMA)
+     set_target_properties(${PROJECT_NAME} PROPERTIES C_STANDARD 99)
+Common subdirectories: minizip-ng-3.0.4/doc and minizip-ng-3.0.4-vita/doc
+diff -u minizip-ng-3.0.4/mz_os_posix.c minizip-ng-3.0.4-vita/mz_os_posix.c
+--- minizip-ng-3.0.4/mz_os_posix.c	2021-11-29 11:58:24.000000000 -0600
++++ minizip-ng-3.0.4-vita/mz_os_posix.c	2022-07-07 21:06:02.115715700 -0500
+@@ -330,12 +330,19 @@
+ }
+ 
+ int32_t mz_os_make_symlink(const char *path, const char *target_path) {
++#ifdef __vita__
++    return MZ_INTERNAL_ERROR;
++#else
+     if (symlink(target_path, path) != 0)
+         return MZ_INTERNAL_ERROR;
+     return MZ_OK;
++#endif
+ }
+ 
+ int32_t mz_os_read_symlink(const char *path, char *target_path, int32_t max_target_path) {
++#ifdef __vita__
++    return MZ_EXIST_ERROR;
++#else
+     size_t length = 0;
+ 
+     length = (size_t)readlink(path, target_path, max_target_path - 1);
+@@ -344,6 +351,7 @@
+ 
+     target_path[length] = 0;
+     return MZ_OK;
++#endif
+ }
+ 
+ uint64_t mz_os_ms_time(void) {
+Common subdirectories: minizip-ng-3.0.4/test and minizip-ng-3.0.4-vita/test
