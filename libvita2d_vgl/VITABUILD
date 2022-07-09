@@ -1,0 +1,17 @@
+pkgname=libvita2d_vgl
+pkgver=1.0
+pkgrel=1
+url="https://github.com/Rinnegatamante/libvita2d_vgl"
+source=("https://github.com/Rinnegatamante/$pkgname/archive/refs/tags/v.$pkgver.tar.gz")
+sha256sums=('a39997a39bbca66a56ee02792b2636649ee6e975ed5ee855a43bf220aa3661a9')
+depends=('zlib' 'freetype' 'vitaGL')
+
+build() {
+  cd $pkgname-v.$pkgver/libvita2d
+  make -j$(nproc) CFLAGS='-Wl,-q -Wall -O3 -I$(INCLUDES) -I$(VITASDK)/arm-vita-eabi/include/freetype2'
+}
+
+package () {
+  cd $pkgname-v.$pkgver/libvita2d
+  make DESTDIR=$pkgdir install
+}
