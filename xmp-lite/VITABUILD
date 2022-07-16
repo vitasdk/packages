@@ -1,8 +1,9 @@
 pkgname=xmp-lite
 pkgver=9999
 pkgrel=1
+gitrev=cce4d9ecb7c38eab6327e415a9134bdda5aa4170
 url="https://github.com/bucanero/libxmp-lite-ps4"
-source=("git+https://github.com/bucanero/libxmp-lite-ps4.git")
+source=("https://github.com/bucanero/libxmp-lite-ps4/archive/${gitrev}.tar.gz")
 sha256sums=('SKIP')
 
 build() {
