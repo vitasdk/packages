@@ -3,7 +3,7 @@ pkgver=9999
 pkgrel=1
 gitrev=bc2929c0c807ce5441dcba12cb02a5689113e995
 url="https://github.com/bucanero/libun7zip"
-source=("https://github.com/bucanero/libun7zip/archive/${gitrev}.tar.gz")
+source=("git+https://github.com/bucanero/libun7zip.git#commit=${gitrev}")
 sha256sums=('SKIP')
 
 build() {
