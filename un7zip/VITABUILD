@@ -1,7 +1,7 @@
 pkgname=un7zip
 pkgver=9999
 pkgrel=1
-gitrev=8086aa4114f33dc6de04e7710492dfb6eaa0dda0
+gitrev=6d824234a6b7953e5a0f2578b4d9e49e8d770ca8
 url="https://github.com/bucanero/libun7zip"
 source=("git+https://github.com/bucanero/libun7zip.git#commit=${gitrev}")
 sha256sums=('SKIP')
