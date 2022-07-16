@@ -1,0 +1,17 @@
+pkgname=un7zip
+pkgver=9999
+pkgrel=1
+gitrev=6d824234a6b7953e5a0f2578b4d9e49e8d770ca8
+url="https://github.com/bucanero/libun7zip"
+source=("git+https://github.com/bucanero/libun7zip.git#commit=${gitrev}")
+sha256sums=('SKIP')
+
+build() {
+  cd libun7zip
+  make -j$(nproc) -f Makefile.vita
+}
+
+package () {
+  cd libun7zip
+  make DESTDIR=$pkgdir -f Makefile.vita install
+}
