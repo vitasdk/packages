@@ -8,12 +8,11 @@ sha256sums=('d3605afc28ed4b7d1d9e3142d72e42855e4a23c07c951bbb0299556b02d36755')
 build() {
   cd $pkgname-$pkgver
   sed '84s/.*/defined(__arm__)/' library/net.c > library/net.c
-  cmake . --toolchain $VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+  cmake . --toolchain $VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE
   make -j$(nproc) polarssl
 }
 
 package () {
   cd $pkgname-$pkgver
-  cp library/libpolarssl.a "${VITASDK}/arm-vita-eabi/lib"
-  cp -R ../include/polarssl "${VITASDK}/arm-vita-eabi/include/polarssl"
+  make install
 }
