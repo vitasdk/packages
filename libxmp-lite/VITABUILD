@@ -1,0 +1,17 @@
+pkgname=libxmp-lite
+pkgver=4.5.0
+pkgrel=1
+url="https://github.com/libxmp/libxmp"
+source=("https://github.com/libxmp/libxmp/releases/download/libxmp-${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('19a019abd5a3ddf449cd20ca52cfe18970f6ab28abdffdd54cff563981a943bb')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  make -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
