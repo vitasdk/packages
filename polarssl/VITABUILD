@@ -1,0 +1,18 @@
+pkgname=polarssl
+pkgver=1.3.9
+pkgrel=1
+url="https://tls.mbed.org"
+source=("https://src.fedoraproject.org/repo/pkgs/polarssl/polarssl-1.3.9-gpl.tgz/48af7d1f0d5de512cbd6dacf5407884c/$pkgname-$pkgver-gpl.tgz")
+sha256sums=('d3605afc28ed4b7d1d9e3142d72e42855e4a23c07c951bbb0299556b02d36755')
+
+build() {
+  cd $pkgname-$pkgver
+  sed '84s/.*/defined(__arm__)/' library/net.c > library/net.c
+  cmake . -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE
+  make -j$(nproc) polarssl
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
