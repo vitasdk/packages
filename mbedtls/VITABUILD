@@ -11,7 +11,7 @@ build() {
   sed '36s/.*/defined(__arm__)/' library/net_sockets.c > library/net_sockets.c
   sed '1036s/.*/#define MBEDTLS_NO_PLATFORM_ENTROPY/' include/mbedtls/mbedtls_config.h > include/mbedtls/mbedtls_config.h
   cmake . -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE -DMBEDTLS_FATAL_WARNINGS=0
-  make -j$(nproc) polarssl
+  make -j$(nproc) mbedtls
 }
 
 package () {
