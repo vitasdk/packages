@@ -42,11 +42,9 @@ let directories = fs.readdirSync(testFolder).filter(file => fs.lstatSync(file).i
 
 directories = directories.filter(directory => {
     return fs.readdirSync(directory).filter(file => file == 'VITABUILD').length > 0;
-});
+}).filter(directory => !directory.includes('bzip2'));
 
 directories.forEach(directory => {
-    if(!directory.includes('bzip2'))
-        return;
     const content = fs.readFileSync(path.join(directory, "VITABUILD"));
     const lines = content.toString().split('\n');
     for (let i = 0; i < lines.length; i++) {
