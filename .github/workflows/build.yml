@@ -49,10 +49,14 @@ jobs:
     - name: Upload package
       run: |
         bash ./upload.sh ${{ matrix.package }}
+    - name: Rename package
+      run: |
+        export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
+        mv $FILE ${{ matrix.package }}.tar.xz
     - uses: actions/upload-artifact@v2
       with:
         name: package
-        path: ${{ matrix.package }}/*-arm.tar.xz
+        path: ${{ matrix.package }}/*.tar.xz
   upload-releases:
       needs: [prepare_jobs, build]
       runs-on: ubuntu-18.04
@@ -63,12 +67,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libarchive-tools
-      - name: Rename release artifacts
-        if: contains(github.ref,'refs/heads/master')
-        run: |
-          cd package
-          export FILE=`echo *-arm.tar.xz`
-          mv $FILE ${{ env.PACKAGE }}.tar.xz
       - uses: svenstaro/upload-release-action@v2
         if: contains(github.ref,'refs/heads/master')
         with:
