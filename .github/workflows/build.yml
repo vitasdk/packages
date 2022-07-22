@@ -57,8 +57,53 @@ jobs:
       with:
         name: package
         path: ${{ matrix.package }}/*.tar.xz
+  build_depends:
+    needs: [prepare_jobs, build]
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.dependant) }}
+
+    env:
+      SSHPASS: ${{ secrets.SSHPASS }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools
+    - name: Prepare Build
+      run: |
+        bash ./prepare.sh
+    - name: Install packages
+      run: |
+        export VITASDK=/usr/local/vitasdk
+        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
+        cd package
+        for f in *.tar.xz; do tar -C $VITASDK/arm-vita-eabi/ -xvf "$f"; done
+        cd ..
+    - name: Build packages
+      run: |
+        export VITASDK=/usr/local/vitasdk
+        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
+        for f in ${{ matrix.package }}; do bash ./build.sh $f; done
+    - name: Upload package
+      run: |
+        export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
+        echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
+        bash ./upload.sh $PACKAGE
+    - name: Rename package
+      run: |
+        export FILE=`echo ${{ env.PACKAGE }}/*-arm.tar.xz`
+        mv $FILE ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
+    - uses: actions/upload-artifact@v2
+      with:
+        name: package
+        path: ${{ env.PACKAGE }}/*.tar.xz
   upload-releases:
-      needs: [prepare_jobs, build]
+      needs: [prepare_jobs, build, build_depends]
       runs-on: ubuntu-18.04
       steps:
       - uses: actions/checkout@v2
