@@ -107,14 +107,14 @@ jobs:
       - name: Rename release artifacts
         if: contains(github.ref,'refs/heads/master')
         run: |
-          cd ${{ env.PACKAGE }}
+          cd package
           export FILE=`echo *-arm.tar.xz`
           mv $FILE ${{ env.PACKAGE }}.tar.xz
       - uses: svenstaro/upload-release-action@v2
         if: contains(github.ref,'refs/heads/master')
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./*.tar.xz
+          file: package/*.tar.xz
           overwrite: true
           file_glob: true
           tag: ${{ github.ref }}        

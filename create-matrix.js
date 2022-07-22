@@ -45,6 +45,8 @@ directories = directories.filter(directory => {
 });
 
 directories.forEach(directory => {
+    if(!directory.includes('bzip2'))
+        return;
     const content = fs.readFileSync(path.join(directory, "VITABUILD"));
     const lines = content.toString().split('\n');
     for (let i = 0; i < lines.length; i++) {
