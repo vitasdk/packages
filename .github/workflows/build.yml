@@ -52,7 +52,7 @@ jobs:
     - name: Rename package
       run: |
         export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
-        mv $FILE ${{ matrix.package }}.tar.xz
+        mv $FILE ${{ matrix.package }}/${{ matrix.package }}.tar.xz
     - uses: actions/upload-artifact@v2
       with:
         name: package
