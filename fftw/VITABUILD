@@ -1,9 +1,9 @@
 pkgname=fftw
-pkgver=3.3.9
+pkgver=3.3.10
 pkgrel=1
 url="https://www.fftw.org/"
 source=("https://fftw.org/fftw-${pkgver}.tar.gz")
-sha256sums=('bf2c7ce40b04ae811af714deb512510cc2c17b9ab9d6ddcf49fe4487eea7af3d')
+sha256sums=('56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467')
 
 build() {
   cd fftw-$pkgver
