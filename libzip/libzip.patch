@@ -1,24 +1,35 @@
-diff --git a/lib/zip_mkstempm.c b/lib/zip_mkstempm.c
---- a/lib/zip_mkstempm.c
-+++ b/lib/zip_mkstempm.c
-@@ -80,10 +80,10 @@
-         }
- 
-         if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
--            if (mode != -1) {
-+            //if (mode != -1) {
-                 /* open() honors umask(), which we don't want in this case */
--                (void)chmod(path, (mode_t)mode);
--            }
-+            //    (void)chmod(path, (mode_t)mode);
-+            //}
-             return fd;
-         }
-         if (errno != EEXIST) {
 diff --git a/lib/zip_random_unix.c b/lib/zip_random_unix.c
 --- a/lib/zip_random_unix.c
 +++ b/lib/zip_random_unix.c
-@@ -94,10 +94,10 @@
+@@ -37,27 +37,6 @@
+ #include "zip_crypto.h"
+ #endif
+ 
+-#ifdef HAVE_ARC4RANDOM
+-
+-#include <stdlib.h>
+-
+-#ifndef HAVE_SECURE_RANDOM
+-ZIP_EXTERN bool
+-zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
+-    arc4random_buf(buffer, length);
+-    return true;
+-}
+-#endif
+-
+-#ifndef HAVE_RANDOM_UINT32
+-zip_uint32_t
+-zip_random_uint32(void) {
+-    return arc4random();
+-}
+-#endif
+-
+-#else /* HAVE_ARC4RANDOM */
+-
+ #ifndef HAVE_SECURE_RANDOM
+ #include <fcntl.h>
+ #include <unistd.h>
+@@ -94,11 +73,9 @@ zip_random_uint32(void) {
      }
  
      if (!seeded) {
@@ -30,4 +41,23 @@ diff --git a/lib/zip_random_unix.c b/lib/zip_random_unix.c
 +    return (zip_uint32_t)rand();
  }
  #endif
- 
+-
+-#endif /* HAVE_ARC4RANDOM */
+diff --git a/lib/zip_source_file_stdio_named.c b/lib/zip_source_file_stdio_named.c
+--- a/lib/zip_source_file_stdio_named.c
++++ b/lib/zip_source_file_stdio_named.c
+@@ -325,14 +325,6 @@ static int create_temp_file(zip_source_file_context_t *ctx, bool create_file) {
+         
+         if (create_file) {
+             if ((fd = open(temp, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
+-                if (mode != -1) {
+-                    /* open() honors umask(), which we don't want in this case */
+-#ifdef HAVE_FCHMOD
+-                    (void)fchmod(fd, (mode_t)mode);
+-#else
+-                    (void)chmod(temp, (mode_t)mode);
+-#endif
+-                }
+                 break;
+             }
+             if (errno != EEXIST) {
