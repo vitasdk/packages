@@ -1,9 +1,9 @@
 pkgname=libzip
-pkgver=1.8.0
+pkgver=1.9.2
 pkgrel=1
 url="https://libzip.org/"
 source=("https://libzip.org/download/$pkgname-$pkgver.tar.xz" "libzip.patch")
-sha256sums=('f0763bda24ba947e80430be787c4b068d8b6aa6027a26a19923f0acfa3dac97e'
+sha256sums=('c93e9852b7b2dc931197831438fee5295976ee0ba24f8524a8907be5c2ba5937'
             'SKIP')
 depends=('zlib')
 

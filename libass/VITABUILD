@@ -1,9 +1,9 @@
 pkgname=libass
-pkgver=0.15.1
+pkgver=0.16.0
 pkgrel=1
 url="https://github.com/libass/libass"
 source=("https://github.com/libass/libass/releases/download/$pkgver/libass-$pkgver.tar.xz")
-sha256sums=('1cdd39c9d007b06e737e7738004d7f38cf9b1e92843f37307b24e7ff63ab8e53')
+sha256sums=('5dbde9e22339119cf8eed59eea6c623a0746ef5a90b689e68a090109078e3c08')
 depends=('freetype libpng harfbuzz fribidi')
 
 build() {
