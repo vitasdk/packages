@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c01ec25..4b353ae 100644
+index cca29663..5327ca9b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -668,16 +668,6 @@ if(WITH_TURBOJPEG)
+@@ -656,16 +656,6 @@ if(WITH_TURBOJPEG)
      if(NOT MSVC)
        set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
      endif()
@@ -19,7 +19,7 @@ index c01ec25..4b353ae 100644
    endif()
  endif()
  
-@@ -1464,8 +1454,6 @@ if(WITH_TURBOJPEG)
+@@ -1452,8 +1442,6 @@ if(WITH_TURBOJPEG)
        else()
          set(DIR ${CMAKE_CURRENT_BINARY_DIR})
        endif()
