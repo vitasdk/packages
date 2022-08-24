@@ -1,0 +1,21 @@
+pkgname=vita-rss-libdl
+pkgver=0.2.0
+pkgrel=1
+url="https://github.com/isage/vita-rss-libdl"
+source=("https://github.com/isage/vita-rss-libdl/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('f8e8c1ebaa43a1676ea0484f918d6d07e470b127d3e5c527717d0b0b20c35103')
+depends=('taihen')
+conflicts=('vita-libdl')
+replaces=('vita-libdl')
+
+build() {
+  cd vita-rss-libdl-${pkgver}
+  mkdir build && cd build
+  cmake -DCMAKE_BUILD_TYPE=Release ..
+  make -j$(nproc)
+}
+
+package () {
+  cd vita-rss-libdl-${pkgver}/build
+  make PREFIX=$prefix DESTDIR=$pkgdir install
+}
