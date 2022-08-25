@@ -5,7 +5,7 @@ gitrev=c329ddd10691c1875f26087ba23c2ae278515e24
 url="https://luajit.org"
 source=("https://github.com/SonicMastr/LuaJIT-Vita/archive/${gitrev}.tar.gz")
 sha256sums=( SKIP )
-depends=('taihen' 'vita-libdl')
+depends=('taihen' 'vita-rss-libdl')
 
 build() {
   cd LuaJIT-Vita-${gitrev}
