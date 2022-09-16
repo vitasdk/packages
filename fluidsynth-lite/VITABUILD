@@ -1,0 +1,16 @@
+pkgname=fluidsynth-lite
+pkgver=9999
+pkgrel=1
+url="https://github.com/fgsfdsfgs/fluidsynth-lite"
+source=("git+https://github.com/fgsfdsfgs/fluidsynth-lite.git")
+sha256sums=('SKIP')
+
+build() {
+  cd $pkgname
+  make -f Makefile.vita -j$(nproc)
+}
+
+package () {
+  cd $pkgname
+  make -f Makefile.vita DESTDIR=$pkgdir install
+}
