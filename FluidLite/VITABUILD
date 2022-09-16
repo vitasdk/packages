@@ -1,6 +1,6 @@
 pkgname=FluidLite
 pkgver=1.2.2
-pkgrel=1
+pkgrel=2
 _commit='eaacb5f8d089a31084777de490d10c1c9b9c0c51'
 url="https://github.com/divideconcept/FluidLite/"
 source=("git+https://github.com/divideconcept/${pkgname}.git#commit=${_commit}")
@@ -8,6 +8,7 @@ sha256sums=('SKIP')
 
 build() {
   cd $pkgname
+  sed -i "s/POSITION_INDEPENDENT_CODE TRUE/POSITION_INDEPENDENT_CODE FALSE/" CMakeLists.txt
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DFLUIDLITE_BUILD_STATIC=ON -DFLUIDLITE_BUILD_SHARED=OFF
   make -j$(nproc)
