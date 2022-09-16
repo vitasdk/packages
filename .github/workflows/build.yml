@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare_jobs:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container: node:lts
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
 
   build:
     needs: [prepare_jobs]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -37,7 +37,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools
+        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools xutils-dev
     - name: Prepare Build
       run: |
         bash ./prepare.sh
@@ -59,7 +59,7 @@ jobs:
         path: ${{ matrix.package }}/*.tar.xz
   build_depends:
     needs: [prepare_jobs, build]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -73,7 +73,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools pkg-config libc6-dev-i386
+        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools xutils-dev pkg-config libc6-dev-i386
     - name: Prepare Build
       run: |
         bash ./prepare.sh
@@ -104,7 +104,7 @@ jobs:
         path: ${{ env.PACKAGE }}/*.tar.xz
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
