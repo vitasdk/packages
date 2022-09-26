@@ -7,9 +7,9 @@ sha256sums=('efeac7fb687d19a7c7dc60f5e60265edd528244856cf3db2e2aecacece08b23f')
 
 build() {
   cd $pkgname-$pkgver
-  sed '30s/.*/defined(__arm__)/' library/timing.c > library/timing.c
-  sed '36s/.*/defined(__arm__)/' library/net_sockets.c > library/net_sockets.c
-  sed '1036s/.*/#define MBEDTLS_NO_PLATFORM_ENTROPY/' include/mbedtls/mbedtls_config.h > include/mbedtls/mbedtls_config.h
+  sed -i '30s/.*/defined(__arm__)/' library/timing.c
+  sed -i '36s/.*/defined(__arm__)/' library/net_sockets.c
+  sed -i '1036s/.*/#define MBEDTLS_NO_PLATFORM_ENTROPY/' include/mbedtls/mbedtls_config.h
   cmake . -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE -DMBEDTLS_FATAL_WARNINGS=0
   make -j$(nproc) mbedtls
 }
