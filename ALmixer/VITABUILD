@@ -3,13 +3,13 @@ pkgver=0.5
 pkgrel=1
 url="https://github.com/Rinnegatamante/ALmixer"
 source=("https://github.com/Rinnegatamante/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('6750226427449c371f955dbbb217dc857f55b545d57b916a009c4e17cddbba86')
+sha256sums=('57e81731197bba8d56e2cd279d80a2a8ee6629ad8b194dd051d9acba49630f49')
 depends=('libvorbis' 'mpg123' 'libogg')
 
 build() {
   cd $pkgname-$pkgver
   mkdir build && cd build
-  cmake .. -DVITA=ON
+  cmake .. -DVITA=ON -DCMAKE_BUILD_TYPE=Release
   make -j$(nproc)
 }
 
@@ -17,9 +17,6 @@ package () {
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
   mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
   
-  cd $pkgname-$pkgver
-  cp build/lib$pkgname.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
-  cp include/$pkgname.h $pkgdir/$VITASDK/arm-vita-eabi/include/
-  cp include/$pkgname_PlatformExtensions.h $pkgdir/$VITASDK/arm-vita-eabi/include/
-  cp include/$pkgname_RWops.h $pkgdir/$VITASDK/arm-vita-eabi/include/
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
 }
