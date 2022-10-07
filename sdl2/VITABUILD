@@ -1,7 +1,7 @@
 pkgname=sdl2
-pkgver=2.24.0
+pkgver=2.24.1
 pkgrel=1
-gitrev=8c9beb0c873f6ca5efbd88f1ad2648bfc793b2ac
+gitrev=a1d1946dcba6509f0679f507b57e7b228d32e6f8
 url='https://www.libsdl.org'
 source=(
   "https://github.com/libsdl-org/SDL/archive/${gitrev}.tar.gz"
@@ -17,7 +17,7 @@ prepare() {
 build() {
   cd "SDL-${gitrev}"
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DSDL_TEST=OFF
   make -j$(nproc)
 }
 
