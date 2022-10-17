@@ -7,7 +7,7 @@ source=(
     "fix_curlformoption.patch"
 )
 sha256sums=('78a06f918bd5fde3c4573ef4f9806f56372b32ec1829c9ec474799eeee641c27' SKIP)
-depends=('openssl' 'zlib')
+depends=('mbedtls' 'zlib')
 
 prepare() {
   cd curl-${pkgver}
@@ -18,7 +18,8 @@ build() {
   cd curl-${pkgver}
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_CURL_EXE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DENABLE_IPV6=Off -DCURL_DISABLE_SOCKETPAIR=On -DHAVE_FCNTL_O_NONBLOCK=Off
+    -DBUILD_CURL_EXE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DENABLE_IPV6=Off -DCURL_DISABLE_SOCKETPAIR=On -DHAVE_FCNTL_O_NONBLOCK=Off \
+    -DCURL_USE_MBEDTLS=On -DCURL_USE_OPENSSL=Off
   make -j$(nproc)
 }
 
