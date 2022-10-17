@@ -1,21 +1,20 @@
 pkgname=curl
-pkgver=9999
+pkgver=7.85.0
 pkgrel=1
-url="https://github.com/d3m3vilurr/vita-curl"
-source=("git+https://github.com/d3m3vilurr/vita-curl.git")
-sha256sums=('SKIP')
+url="https://curl.se/"
+source=("https://github.com/curl/curl/releases/download/curl-7_85_0/curl-7.85.0.tar.gz")
+sha256sums=('78a06f918bd5fde3c4573ef4f9806f56372b32ec1829c9ec474799eeee641c27')
 depends=('openssl' 'zlib')
 
 build() {
-  cd vita-curl
-  ./buildconf
-  ./configure --host=arm-vita-eabi  --prefix=$VITASDK/arm-vita-eabi/
-  cp lib/config-vita.h lib/curl_config.h
+  cd curl-${pkgver}
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_CURL_EXE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DENABLE_IPV6=Off -DCURL_DISABLE_SOCKETPAIR=On -DHAVE_FCNTL_O_NONBLOCK=Off
   make -j$(nproc)
 }
 
 package () {
-  cd vita-curl
+  cd curl-${pkgver}/build
   make DESTDIR=$pkgdir install
-  rm -rf $pkgdir/$prefix/share/man # remove useless man pages
 }
