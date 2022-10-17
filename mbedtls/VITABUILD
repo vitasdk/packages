@@ -2,19 +2,22 @@ pkgname=mbedtls
 pkgver=3.2.1
 pkgrel=1
 url="https://tls.mbed.org"
-source=("https://github.com/Mbed-TLS/mbedtls/archive/refs/tags/v$pkgver.zip")
-sha256sums=('efeac7fb687d19a7c7dc60f5e60265edd528244856cf3db2e2aecacece08b23f')
+source=("https://github.com/Mbed-TLS/mbedtls/archive/refs/tags/v$pkgver.zip" "vita.patch")
+sha256sums=('efeac7fb687d19a7c7dc60f5e60265edd528244856cf3db2e2aecacece08b23f' SKIP)
+
+prepare() {
+  cd $pkgname-$pkgver
+  patch --strip=1 --input=${srcdir}/vita.patch
+}
 
 build() {
   cd $pkgname-$pkgver
-  sed -i '30s/.*/!defined(__arm__)/' library/timing.c
-  sed -i '36s/.*/!defined(__arm__)/' library/net_sockets.c
-  sed -i '1036s/.*/#define MBEDTLS_NO_PLATFORM_ENTROPY/' include/mbedtls/mbedtls_config.h
-  cmake . -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE -DMBEDTLS_FATAL_WARNINGS=0
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=FALSE -DENABLE_PROGRAMS=FALSE -DMBEDTLS_FATAL_WARNINGS=0
   make -j$(nproc) mbedtls
 }
 
 package () {
-  cd $pkgname-$pkgver
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
