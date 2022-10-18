@@ -1,9 +1,9 @@
 pkgname=sdl2_image
 pkgver=2.0.5
-pkgrel=2
+pkgrel=3
 url="https://www.libsdl.org/projects/SDL_image/"
 source=("https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.tar.gz" pkgconfig.patch)
-sha256sums=(bdd5f6e026682f7d7e1be0b6051b209da2f402a2dd8bd1c4bd9c25ad263108d0 d667f10cdb0ee76d4f257496fb074a54a8609b270bb12fa47c479387639e2b39)
+sha256sums=(bdd5f6e026682f7d7e1be0b6051b209da2f402a2dd8bd1c4bd9c25ad263108d0 b7725f0721767eb3de4f378a668bbdefe9b6d374e7960bf7b93825ecf2f3671d)
 depends=('sdl2 libpng libwebp libjpeg-turbo zlib')
 
 prepare() {
