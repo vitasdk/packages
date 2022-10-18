@@ -6,5 +6,5 @@ index 1b841eb..d33eb60 100644
  Libs: -L${libdir} -lSDL2_image
  Cflags: -I${includedir}/SDL2
  
-+Requires.private: libpng libjpeg libwebp libz
++Requires.private: libpng libjpeg libwebp zlib
 \ No newline at end of file
