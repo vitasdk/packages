@@ -17,8 +17,8 @@ jobs:
       - name: Install dependencies
         id: set-matrix
         run: |
-          echo "::set-output name=dependant::$(node create-matrix.js dependant)"
-          echo "::set-output name=non_dependant::$(node create-matrix.js non_dependant)"
+          echo "dependant=$(node create-matrix.js dependant)" >> $GITHUB_OUTPUT
+          echo "non_dependant=$(node create-matrix.js non_dependant)" >> $GITHUB_OUTPUT
     outputs:
       dependant: ${{ steps.set-matrix.outputs.dependant }}
       non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
@@ -114,12 +114,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libarchive-tools
-      - uses: svenstaro/upload-release-action@v2
+      - uses: termux/upload-release-action@v4.0.1
         if: contains(github.ref,'refs/heads/master')
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: package/*.tar.xz
           overwrite: true
           file_glob: true
-          tag: ${{ github.ref }}        
+          tag: ${{ github.ref }}
           release_name: master
