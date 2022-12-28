@@ -114,7 +114,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libarchive-tools
-      - uses: termux/upload-release-action@v4.0.1
+      - uses: termux/upload-release-action@v3.0.3
         if: contains(github.ref,'refs/heads/master')
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
