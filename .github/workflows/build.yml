@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-18.04
     container: node:lts
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install dependencies
         id: set-matrix
         run: |
@@ -34,7 +34,7 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -54,7 +54,7 @@ jobs:
       run: |
         export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
         mv $FILE ${{ matrix.package }}/${{ matrix.package }}.tar.xz
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: package
         path: ${{ matrix.package }}/*.tar.xz
@@ -70,8 +70,8 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -100,7 +100,7 @@ jobs:
       run: |
         export FILE=`echo ${{ env.PACKAGE }}/*-arm.tar.xz`
         mv $FILE ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: package
         path: ${{ env.PACKAGE }}/*.tar.xz
@@ -108,8 +108,8 @@ jobs:
       needs: [prepare_jobs, build, build_depends]
       runs-on: ubuntu-18.04
       steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
       - name: Install dependencies
         run: |
           sudo apt-get update
