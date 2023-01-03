@@ -47,9 +47,6 @@ jobs:
         export VITASDK=/usr/local/vitasdk
         export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
         bash ./build.sh ${{ matrix.package }}
-    - name: Upload package
-      run: |
-        bash ./upload.sh ${{ matrix.package }}
     - name: Rename package
       run: |
         export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
