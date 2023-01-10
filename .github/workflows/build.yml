@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare_jobs:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container: node:lts
     steps:
       - uses: actions/checkout@v3
@@ -103,7 +103,7 @@ jobs:
         path: ${{ env.PACKAGE }}/*.tar.xz
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
