@@ -25,7 +25,8 @@ jobs:
 
   build:
     needs: [prepare_jobs]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container: vitasdk/vitasdk:latest
     strategy:
       fail-fast: false
       matrix:
@@ -35,13 +36,6 @@ jobs:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - uses: actions/checkout@v3
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools
-    - name: Prepare Build
-      run: |
-        bash ./prepare.sh
     - name: Build package
       run: |
         export VITASDK=/usr/local/vitasdk
@@ -57,7 +51,8 @@ jobs:
         path: ${{ matrix.package }}/*.tar.xz
   build_depends:
     needs: [prepare_jobs, build]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container: vitasdk/vitasdk:latest
     strategy:
       fail-fast: false
       matrix:
@@ -69,13 +64,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools pkg-config libc6-dev-i386
-    - name: Prepare Build
-      run: |
-        bash ./prepare.sh
     - name: Install packages
       run: |
         export VITASDK=/usr/local/vitasdk
