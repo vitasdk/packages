@@ -37,7 +37,7 @@ jobs:
     steps:
     - name: Install dependencies
       run: |
-        apk add git autoconf automake patch libtool gcc g++ musl-dev
+        apk add git autoconf automake patch libtool gcc g++ musl-dev subversion makedepend texinfo
     - uses: actions/checkout@v3
     - name: Build package
       run: |
@@ -66,7 +66,7 @@ jobs:
     steps:
     - name: Install dependencies
       run: |
-        apk add git autoconf automake patch libtool gcc g++ musl-dev
+        apk add git autoconf automake patch libtool gcc g++ musl-dev subversion makedepend texinfo
     - uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
     - name: Install packages
