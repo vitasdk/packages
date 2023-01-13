@@ -77,7 +77,7 @@ jobs:
     - name: Build packages
       run: |
         chown -R user .
-        for f in ${{ matrix.package }}; do su user -c 'bash ./build.sh $f'; done
+        su user -c 'for f in ${{ matrix.package }}; do bash ./build.sh $f; done'
     - name: Upload package
       run: |
         export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
