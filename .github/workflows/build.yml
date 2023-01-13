@@ -71,8 +71,6 @@ jobs:
     - uses: actions/download-artifact@v3
     - name: Install packages
       run: |
-        export VITASDK=/usr/local/vitasdk
-        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
         cd package
         for f in *.tar.xz; do tar -C $VITASDK/arm-vita-eabi/ -xvf "$f"; done
         cd ..
