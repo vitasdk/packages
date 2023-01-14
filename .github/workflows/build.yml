@@ -26,7 +26,7 @@ jobs:
   build:
     needs: [prepare_jobs]
     runs-on: ubuntu-latest
-    container: vitasdk/vitasdk:latest
+    container: vitasdk/buildscripts:latest
     strategy:
       fail-fast: false
       matrix:
@@ -37,7 +37,7 @@ jobs:
     steps:
     - name: Install dependencies
       run: |
-        apk add git autoconf automake patch libtool gcc g++ musl-dev subversion makedepend texinfo diffutils gcompat
+        apk add git autoconf automake patch libtool gcc g++ musl-dev subversion makedepend texinfo diffutils gcompat make bash fakeroot pkgconf curl fakeroot libarchive-tools file xz cmake python3 && ln -sf python3 /usr/bin/python
     - uses: actions/checkout@v3
     - name: Build package
       run: |
@@ -54,7 +54,7 @@ jobs:
   build_depends:
     needs: [prepare_jobs, build]
     runs-on: ubuntu-latest
-    container: vitasdk/vitasdk:latest
+    container: vitasdk/buildscripts:latest
     strategy:
       fail-fast: false
       matrix:
@@ -66,7 +66,7 @@ jobs:
     steps:
     - name: Install dependencies
       run: |
-        apk add git autoconf automake patch libtool gcc g++ musl-dev subversion makedepend texinfo diffutils gcompat
+        apk add git autoconf automake patch libtool gcc g++ musl-dev subversion makedepend texinfo diffutils gcompat make bash fakeroot pkgconf curl fakeroot libarchive-tools file xz cmake python3 && ln -sf python3 /usr/bin/python
     - uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
     - name: Install packages
