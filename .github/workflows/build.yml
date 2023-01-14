@@ -38,7 +38,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools
+        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools xutils-dev
     - name: Prepare Build
       run: |
         bash ./prepare.sh
