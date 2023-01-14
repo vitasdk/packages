@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare_jobs:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container: node:lts
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +25,8 @@ jobs:
 
   build:
     needs: [prepare_jobs]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container: vitasdk/buildscripts:latest
     strategy:
       fail-fast: false
       matrix:
@@ -34,19 +35,14 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v3
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools
-    - name: Prepare Build
-      run: |
-        bash ./prepare.sh
+        apk add git autoconf automake patch libtool gcc g++ musl-dev subversion makedepend texinfo diffutils gcompat make bash fakeroot pkgconf curl fakeroot libarchive-tools file xz cmake python3 && ln -sf python3 /usr/bin/python
+    - uses: actions/checkout@v3
     - name: Build package
       run: |
-        export VITASDK=/usr/local/vitasdk
-        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
-        bash ./build.sh ${{ matrix.package }}
+        chown -R user .
+        su user -c 'bash ./build.sh ${{ matrix.package }}'
     - name: Rename package
       run: |
         export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
@@ -57,7 +53,8 @@ jobs:
         path: ${{ matrix.package }}/*.tar.xz
   build_depends:
     needs: [prepare_jobs, build]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container: vitasdk/buildscripts:latest
     strategy:
       fail-fast: false
       matrix:
@@ -67,27 +64,21 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/download-artifact@v3
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools pkg-config libc6-dev-i386
-    - name: Prepare Build
-      run: |
-        bash ./prepare.sh
+        apk add git autoconf automake patch libtool gcc g++ musl-dev subversion makedepend texinfo diffutils gcompat make bash fakeroot pkgconf curl fakeroot libarchive-tools file xz cmake python3 && ln -sf python3 /usr/bin/python
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
     - name: Install packages
       run: |
-        export VITASDK=/usr/local/vitasdk
-        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
         cd package
         for f in *.tar.xz; do tar -C $VITASDK/arm-vita-eabi/ -xvf "$f"; done
         cd ..
     - name: Build packages
       run: |
-        export VITASDK=/usr/local/vitasdk
-        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
-        for f in ${{ matrix.package }}; do bash ./build.sh $f; done
+        chown -R user .
+        chown -R user $VITASDK
+        su user -c 'for f in ${{ matrix.package }}; do bash ./build.sh $f; done'
     - name: Upload package
       run: |
         export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
@@ -103,7 +94,7 @@ jobs:
         path: ${{ env.PACKAGE }}/*.tar.xz
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
