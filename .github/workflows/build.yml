@@ -88,11 +88,10 @@ jobs:
         export VITASDK=/usr/local/vitasdk
         export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
         for f in ${{ matrix.package }}; do bash ./build.sh $f; done
-    - name: Upload package
+    - name: Export package
       run: |
         export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
         echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
-        bash ./upload.sh $PACKAGE
     - name: Rename package
       run: |
         export FILE=`echo ${{ env.PACKAGE }}/*-arm.tar.xz`
@@ -103,7 +102,7 @@ jobs:
         path: ${{ env.PACKAGE }}/*.tar.xz
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-20.04
       steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
