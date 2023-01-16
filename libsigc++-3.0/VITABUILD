@@ -1,9 +1,9 @@
 pkgname=libsigc++-3.0
-pkgver=3.2.0
+pkgver=3.4.0
 pkgrel=1
 url="https://libsigcplusplus.github.io/libsigcplusplus/"
 source=("https://github.com/libsigcplusplus/libsigcplusplus/releases/download/${pkgver}/libsigc++-${pkgver}.tar.xz")
-sha256sums=('8cdcb986e3f0a7c5b4474aa3c833d676e62469509f4899110ddf118f04082651')
+sha256sums=('02e2630ffb5ce93cd52c38423521dfe7063328863a6e96d41d765a6116b8707e')
 
 build() {
   cd libsigc++-$pkgver
