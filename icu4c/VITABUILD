@@ -1,7 +1,7 @@
 pkgname=icu4c
 pkgver=59.2
 pkgrel=1
-url='http://site.icu-project.org/'
+url='https://icu.unicode.org/'
 source=(
   "https://github.com/unicode-org/icu/releases/download/release-59-2/icu4c-59_2-src.tgz"
   "icu-59.2.patch"

@@ -1,7 +1,7 @@
 pkgname=websocketpp
 pkgver=0.8.2
 pkgrel=1
-url="https://github.com/zaphoyd/websocketpp"
+url="https://www.zaphoyd.com/projects/websocketpp/"
 source=("https://github.com/zaphoyd/websocketpp/archive/refs/tags/$pkgver.tar.gz")
 sha256sums=('6ce889d85ecdc2d8fa07408d6787e7352510750daa66b5ad44aacb47bea76755')
 depends=('boost')

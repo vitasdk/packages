@@ -2,13 +2,9 @@ pkgname=sdl2_ttf
 pkgver=2.20.1
 pkgrel=1
 gitrev=0a652b598625d16ea7016665095cb1e9bce9ef4f
-url="https://www.libsdl.org/projects/SDL_ttf/"
-source=(
-    "https://github.com/libsdl-org/SDL_ttf/archive/${gitrev}.zip"
-)
-sha256sums=(
-    SKIP
-)
+url="https://github.com/libsdl-org/SDL_ttf"
+source=("https://github.com/libsdl-org/SDL_ttf/archive/${gitrev}.zip")
+sha256sums=(SKIP)
 depends=('sdl2 freetype harfbuzz')
 
 build() {
