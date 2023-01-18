@@ -1,8 +1,8 @@
 pkgname=unrar
 pkgver=6.1.6
 pkgrel=2
-url="http://www.rarlab.com"
-source=("http://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz" "0001-vita.patch")
+url="https://www.rarlab.com/"
+source=("https://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz" "0001-vita.patch")
 sha256sums=('67f4ab891c062218c2badfaac9c8cab5c8bfd5e96dabfca56c8faa3d209a801d' '0870cbf7aca8ba3a6b8e6e0f239fc1b321cb11fb67229ad5c8dc56ceabcd810e')
 
 prepare() {

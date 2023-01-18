@@ -1,7 +1,7 @@
 pkgname=glm
 pkgver=0.9.8.5
 pkgrel=1
-url="https://github.com/g-truc/glm.git"
+url="https://github.com/g-truc/glm"
 source=("https://github.com/g-truc/glm/releases/download/0.9.8.5/glm-0.9.8.5.zip")
 sha256sums=('9f9f520ec7fb8c20c69d6b398ed928a2448c6a3245cbedb8631a56a987c38660')
 

@@ -1,7 +1,7 @@
 pkgname=libarchive
 pkgver=3.3.2
 pkgrel=3
-url="https://github.com/libarchive/libarchive"
+url="https://www.libarchive.org/"
 source=("https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz" "libarchive-3.3.2-vita.patch")
 sha256sums=('22560b89d420b11a4a724877bc6672b7d7c0f239e77d42a39dcc5a9c3b28db82' 'SKIP')
 depends=('zlib')

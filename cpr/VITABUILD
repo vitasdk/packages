@@ -1,7 +1,7 @@
 pkgname=cpr
 pkgver=1.6.2
 pkgrel=1
-url="https://github.com/libcpr/cpr/"
+url="https://docs.libcpr.org/"
 source=("https://github.com/libcpr/cpr/archive/refs/tags/$pkgver.tar.gz")
 sha256sums=('c45f9c55797380c6ba44060f0c73713fbd7989eeb1147aedb8723aa14f3afaa3')
 depends=('curl')

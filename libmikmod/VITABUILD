@@ -1,7 +1,7 @@
 pkgname=libmikmod
 pkgver=3.3.11
 pkgrel=1
-url="https://github.com/usineur/mikmod"
+url="https://mikmod.sourceforge.net/"
 source=("git+https://github.com/usineur/mikmod.git#branch=vita")
 sha256sums=('SKIP')
 

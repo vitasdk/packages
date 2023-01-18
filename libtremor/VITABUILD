@@ -1,7 +1,7 @@
 pkgname=libtremor
 pkgver=9999
 pkgrel=1
-url="http://xiph.org/"
+url="https://xiph.org/"
 source=("git+https://gitlab.xiph.org/xiph/tremor.git#commit=293fd1c0")
 sha256sums=('SKIP')
 

@@ -1,7 +1,7 @@
 pkgname=libzstd
 pkgver=1.5.4
 pkgrel=1
-url='https://zstd.net'
+url='https://facebook.github.io/zstd/'
 source=("https://github.com/facebook/zstd/releases/download/v$pkgver/zstd-$pkgver.tar.gz")
 sha256sums=('0f470992aedad543126d06efab344dc5f3e171893810455787d38347343a4424')
 build() {

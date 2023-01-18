@@ -1,7 +1,7 @@
 pkgname=harfbuzz
 pkgver=1.4.8
 pkgrel=1
-url="http://harfbuzz.org/"
+url="https://harfbuzz.github.io/"
 source=("https://github.com/behdad/harfbuzz/releases/download/${pkgver}/harfbuzz-${pkgver}.tar.bz2")
 sha256sums=('ccec4930ff0bb2d0c40aee203075447954b64a8c2695202413cc5e428c907131')
 depends=('icu libpng')
