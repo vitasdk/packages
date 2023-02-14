@@ -1,10 +1,10 @@
 pkgname=libvpx
-pkgver=1.12.0
+pkgver=1.13.0
 pkgrel=1
 url='https://chromium.googlesource.com/webm/libvpx'
 source=("https://github.com/webmproject/libvpx/archive/v$pkgver.tar.gz" "libvpx.patch")
 sha256sums=(
-  'f1acc15d0fd0cb431f4bf6eac32d5e932e40ea1186fe78e074254d6d003957bb'
+  'cb2a393c9c1fae7aba76b950bb0ad393ba105409fe1a147ccd61b0aaa1501066'
   'SKIP'
 )
 
