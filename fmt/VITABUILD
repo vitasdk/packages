@@ -1,9 +1,9 @@
 pkgname=fmt
-pkgver=9.1.0
+pkgver=10.0.0
 pkgrel=1
 url="https://fmt.dev/"
 source=("https://github.com/fmtlib/fmt/releases/download/$pkgver/$pkgname-$pkgver.zip")
-sha256sums=('cceb4cb9366e18a5742128cb3524ce5f50e88b476f1e54737a47ffdf4df4c996')
+sha256sums=('4943cb165f3f587f26da834d3056ee8733c397e024145ca7d2a8a96bb71ac281')
 
 build() {
   cd $pkgname-$pkgver
