@@ -1,24 +1,28 @@
 pkgname=libxml2
-pkgver=v2.9.8
+pkgver=2.11.4
 pkgrel=1
 url="https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home"
-source=("git+https://github.com/GNOME/libxml2.git#tag=${pkgver}")
-sha256sums=('SKIP')
+source=("https://download.gnome.org/sources/libxml2/2.11/libxml2-2.11.4.tar.xz" "libxml2-no-pic.patch")
+sha256sums=('737e1d7f8ab3f139729ca13a2494fd17bf30ddb4b7a427cf336252cab57f57f7' '28017d68b06dbe0ffd9d284d4dae3d7c690969c57459affdcfb034b98baa2d3c')
 depends=('zlib')
 
 prepare() {
-  cd ${pkgname}
-  patch -p1 < "${startdir}/patches/libxml2-2.9.8-vita.patch"
+  cd ${pkgname}-${pkgver}
+  patch -p1 < ../libxml2-no-pic.patch
 }
 
 build() {
-  cd ${pkgname}
-  ./autogen.sh --host arm-vita-eabi --prefix=$prefix --disable-ipv6 --without-debug --without-ftp --without-http --without-threads --without-lzma --disable-tests --without-python
+  cd ${pkgname}-${pkgver}
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=/usr/local/vitasdk/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF -DLIBXML2_WITH_DEBUG=OFF -DLIBXML2_WITH_FTP=OFF -DLIBXML2_WITH_HTTP=OFF -DLIBXML2_WITH_ICONV=OFF -DLIBXML2_WITH_LZMA=OFF -DLIBXML2_WITH_PROGRAMS=OFF -DLIBXML2_WITH_PYTHON=OFF -DLIBXML2_WITH_TESTS=OFF -DLIBXML2_WITH_THREADS=OFF
   make -j$(nproc)
 }
 
 package () {
-  cd ${pkgname}
+  cd ${pkgname}-${pkgver}/build
   make DESTDIR=${pkgdir} install
+  
+  rm -rf $pkgdir/$prefix/share/doc # remove doc
+  rm -rf $pkgdir/$prefix/share/man # remove man pages
 }
 
