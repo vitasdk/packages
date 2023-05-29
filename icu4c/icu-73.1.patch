@@ -1,0 +1,64 @@
+diff --git a/source/common/putilimp.h b/source/common/putilimp.h
+index 5b95a68..dd47dcb 100644
+--- a/source/common/putilimp.h
++++ b/source/common/putilimp.h
+@@ -101,7 +101,7 @@ typedef size_t uintptr_t;
+ #if U_PLATFORM_HAS_WINUWP_API == 0
+ #   define U_TZSET _tzset
+ #endif
+-#elif U_PLATFORM == U_PF_OS400
++#elif U_PLATFORM == U_PF_OS400 || defined(__vita__)
+    /* not defined */
+ #else
+ #   define U_TZSET tzset
+@@ -139,7 +139,7 @@ typedef size_t uintptr_t;
+ #if U_PLATFORM_HAS_WINUWP_API == 0
+ #   define U_TZNAME _tzname
+ #endif
+-#elif U_PLATFORM == U_PF_OS400
++#elif U_PLATFORM == U_PF_OS400 || defined(__vita__)
+    /* not defined */
+ #else
+ #   define U_TZNAME tzname
+diff --git a/source/common/unicode/putil.h b/source/common/unicode/putil.h
+index 500c212..441209d 100644
+--- a/source/common/unicode/putil.h
++++ b/source/common/unicode/putil.h
+@@ -126,6 +126,13 @@ U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *
+ #   define U_FILE_SEP_STRING "\\"
+ #   define U_FILE_ALT_SEP_STRING "/"
+ #   define U_PATH_SEP_STRING ";"
++#elif defined(__vita__)
++#   define U_FILE_SEP_CHAR '/'
++#   define U_FILE_ALT_SEP_CHAR '/'
++#   define U_PATH_SEP_CHAR ';'
++#   define U_FILE_SEP_STRING "/"
++#   define U_FILE_ALT_SEP_STRING "/"
++#   define U_PATH_SEP_STRING ";"
+ #else
+ #   define U_FILE_SEP_CHAR '/'
+ #   define U_FILE_ALT_SEP_CHAR '/'
+diff --git a/source/tools/toolutil/toolutil.cpp b/source/tools/toolutil/toolutil.cpp
+index 7e7bdc7..2b6920f 100644
+--- a/source/tools/toolutil/toolutil.cpp
++++ b/source/tools/toolutil/toolutil.cpp
+@@ -70,6 +70,10 @@
+ #include "cstring.h"
+ #include "toolutil.h"
+ 
++#if defined(__vita__)
++#include <psp2/io/stat.h>
++#endif
++
+ U_NAMESPACE_BEGIN
+ 
+ IcuToolErrorCode::~IcuToolErrorCode() {
+@@ -180,6 +184,8 @@ uprv_mkdir(const char *pathname, UErrorCode *status) {
+     int retVal = 0;
+ #if U_PLATFORM_USES_ONLY_WIN32_API
+     retVal = _mkdir(pathname);
++#elif defined(__vita__)
++    retVal = sceIoMkdir(pathname, S_IRWXU | (S_IROTH | S_IXOTH) | (S_IROTH | S_IXOTH));
+ #else
+     retVal = mkdir(pathname, S_IRWXU | (S_IROTH | S_IXOTH) | (S_IROTH | S_IXOTH));
+ #endif
