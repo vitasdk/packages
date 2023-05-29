@@ -18,7 +18,7 @@ export LDFLAGS="-lc -lstdc++ -march=armv7-a -Wl,--fix-cortex-a8 -Wl,-rpath-link=
 
 export PATH=$PATH:$STANDALONE_TOOLCHAIN_ROOT/bin
 
-sh $ICU_ROOT/icu/source/configure --with-cross-build=$ICU_CROSS_BUILD \
+sh $ICU_ROOT/source/configure --with-cross-build=$ICU_CROSS_BUILD \
 --enable-extras=yes --enable-strict=no --enable-static=yes --enable-shared=no \
 --enable-tests=no --enable-samples=no --enable-dyload=no --enable-renaming=yes \
 --host=arm-vita-eabi --prefix=$VITASDK/arm-vita-eabi --with-data-packaging=files
