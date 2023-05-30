@@ -1,21 +1,19 @@
 pkgname=sdl2_ttf
-pkgver=2.20.1
+pkgver=2.20.2
 pkgrel=1
-gitrev=0a652b598625d16ea7016665095cb1e9bce9ef4f
 url="https://github.com/libsdl-org/SDL_ttf"
-source=("https://github.com/libsdl-org/SDL_ttf/archive/${gitrev}.zip")
-sha256sums=(SKIP)
+source=("https://github.com/libsdl-org/SDL_ttf/releases/download/release-${pkgver}/SDL2_ttf-${pkgver}.tar.gz")
+sha256sums=('9dc71ed93487521b107a2c4a9ca6bf43fb62f6bddd5c26b055e6b91418a22053')
 depends=('sdl2 freetype harfbuzz')
 
 build() {
-  cd "SDL_ttf-${gitrev}"
+  cd SDL2_ttf-${pkgver}
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DBUILD_SHARED_LIBS=OFF -DSDL2TTF_SAMPLES=OFF
   make -j$(nproc)
 }
 
 package () {
-  cd "SDL_ttf-${gitrev}"
-  cd build
+  cd SDL2_ttf-${pkgver}/build
   make DESTDIR=$pkgdir install
 }
