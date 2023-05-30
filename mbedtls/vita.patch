@@ -1,0 +1,143 @@
+diff --git a/library/entropy_poll.c b/library/entropy_poll.c
+index b5024c83f..d42495325 100644
+--- a/library/entropy_poll.c
++++ b/library/entropy_poll.c
+@@ -41,7 +41,7 @@
+ 
+ #if !defined(unix) && !defined(__unix__) && !defined(__unix) && \
+     !defined(__APPLE__) && !defined(_WIN32) && !defined(__QNXNTO__) && \
+-    !defined(__HAIKU__) && !defined(__midipix__)
++    !defined(__HAIKU__) && !defined(__midipix__) && !defined(__vita__)
+ #error \
+     "Platform entropy sources only work on Unix and Windows, see MBEDTLS_NO_PLATFORM_ENTROPY in mbedtls_config.h"
+ #endif
+@@ -153,6 +153,27 @@ static int sysctl_arnd_wrapper(unsigned char *buf, size_t buflen)
+ #endif /* KERN_ARND */
+ #endif /* __FreeBSD__ || __NetBSD__ */
+ 
++/*
++ * vitasdk provides getentropy(), with 256b max per call.
++ */
++#if defined(__vita__)
++int getentropy(void *, size_t); // hidden behind __BSD_VISIBLE
++
++static int vita_getentropy_wrapper(unsigned char *buf, size_t buflen)
++{
++    size_t len;
++
++    while (buflen > 0) {
++        len = buflen > 256 ? 256 : buflen;
++        if (getentropy(buf, len) == -1)
++            return -1;
++        buflen -= len;
++        buf += len;
++    }
++    return 0;
++}
++#endif /* __vita__ */
++
+ #include <stdio.h>
+ 
+ int mbedtls_platform_entropy_poll(void *data,
+@@ -184,6 +205,14 @@ int mbedtls_platform_entropy_poll(void *data,
+     }
+     *olen = len;
+     return 0;
++#elif defined(__vita__)
++	((void) file);
++	((void) read_len);
++	if (vita_getentropy_wrapper(output, len) == -1) {
++		return MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
++	}
++	*olen = len;
++	return 0;
+ #else
+ 
+     *olen = 0;
+diff --git a/library/net_sockets.c b/library/net_sockets.c
+index e63d08b15..cebbbe723 100644
+--- a/library/net_sockets.c
++++ b/library/net_sockets.c
+@@ -33,7 +33,7 @@
+ 
+ #if !defined(unix) && !defined(__unix__) && !defined(__unix) && \
+     !defined(__APPLE__) && !defined(_WIN32) && !defined(__QNXNTO__) && \
+-    !defined(__HAIKU__) && !defined(__midipix__)
++    !defined(__HAIKU__) && !defined(__midipix__) && !defined(__vita__)
+ #error "This module only works on Unix and Windows, see MBEDTLS_NET_C in mbedtls_config.h"
+ #endif
+ 
+@@ -295,6 +295,40 @@ static int net_would_block(const mbedtls_net_context *ctx)
+     ((void) ctx);
+     return WSAGetLastError() == WSAEWOULDBLOCK;
+ }
++#elif defined(__vita__)
++/*
++ * Check if the requested operation would be blocking on a non-blocking socket
++ * and thus 'failed' with a negative return value.
++ *
++ * Note: on a blocking socket this function always returns 0!
++ */
++static int net_would_block(const mbedtls_net_context *ctx)
++{
++	int err = errno;
++
++	long b;
++	socklen_t b_size = sizeof(b);
++
++	/*
++	 * Never return 'WOULD BLOCK' on a blocking socket
++	 */
++	getsockopt(ctx->fd, SOL_SOCKET, SO_NONBLOCK, &b, &b_size);
++	if (b != 1L) {
++		errno = err;
++		return 0;
++	}
++
++	switch (errno = err) {
++#if defined EAGAIN
++		case EAGAIN:
++#endif
++#if defined EWOULDBLOCK && EWOULDBLOCK != EAGAIN
++		case EWOULDBLOCK:
++#endif
++	return 1;
++	}
++	return 0;
++}
+ #else
+ /*
+  * Check if the requested operation would be blocking on a non-blocking socket
+@@ -446,6 +480,9 @@ int mbedtls_net_set_block(mbedtls_net_context *ctx)
+     !defined(EFI32)
+     u_long n = 0;
+     return ioctlsocket(ctx->fd, FIONBIO, &n);
++#elif defined(__vita__)
++    long b = 0L;
++    return setsockopt(ctx->fd, SOL_SOCKET, SO_NONBLOCK, &b, sizeof(b));
+ #else
+     return fcntl(ctx->fd, F_SETFL, fcntl(ctx->fd, F_GETFL) & ~O_NONBLOCK);
+ #endif
+@@ -457,6 +494,9 @@ int mbedtls_net_set_nonblock(mbedtls_net_context *ctx)
+     !defined(EFI32)
+     u_long n = 1;
+     return ioctlsocket(ctx->fd, FIONBIO, &n);
++#elif defined(__vita__)
++    long b = 1L;
++    return setsockopt(ctx->fd, SOL_SOCKET, SO_NONBLOCK, &b, sizeof(b));
+ #else
+     return fcntl(ctx->fd, F_SETFL, fcntl(ctx->fd, F_GETFL) | O_NONBLOCK);
+ #endif
+diff --git a/library/timing.c b/library/timing.c
+index 6852033ea..06d7cadd2 100644
+--- a/library/timing.c
++++ b/library/timing.c
+@@ -27,7 +27,7 @@
+ 
+ #if !defined(unix) && !defined(__unix__) && !defined(__unix) && \
+     !defined(__APPLE__) && !defined(_WIN32) && !defined(__QNXNTO__) && \
+-    !defined(__HAIKU__) && !defined(__midipix__)
++    !defined(__HAIKU__) && !defined(__midipix__) && !defined(__vita__)
+ #error "This module only works on Unix and Windows, see MBEDTLS_TIMING_C in mbedtls_config.h"
+ #endif
+ 
