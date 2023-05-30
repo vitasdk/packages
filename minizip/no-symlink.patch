@@ -1,0 +1,32 @@
+diff --git a/mz_os_posix.c b/mz_os_posix.c
+index aefc1a4..e9e38cc 100644
+--- a/mz_os_posix.c
++++ b/mz_os_posix.c
+@@ -313,12 +313,19 @@ int32_t mz_os_is_symlink(const char *path) {
+ }
+ 
+ int32_t mz_os_make_symlink(const char *path, const char *target_path) {
++#ifdef __vita__
++    return MZ_INTERNAL_ERROR;
++#else
+     if (symlink(target_path, path) != 0)
+         return MZ_INTERNAL_ERROR;
+     return MZ_OK;
++#endif
+ }
+ 
+ int32_t mz_os_read_symlink(const char *path, char *target_path, int32_t max_target_path) {
++#ifdef __vita__
++    return MZ_INTERNAL_ERROR;
++#else
+     size_t length = 0;
+ 
+     length = (size_t)readlink(path, target_path, max_target_path - 1);
+@@ -327,6 +334,7 @@ int32_t mz_os_read_symlink(const char *path, char *target_path, int32_t max_targ
+ 
+     target_path[length] = 0;
+     return MZ_OK;
++#endif
+ }
+ 
+ uint64_t mz_os_ms_time(void) {
