@@ -14,7 +14,7 @@ build() {
     --disable-asm --enable-large-tiles \
     --disable-require-system-font-provider
 
-  make
+  make -j$(nproc)
 }
 
 package() {
