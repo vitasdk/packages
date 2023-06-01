@@ -1,18 +1,19 @@
 pkgname=freetype
-pkgver=2.9.1
+pkgver=2.13.0
 pkgrel=1
 url="https://freetype.org/"
-source=("https://download.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.gz")
-sha256sums=('ec391504e55498adceb30baceebd147a6e963f636eb617424bcfc47a169898ce')
-depends=('zlib')
+source=("https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.gz")
+sha256sums=('a7aca0e532a276ea8d85bd31149f0a74c33d19c8d287116ef8f5f8357b4f1f80')
+depends=('bzip2 libpng zlib')
 
 build() {
   cd freetype-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --with-bzip2=no --with-harfbuzz=no
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF -DFT_DISABLE_HARFBUZZ=TRUE
   make -j$(nproc)
 }
 
 package () {
-  cd freetype-$pkgver
+  cd freetype-$pkgver/build
   make DESTDIR=$pkgdir install
 }
