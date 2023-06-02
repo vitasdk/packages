@@ -1,21 +1,21 @@
 pkgname=libzip
 pkgver=1.9.2
-pkgrel=1
+pkgrel=2
 url="https://libzip.org/"
-source=("https://libzip.org/download/$pkgname-$pkgver.tar.xz" "libzip.patch")
+source=("https://libzip.org/download/$pkgname-$pkgver.tar.xz" "random.patch")
 sha256sums=('c93e9852b7b2dc931197831438fee5295976ee0ba24f8524a8907be5c2ba5937'
             'SKIP')
-depends=('zlib')
+depends=('bzip2 openssl xz zlib zstd')
 
 prepare() {
   cd $pkgname-$pkgver
-  patch -Np1 -i "${srcdir}/libzip.patch"
+  patch -Np1 -i "${srcdir}/random.patch"
 }
 
 build() {
   cd $pkgname-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_TOOLS=OFF -DBUILD_REGRESS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_DOC=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_TOOLS=OFF -DBUILD_REGRESS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_DOC=OFF -DBUILD_SHARED_LIBS=OFF -DHAVE_ARC4RANDOM=OFF
   make -j$(nproc)
 }
 
