@@ -1,3 +1,19 @@
+diff --git a/libxmp.pc.in b/libxmp.pc.in
+index 665b6be..19de923 100644
+--- a/libxmp.pc.in
++++ b/libxmp.pc.in
+@@ -1,7 +1,7 @@
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@libdir@
+-includedir=@includedir@
++prefix=${VITASDK}/arm-vita-eabi
++exec_prefix=${prefix}
++libdir=${prefix}/lib
++includedir=${prefix}/include
+ 
+ Name: libxmp
+ Description: Xmp module player library
 diff --git a/src/tempfile.c b/src/tempfile.c
 index 6b05820..587d655 100644
 --- a/src/tempfile.c

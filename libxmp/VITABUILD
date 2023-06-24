@@ -3,15 +3,11 @@ pkgver=4.6.0
 pkgrel=1
 url="https://github.com/libxmp/libxmp"
 source=("https://github.com/libxmp/libxmp/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz" "vita.patch")
-sha256sums=('2d3c45fe523b50907e89e60f9a3b7f4cc9aab83ec9dbba7743eaffbcdcb35ea6' '7fd9404040cb20ab3c7219074b3871463d9c035cbf408a3c3247a3e01ebd3e63')
+sha256sums=('2d3c45fe523b50907e89e60f9a3b7f4cc9aab83ec9dbba7743eaffbcdcb35ea6' '28db5b694cf93d706d1e5e1176931175c4b117903ff48ac2a172da3b47cb7262')
 
 prepare() {
   cd $pkgname-$pkgver
   patch -p1 < ../vita.patch
-  sed -i 's#@prefix@#${VITASDK}/arm-vita-eabi#' libxmp.pc.in
-  sed -i 's#@exec_prefix@#${prefix}#' libxmp.pc.in
-  sed -i 's#@libdir@#${prefix}/lib#' libxmp.pc.in
-  sed -i 's#@includedir@#${prefix}/include#' libxmp.pc.in
 }
 
 build() {
