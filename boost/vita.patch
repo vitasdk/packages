@@ -1297,6 +1297,44 @@ index 000000000..f117084e0
 +
 +
 +
+diff --git a/boost/filesystem/path.hpp b/boost/filesystem/path.hpp
+index 7469401c2..158a4ae5a 100644
+--- a/boost/filesystem/path.hpp
++++ b/boost/filesystem/path.hpp
+@@ -828,7 +828,7 @@ public:
+     bool is_absolute() const
+     {
+         // Windows CE has no root name (aka drive letters)
+-#if defined(BOOST_WINDOWS_API) && !defined(UNDER_CE)
++#if (defined(BOOST_WINDOWS_API) && !defined(UNDER_CE)) || defined(__vita__)
+         return has_root_name() && has_root_directory();
+ #else
+         return has_root_directory();
+@@ -1221,6 +1221,9 @@ inline bool is_element_separator(path::value_type c) BOOST_NOEXCEPT
+     return c == path::separator
+ #ifdef BOOST_WINDOWS_API
+         || c == path::preferred_separator || c == L':'
++#endif
++#ifdef __vita__
++        || c == ':'
+ #endif
+         ;
+ }
+diff --git a/boost/uuid/detail/random_provider_detect_platform.hpp b/boost/uuid/detail/random_provider_detect_platform.hpp
+index 014c83be6..5a2334f41 100644
+--- a/boost/uuid/detail/random_provider_detect_platform.hpp
++++ b/boost/uuid/detail/random_provider_detect_platform.hpp
+@@ -64,6 +64,10 @@
+ # define BOOST_UUID_RANDOM_PROVIDER_GETENTROPY
+ # define BOOST_UUID_RANDOM_PROVIDER_NAME getentropy
+ 
++#elif defined(__vita__)
++# define BOOST_UUID_RANDOM_PROVIDER_GETENTROPY
++# define BOOST_UUID_RANDOM_PROVIDER_NAME getentropy
++
+ #else
+ # define BOOST_UUID_RANDOM_PROVIDER_POSIX
+ # define BOOST_UUID_RANDOM_PROVIDER_NAME posix
 diff --git a/libs/container/src/dlmalloc_2_8_6.c b/libs/container/src/dlmalloc_2_8_6.c
 index 9aa1e5a5c..6f5a125c7 100644
 --- a/libs/container/src/dlmalloc_2_8_6.c
@@ -1467,6 +1505,171 @@ index 71672e5e1..2c772276e 100644
  #else
  
      handle_wrapper h(
+diff --git a/libs/filesystem/src/path.cpp b/libs/filesystem/src/path.cpp
+index 7b04e6cc3..f9d0f0f11 100644
+--- a/libs/filesystem/src/path.cpp
++++ b/libs/filesystem/src/path.cpp
+@@ -31,6 +31,10 @@
+ #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
+ #endif
+ 
++#if defined(__vita__)
++#include "vita_tools.hpp"
++#endif
++
+ #ifdef BOOST_FILESYSTEM_DEBUG
+ #include <iostream>
+ #include <iomanip>
+@@ -108,6 +112,21 @@ const char dot_path_literal[] = ".";
+ const char dot_dot_path_literal[] = "..";
+ const char separators[] = "/";
+ 
++#if defined(__vita__)
++using boost::filesystem::detail::colon;
++
++inline bool is_alnum(char c)
++{
++    return boost::filesystem::detail::is_letter(c) || (c >= '0' && c <= '9');
++}
++
++inline bool is_device_name_char(char c)
++{
++    return is_alnum(c);
++}
++
++#endif
++
+ //! Returns position of the first directory separator in the \a size initial characters of \a p, or \a size if not found
+ inline size_type find_separator(const char* p, size_type size) BOOST_NOEXCEPT
+ {
+@@ -201,7 +220,7 @@ BOOST_FILESYSTEM_DECL void path::append_v4(path const& p)
+             // if (p.is_absolute())
+             if
+             (
+-#if defined(BOOST_WINDOWS_API) && !defined(UNDER_CE)
++#if (defined(BOOST_WINDOWS_API) && !defined(UNDER_CE)) || defined(__vita__)
+                 that_root_name_size > 0 &&
+ #endif
+                 that_root_dir_pos < that_size
+@@ -261,7 +280,7 @@ BOOST_FILESYSTEM_DECL void path::append_v4(const value_type* begin, const value_
+             // if (p.is_absolute())
+             if
+             (
+-#if defined(BOOST_WINDOWS_API) && !defined(UNDER_CE)
++#if (defined(BOOST_WINDOWS_API) && !defined(UNDER_CE)) || defined(__vita__)
+                 that_root_name_size > 0 &&
+ #endif
+                 that_root_dir_pos < that_size
+@@ -334,7 +353,7 @@ BOOST_FILESYSTEM_DECL int path::compare_v4(path const& p) const BOOST_NOEXCEPT
+ BOOST_FILESYSTEM_DECL path::string_type::size_type path::append_separator_if_needed()
+ {
+     if (!m_pathname.empty() &&
+-#ifdef BOOST_WINDOWS_API
++#if defined(BOOST_WINDOWS_API) || defined(__vita__)
+         *(m_pathname.end() - 1) != colon &&
+ #endif
+         !detail::is_directory_separator(*(m_pathname.end() - 1)))
+@@ -653,7 +672,7 @@ BOOST_FILESYSTEM_DECL path path::lexically_normal_v3() const
+     size_type root_dir_pos = find_root_directory_start(pathname, pathname_size, root_name_size);
+     path normal(pathname, pathname + root_name_size);
+ 
+-#if defined(BOOST_WINDOWS_API)
++#if defined(BOOST_WINDOWS_API) || defined(__vita__)
+     for (size_type i = 0; i < root_name_size; ++i)
+     {
+         if (normal.m_pathname[i] == path::separator)
+@@ -751,7 +770,7 @@ BOOST_FILESYSTEM_DECL path path::lexically_normal_v4() const
+     size_type root_dir_pos = find_root_directory_start(pathname, pathname_size, root_name_size);
+     path normal(pathname, pathname + root_name_size);
+ 
+-#if defined(BOOST_WINDOWS_API)
++#if defined(BOOST_WINDOWS_API) || defined(__vita__)
+     for (size_type i = 0; i < root_name_size; ++i)
+     {
+         if (normal.m_pathname[i] == path::separator)
+@@ -975,6 +994,28 @@ size_type find_root_directory_start(const value_type* path, size_type size, size
+     }
+ #endif
+ 
++#if defined(__vita__)
++    if ((size - pos) >= 2 && fs::detail::is_letter(path[pos]))
++    {
++        size_type i = pos + 1;
++        for (; i < size; ++i)
++        {
++            if (!is_device_name_char(path[i]))
++                break;
++        }
++
++        if (i < size && path[i] == colon)
++        {
++            pos = i + 1;
++            root_name_size = pos;
++            parsing_root_name = false;
++
++            if (pos < size && fs::detail::is_directory_separator(path[pos]))
++                return pos;
++        }
++    }
++#endif
++
+     if (!parsing_root_name)
+         return size;
+ 
+diff --git a/libs/filesystem/src/unique_path.cpp b/libs/filesystem/src/unique_path.cpp
+index d48f8edfb..5feb9ae10 100644
+--- a/libs/filesystem/src/unique_path.cpp
++++ b/libs/filesystem/src/unique_path.cpp
+@@ -28,7 +28,7 @@
+ #if !defined(BOOST_FILESYSTEM_DISABLE_ARC4RANDOM)
+ #if BOOST_OS_BSD_OPEN >= BOOST_VERSION_NUMBER(2, 1, 0) || \
+     BOOST_OS_BSD_FREE >= BOOST_VERSION_NUMBER(8, 0, 0) || \
+-    BOOST_LIB_C_CLOUDABI
++    BOOST_LIB_C_CLOUDABI || defined(__vita__)
+ #include <stdlib.h>
+ #define BOOST_FILESYSTEM_HAS_ARC4RANDOM
+ #endif
+diff --git a/libs/filesystem/src/vita_tools.hpp b/libs/filesystem/src/vita_tools.hpp
+new file mode 100644
+index 000000000..62d3c4ce8
+--- /dev/null
++++ b/libs/filesystem/src/vita_tools.hpp
+@@ -0,0 +1,35 @@
++//  vita_tools.hpp  -----------------------------------------------------------------//
++
++//  Copyright 2023 Cat
++
++//  Distributed under the Boost Software License, Version 1.0.
++//  See http://www.boost.org/LICENSE_1_0.txt
++
++//  See library home page at http://www.boost.org/libs/filesystem
++
++//--------------------------------------------------------------------------------------//
++
++#ifndef BOOST_FILESYSTEM_SRC_VITA_TOOLS_HPP_
++#define BOOST_FILESYSTEM_SRC_VITA_TOOLS_HPP_
++
++#include <boost/filesystem/config.hpp>
++#include <boost/filesystem/path.hpp>
++#include <boost/filesystem/file_status.hpp>
++
++namespace boost {
++namespace filesystem {
++namespace detail {
++
++BOOST_INLINE_VARIABLE BOOST_CONSTEXPR_OR_CONST char colon = ':';
++
++inline bool is_letter(char c)
++{
++    return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
++}
++
++
++} // namespace detail
++} // namespace filesystem
++} // namespace boost
++
++#endif // BOOST_FILESYSTEM_SRC_VITA_TOOLS_HPP_
 diff --git a/libs/iostreams/src/mapped_file.cpp b/libs/iostreams/src/mapped_file.cpp
 index 918a5d4c6..145e9bbbc 100644
 --- a/libs/iostreams/src/mapped_file.cpp
