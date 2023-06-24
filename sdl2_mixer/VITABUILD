@@ -1,32 +1,33 @@
 pkgname=sdl2_mixer
-pkgver=2.0.4
-pkgrel=2
+pkgver=2.6.3
+pkgrel=1
 url="https://github.com/libsdl-org/SDL_mixer"
-source=("https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.tar.gz" sdl-mixer-timidity.patch noplayers.patch pkgconfig.patch)
+source=("https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.tar.gz"
+        "pkg-config-fix.patch")
 sha256sums=(
-    b4cf5a382c061cd75081cf246c2aa2f9df8db04bdda8dcdc6b6cca55bede2419
-    b330231aa8446ac3c9eec319ff4225e4a37288e385d8cac431943238697035a1
-    c7759b68610e0df6fdcd6e46ed0f629ccc6aad31bcdb2ffa3870aeedb15c0cc9
-    7935223ca3c90f06d2e60f2773283527a3001aa6ef2c0e463ef158c682321290
+    "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
+    "ae05759f79b62d1a4358c462d0aa7bfb365aaa51eb959cee50b21868f391e8b1"
 )
 
 depends=('sdl2' 'libvorbis' 'libmikmod' 'libmodplug' 'mpg123' 'flac' 'opus')
 
 prepare() {
   cd "SDL2_mixer-${pkgver}"
-  patch --strip=1 --input="${srcdir}/sdl-mixer-timidity.patch"
-  patch --strip=1 --input="${srcdir}/noplayers.patch"
-  patch --strip=1 --input="${srcdir}/pkgconfig.patch"
+  patch --strip=1 --input="${srcdir}/pkg-config-fix.patch"
 }
 
 build() {
   cd "SDL2_mixer-${pkgver}"
-  PATH="$VITASDK/arm-vita-eabi/bin:$PATH" LIBS="-lvorbis -logg -lm" ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic --enable-music-mp3-mpg123 --enable-music-flac --enable-music-mod-mikmod --disable-music-cmd --enable-music-opus
+  mkdir build && cd build
+  cmake -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF -DSDL2MIXER_OPUS=ON -DSDL2MIXER_MIDI=ON \
+        -DSDL2MIXER_MIDI_TIMIDITY=ON -DSDL2MIXER_FLAC=ON -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_MOD_XMP=ON -DSDL2MIXER_MP3_MPG123=ON \
+        -DSDL2MIXER_MOD_MODPLUG=OFF -DSDL2MIXER_CMD=OFF -DSDL2MIXER_MIDI_FLUIDSYNTH=OFF -DSDL2MIXER_SAMPLES=OFF ..
   make -j$(nproc)
 }
 
 package () {
-  cd "SDL2_mixer-${pkgver}"
+  cd "SDL2_mixer-${pkgver}/build"
   make DESTDIR=$pkgdir install
 }
 
