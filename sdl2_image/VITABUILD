@@ -1,10 +1,17 @@
 pkgname=sdl2_image
 pkgver=2.6.3
-pkgrel=1
+pkgrel=2
 url="https://github.com/libsdl-org/SDL_image"
-source=("https://www.libsdl.org/projects/SDL_image/release/SDL2_image-${pkgver}.tar.gz")
-sha256sums=(931c9be5bf1d7c8fae9b7dc157828b7eee874e23c7f24b44ba7eff6b4836312c)
+source=("https://www.libsdl.org/projects/SDL_image/release/SDL2_image-${pkgver}.tar.gz"
+	"pkg-config-fix.patch")
+sha256sums=("931c9be5bf1d7c8fae9b7dc157828b7eee874e23c7f24b44ba7eff6b4836312c"
+             "fcdee7870844c4bc491786a0b16687bc39116843a4e0efe098668b1e452fc346")
 depends=('sdl2 libpng libwebp libjpeg-turbo zlib')
+
+prepare() {
+  cd SDL2_image-${pkgver}
+  patch -Np1 -i "${srcdir}/pkg-config-fix.patch"
+}
 
 build() {
   cd SDL2_image-${pkgver}
