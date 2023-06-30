@@ -5,7 +5,7 @@ url="https://github.com/libsdl-org/SDL_ttf"
 source=("https://github.com/libsdl-org/SDL_ttf/releases/download/release-${pkgver}/SDL2_ttf-${pkgver}.tar.gz"
         "pkg-config-fix.patch")
 sha256sums=("9dc71ed93487521b107a2c4a9ca6bf43fb62f6bddd5c26b055e6b91418a22053"
-            "66b09b01ded2a874a04f4c0232a3e9ab7e0b56c626a396a5f6e5791d0f88e7ef")
+            "799aef6bd3f30cfc0e61470499fc63048292050dceb9885c25e599470c9f192e")
 depends=('sdl2 freetype harfbuzz')
 
 prepare() {
