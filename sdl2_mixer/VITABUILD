@@ -6,7 +6,7 @@ source=("https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.
         "pkg-config-fix.patch")
 sha256sums=(
     "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
-    "ae05759f79b62d1a4358c462d0aa7bfb365aaa51eb959cee50b21868f391e8b1"
+    "9de77978b881b0ab61aa60673ec7de92e920f8affd42ab129d8fe153e2698de5"
 )
 
 depends=('sdl2' 'libvorbis' 'libxmp' 'libmodplug' 'mpg123' 'flac' 'opus')
