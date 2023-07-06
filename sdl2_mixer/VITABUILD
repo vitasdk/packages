@@ -11,7 +11,7 @@ sha256sums=(
     "3dc9b332adb6b08af12c7e5e4aa3b0165c9ef4ed3e6d7e8b2f1a57a83118ad2d"
 )
 
-depends=('sdl2' 'libvorbis' 'libxmp-lite' 'libmodplug' 'mpg123' 'flac' 'opus')
+depends=('sdl2' 'libvorbis' 'libxmp-lite' 'libmodplug' 'mpg123' 'flac' 'opusfile')
 
 prepare() {
   cd "SDL2_mixer-${pkgver}"
