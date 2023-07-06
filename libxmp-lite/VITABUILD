@@ -1,17 +1,19 @@
 pkgname=libxmp-lite
-pkgver=4.5.0
+pkgver=4.6.0
 pkgrel=1
 url="https://github.com/libxmp/libxmp"
 source=("https://github.com/libxmp/libxmp/releases/download/libxmp-${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('19a019abd5a3ddf449cd20ca52cfe18970f6ab28abdffdd54cff563981a943bb')
+sha256sums=('71a93eb0119824bcc56eca95db154d1cdf30304b33d89a4732de6fef8a2c6f38')
 
 build() {
   cd $pkgname-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  mkdir -p build && cd build
+  cmake -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF \
+  -DCMAKE_POSITION_INDEPENDENT_CODE=OFF ..
   make -j$(nproc)
 }
 
 package () {
-  cd $pkgname-$pkgver
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
