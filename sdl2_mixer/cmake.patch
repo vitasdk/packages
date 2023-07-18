@@ -1,0 +1,15 @@
+diff --git a/SDL2_mixerConfig.cmake.in b/SDL2_mixerConfig.cmake.in
+index 4bdd9f8..63d3a1a 100644
+--- a/SDL2_mixerConfig.cmake.in
++++ b/SDL2_mixerConfig.cmake.in
+@@ -58,10 +58,6 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SDL2_mixer-static-targets.cmake")
+     include(CMakeFindDependencyMacro)
+     include(PkgConfigHelper)
+ 
+-    if(NOT DEFINED CMAKE_FIND_PACKAGE_PREFER_CONFIG)
+-        set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+-    endif()
+-
+     if(SDL2MIXER_FLAC_LIBFLAC AND NOT SDL2MIXER_VENDORED AND NOT TARGET FLAC::FLAC)
+         find_dependency(FLAC)
+     endif()

@@ -1,37 +1,43 @@
 pkgname=sdl2_mixer
-pkgver=2.6.3
-pkgrel=3
+pkgver=2.6.99
+pkgrel=1
+gitrev=eb005518b0085244630ccfb41977f818af45d2ea
 url="https://github.com/libsdl-org/SDL_mixer"
-source=("https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.tar.gz"
+source=("git+https://github.com/libsdl-org/SDL_mixer.git#commit=${gitrev}"
         "pkg-config-fix.patch"
-        "libxmp-lite-fix.patch")
+        "cmake.patch"
+        )
 sha256sums=(
-    "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
-    "9de77978b881b0ab61aa60673ec7de92e920f8affd42ab129d8fe153e2698de5"
-    "3dc9b332adb6b08af12c7e5e4aa3b0165c9ef4ed3e6d7e8b2f1a57a83118ad2d"
+    "SKIP"
+    "ebb6ec149fed3a824542c94f102f45b33e33e38252e6441f12f922adb89fa409"
+    "dc578350b4101dafd579660cc579818e830e0294360c722309d672372070f622"
 )
 
 depends=('sdl2' 'libvorbis' 'libxmp-lite' 'libmodplug' 'flac' 'opusfile')
 
 prepare() {
-  cd "SDL2_mixer-${pkgver}"
+  cd "SDL_mixer"
   patch --strip=1 --input="${srcdir}/pkg-config-fix.patch"
-  patch --strip=1 --input="${srcdir}/libxmp-lite-fix.patch"
+  patch --strip=1 --input="${srcdir}/cmake.patch"
 }
 
 build() {
-  cd "SDL2_mixer-${pkgver}"
+  cd "SDL_mixer"
   mkdir -p build && cd build
-  cmake -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF \
+
+  cmake -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=OFF \
         -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF -DSDL2MIXER_OPUS=ON -DSDL2MIXER_MIDI=ON \
+        -DSDL2MIXER_WAVPACK=OFF -DSDL2MIXER_OPUS_SHARED=OFF -DSDL2MIXER_VORBIS_VORBISFILE_SHARED=OFF \
         -DSDL2MIXER_MIDI_TIMIDITY=ON -DSDL2MIXER_FLAC=ON -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_MOD_XMP=ON -DSDL2MIXER_MP3_MPG123=OFF \
         -DSDL2MIXER_MOD_MODPLUG=ON -DSDL2MIXER_MOD_XMP_LITE=ON -DSDL2MIXER_CMD=OFF -DSDL2MIXER_MIDI_FLUIDSYNTH=OFF \
         -DSDL2MIXER_MP3_DRMP3=ON -DSDL2MIXER_MP3=ON -DSDL2MIXER_SAMPLES=OFF -DSDL2MIXER_MOD_XMP_SHARED=OFF ..
+
   make -j$(nproc)
 }
 
 package () {
-  cd "SDL2_mixer-${pkgver}/build"
+  cd "SDL_mixer/build"
   make DESTDIR=$pkgdir install
 }
 
