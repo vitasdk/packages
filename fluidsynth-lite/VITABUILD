@@ -12,5 +12,5 @@ build() {
 
 package () {
   cd $pkgname
-  make -f Makefile.vita DESTDIR=$pkgdir install
+  make -f Makefile.vita DESTDIR=$pkgdir/$prefix install
 }
