@@ -1,9 +1,9 @@
 pkgname=ffmpeg
-pkgver=3.3.9
+pkgver=6.0
 pkgrel=1
-url="http://ffmpeg.org/"
-source=("http://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz")
-sha256sums=('ae34f14fffa65a1a59b256737ca9af7bf4e296b7c4320d42512350126ce06c84')
+url="https://ffmpeg.org/"
+source=("https://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz")
+sha256sums=('57be87c22d9b49c112b6d24bc67d42508660e6b718b3db89c44e47e289137082')
 depends=('lame' 'libvorbis' 'flac' 'opus')
 
 prepare() {
@@ -42,7 +42,7 @@ build() {
 		--disable-bzlib \
 		--disable-iconv \
 		--disable-lzma \
-		--disable-sdl \
+		--disable-sdl2 \
 		--disable-securetransport \
 		--disable-xlib \
 		--enable-pthreads

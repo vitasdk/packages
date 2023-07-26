@@ -1,12 +1,14 @@
 pkgname=libtremor
 pkgver=9999
 pkgrel=1
-url="http://xiph.org/"
-source=("git+https://gitlab.xiph.org/xiph/tremor.git#commit=293fd1c0")
+url="https://xiph.org/"
+source=("git+https://gitlab.xiph.org/xiph/tremor.git#commit=89a7534bf2e70112e0354452b17a78675ca92dbf")
 sha256sums=('SKIP')
 
 build() {
   cd tremor
+  patch -p1 < "$BUILDDIR/asm_arm.diff"
+
   ./autogen.sh --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
   sed -ie 's/-D_REENTRANT/-D_REENTRANT -Wa,-mimplicit-it=thumb/g' Makefile
   make -j$(nproc)

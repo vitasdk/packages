@@ -1,0 +1,151 @@
+diff --git a/asm_arm.h b/asm_arm.h
+index 3a3716d..cd840ea 100644
+--- a/asm_arm.h
++++ b/asm_arm.h
+@@ -131,83 +131,89 @@ static inline void lsp_loop_asm(ogg_uint32_t *qip,ogg_uint32_t *pip,
+   ogg_uint32_t qi=*qip,pi=*pip;
+   ogg_int32_t qexp=*qexpp;
+ 
+-  asm("mov     r0,%3;"
+-      "mov     r1,%5,asr#1;"
+-      "add     r0,r0,r1,lsl#3;"
++  register ogg_uint32_t r0 asm("r0");
++  register ogg_uint32_t r1 asm("r1");
++  register ogg_uint32_t r2 asm("r2");
++  register ogg_uint32_t r3 asm("r3");
++
++  asm("mov     %[r0],%[ilsp];"
++      "mov     %[r1],%[m],asr#1;"
++      "add     %[r0],%[r0],%[r1],lsl#3;"
++      "beq 2f;"
+       "1:"
+       
+-      "ldmdb   r0!,{r1,r3};"
+-      "subs    r1,r1,%4;"          //ilsp[j]-wi
+-      "rsbmi   r1,r1,#0;"          //labs(ilsp[j]-wi)
+-      "umull   %0,r2,r1,%0;"       //qi*=labs(ilsp[j]-wi)
++      "ldmdb   %[r0]!,{%[r1],%[r3]};"
++      "subs    %[r1],%[r1],%[wi];"          //ilsp[j]-wi
++      "rsbmi   %[r1],%[r1],#0;"             //labs(ilsp[j]-wi)
++      "umull   %[qi],%[r2],%[r1],%[qi];"    //qi*=labs(ilsp[j]-wi)
+       
+-      "subs    r1,r3,%4;"          //ilsp[j+1]-wi
+-      "rsbmi   r1,r1,#0;"          //labs(ilsp[j+1]-wi)
+-      "umull   %1,r3,r1,%1;"       //pi*=labs(ilsp[j+1]-wi)
++      "subs    %[r1],%[r3],%[wi];"          //ilsp[j+1]-wi
++      "rsbmi   %[r1],%[r1],#0;"             //labs(ilsp[j+1]-wi)
++      "umull   %[pi],%[r3],%[r1],%[pi];"    //pi*=labs(ilsp[j+1]-wi)
+       
+-      "cmn     r2,r3;"             // shift down 16?
++      "cmn     %[r2],%[r3];"                // shift down 16?
+       "beq     0f;"
+-      "add     %2,%2,#16;"
+-      "mov     %0,%0,lsr #16;"
+-      "orr     %0,%0,r2,lsl #16;"
+-      "mov     %1,%1,lsr #16;"
+-      "orr     %1,%1,r3,lsl #16;"
++      "add     %[qexp],%[qexp],#16;"
++      "mov     %[qi],%[qi],lsr #16;"
++      "orr     %[qi],%[qi],%[r2],lsl #16;"
++      "mov     %[pi],%[pi],lsr #16;"
++      "orr     %[pi],%[pi],%[r3],lsl #16;"
+       "0:"
+-      "cmp     r0,%3;\n"
+-      "bhi     1b;\n"
++      "cmp     %[r0],%[ilsp];"
++      "bhi     1b;"
+       
+       // odd filter assymetry
+-      "ands    r0,%5,#1;\n"
+-      "beq     2f;\n"
+-      "add     r0,%3,%5,lsl#2;\n"
++      "ands    %[r0],%[m],#1;"
++      "beq     2f;"
++      "add     %[r0],%[ilsp],%[m],lsl#2;"
+       
+-      "ldr     r1,[r0,#-4];\n"
+-      "mov     r0,#0x4000;\n"
++      "ldr     %[r1],[%[r0],#-4];"
++      "mov     %[r0],#0x4000;"
+       
+-      "subs    r1,r1,%4;\n"          //ilsp[j]-wi
+-      "rsbmi   r1,r1,#0;\n"          //labs(ilsp[j]-wi)
+-      "umull   %0,r2,r1,%0;\n"       //qi*=labs(ilsp[j]-wi)
+-      "umull   %1,r3,r0,%1;\n"       //pi*=labs(ilsp[j+1]-wi)
++      "subs    %[r1],%[r1],%[wi];"          //ilsp[j]-wi
++      "rsbmi   %[r1],%[r1],#0;"             //labs(ilsp[j]-wi)
++      "umull   %[qi],%[r2],%[r1],%[qi];"    //qi*=labs(ilsp[j]-wi)
++      "umull   %[pi],%[r3],%[r0],%[pi];"    //pi*=labs(ilsp[j+1]-wi)
+       
+-      "cmn     r2,r3;\n"             // shift down 16?
+-      "beq     2f;\n"
+-      "add     %2,%2,#16;\n"
+-      "mov     %0,%0,lsr #16;\n"
+-      "orr     %0,%0,r2,lsl #16;\n"
+-      "mov     %1,%1,lsr #16;\n"
+-      "orr     %1,%1,r3,lsl #16;\n"
++      "cmn     %[r2],%[r3];"                // shift down 16?
++      "beq     2f;"
++      "add     %[qexp],%[qexp],#16;"
++      "mov     %[qi],%[qi],lsr #16;"
++      "orr     %[qi],%[qi],%[r2],lsl #16;"
++      "mov     %[pi],%[pi],lsr #16;"
++      "orr     %[pi],%[pi],%[r3],lsl #16;"
+       
+       //qi=(pi>>shift)*labs(ilsp[j]-wi);
+       //pi=(qi>>shift)*labs(ilsp[j+1]-wi);
+       //qexp+=shift;
+       
+       //}
+-	 
++     
+       /* normalize to max 16 sig figs */
+       "2:"
+-      "mov     r2,#0;"
+-      "orr     r1,%0,%1;"
+-      "tst     r1,#0xff000000;"
+-      "addne   r2,r2,#8;"
+-      "movne   r1,r1,lsr #8;"
+-      "tst     r1,#0x00f00000;"
+-      "addne   r2,r2,#4;"
+-      "movne   r1,r1,lsr #4;"
+-      "tst     r1,#0x000c0000;"
+-      "addne   r2,r2,#2;"
+-      "movne   r1,r1,lsr #2;"
+-      "tst     r1,#0x00020000;"
+-      "addne   r2,r2,#1;"
+-      "movne   r1,r1,lsr #1;"
+-      "tst     r1,#0x00010000;"
+-      "addne   r2,r2,#1;"
+-      "mov     %0,%0,lsr r2;"
+-      "mov     %1,%1,lsr r2;"
+-      "add     %2,%2,r2;"
++      "mov     %[r2],#0;"
++      "orr     %[r1],%[qi],%[pi];"
++      "tst     %[r1],#0xff000000;"
++      "addne   %[r2],%[r2],#8;"
++      "movne   %[r1],%[r1],lsr #8;"
++      "tst     %[r1],#0x00f00000;"
++      "addne   %[r2],%[r2],#4;"
++      "movne   %[r1],%[r1],lsr #4;"
++      "tst     %[r1],#0x000c0000;"
++      "addne   %[r2],%[r2],#2;"
++      "movne   %[r1],%[r1],lsr #2;"
++      "tst     %[r1],#0x00020000;"
++      "addne   %[r2],%[r2],#1;"
++      "movne   %[r1],%[r1],lsr #1;"
++      "tst     %[r1],#0x00010000;"
++      "addne   %[r2],%[r2],#1;"
++      "mov     %[qi],%[qi],lsr %[r2];"
++      "mov     %[pi],%[pi],lsr %[r2];"
++      "add     %[qexp],%[qexp],%[r2];"
+       
+-      : "+r"(qi),"+r"(pi),"+r"(qexp)
+-      : "r"(ilsp),"r"(wi),"r"(m)
+-      : "r0","r1","r2","r3","cc");
++      : [qi] "+r"(qi), [pi] "+r"(pi), [qexp] "+r"(qexp), [r0] "=r"(r0), [r1] "=r"(r1), [r2] "=r"(r2), [r3] "=r"(r3)
++      : [ilsp] "r"(ilsp), [wi] "r"(wi), [m] "r"(m)
++      : "cc");
+   
+   *qip=qi;
+   *pip=pi;

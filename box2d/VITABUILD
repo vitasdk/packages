@@ -8,8 +8,8 @@ sha256sums=('SKIP')
 build() {
   cd box2d-$pkgver
   mkdir build && cd build
-  cmake .. $CMARGS -DCMAKE_INSTALL_PREFIX=$prefix \
-    -DBOX2D_BUILD_DOCS=OFF -DBOX2D_BUILD_UNIT_TESTS=OFF -DBOX2D_BUILD_TESTBED=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+    -DCMAKE_BUILD_TYPE=Release -DBOX2D_BUILD_DOCS=OFF -DBOX2D_BUILD_UNIT_TESTS=OFF -DBOX2D_BUILD_TESTBED=OFF
   make -j$(nproc)
 }
 

@@ -3,28 +3,28 @@ pkgver=1.19.1
 pkgrel=2
 url="https://openal-soft.org/"
 source=(
-  "https://openal-soft.org/openal-releases/${pkgname}-${pkgver}.tar.bz2"
+  "https://github.com/kcat/openal-soft/archive/refs/tags/${pkgname}-${pkgver}.tar.gz"
   "https://raw.githubusercontent.com/isage/openal-soft/master/${pkgname}-${pkgver}-vita-1.patch"
 )
 sha256sums=(
-  5c2f87ff5188b95e0dc4769719a9d89ce435b8322b4478b95dd4b427fe84b2e9
+  9f3536ab2bb7781dbafabc6a61e0b34b17edd16bd6c2eaf2ae71bc63078f98c7
   SKIP
 )
 
 prepare() {
-  cd "${pkgname}-${pkgver}"
+  cd "${pkgname}-${pkgname}-${pkgver}"
   patch --strip=1 --input="${srcdir}/${pkgname}-${pkgver}-vita-1.patch"
 }
 
 build() {
-  cd "${pkgname}-${pkgver}"
+  cd "${pkgname}-${pkgname}-${pkgver}"
   cd build # build dir already exists in openal source
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix
   make -j$(nproc)
 }
 
 package () {
-  cd "${pkgname}-${pkgver}"
+  cd "${pkgname}-${pkgname}-${pkgver}"
   cd build
   make DESTDIR=$pkgdir install
 }

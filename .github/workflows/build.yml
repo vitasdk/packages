@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare_jobs:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     container: node:lts
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +25,7 @@ jobs:
 
   build:
     needs: [prepare_jobs]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -37,8 +37,9 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install dependencies
       run: |
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
         sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools
+        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools xutils-dev python3.11
     - name: Prepare Build
       run: |
         bash ./prepare.sh
@@ -47,9 +48,6 @@ jobs:
         export VITASDK=/usr/local/vitasdk
         export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
         bash ./build.sh ${{ matrix.package }}
-    - name: Upload package
-      run: |
-        bash ./upload.sh ${{ matrix.package }}
     - name: Rename package
       run: |
         export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
@@ -60,7 +58,7 @@ jobs:
         path: ${{ matrix.package }}/*.tar.xz
   build_depends:
     needs: [prepare_jobs, build]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -74,8 +72,9 @@ jobs:
     - uses: actions/download-artifact@v3
     - name: Install dependencies
       run: |
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
         sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools pkg-config libc6-dev-i386
+        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools pkg-config libc6-dev-i386 python3.11
     - name: Prepare Build
       run: |
         bash ./prepare.sh
@@ -91,11 +90,10 @@ jobs:
         export VITASDK=/usr/local/vitasdk
         export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
         for f in ${{ matrix.package }}; do bash ./build.sh $f; done
-    - name: Upload package
+    - name: Export package
       run: |
         export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
         echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
-        bash ./upload.sh $PACKAGE
     - name: Rename package
       run: |
         export FILE=`echo ${{ env.PACKAGE }}/*-arm.tar.xz`
@@ -106,7 +104,7 @@ jobs:
         path: ${{ env.PACKAGE }}/*.tar.xz
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-20.04
       steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3

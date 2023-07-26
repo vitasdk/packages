@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4ea903d..1ea756f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -325,8 +325,6 @@ if(SDL2TTF_INSTALL)
+         COMPONENT devel
+     )
+ 
+-    if(SDL2TTF_BUILD_SHARED_LIBS)
+-        # Only create a .pc file for a shared SDL2_ttf
+         set(prefix "${CMAKE_INSTALL_PREFIX}")
+         set(exec_prefix "\${prefix}")
+         set(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+@@ -346,15 +344,15 @@ if(SDL2TTF_INSTALL)
+         else()
+             set(PC_DESTDIR "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+         endif()
+-        # Only install a SDL2_ttf.pc file in Release mode
++        # Always install SDL2_ttf.pc file: libraries might be different between config modes
+         install(CODE "
+         # FIXME: use file(COPY_FILE) if CMake 3.21+
+-        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_ttf-$<CONFIG>.pc\"
++            execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different
++            \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_ttf-$<CONFIG>.pc\"
+             \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_ttf.pc\")
+         file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${PC_DESTDIR}\"
+             TYPE FILE
+-            FILES \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_ttf.pc\")" CONFIG Release)
+-    endif()
++            FILES \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_ttf.pc\")" COMPONENT devel)
+ 
+     if(SDL2TTF_BUILD_SHARED_LIBS AND (APPLE OR (UNIX AND NOT ANDROID)))
+         install(FILES
+diff --git a/SDL2_ttf.pc.in b/SDL2_ttf.pc.in
+index 71d3d1b..66235a8 100644
+--- a/SDL2_ttf.pc.in
++++ b/SDL2_ttf.pc.in
+@@ -1,4 +1,4 @@
+-prefix=@prefix@
++prefix=${VITASDK}/arm-vita-eabi
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+ includedir=@includedir@

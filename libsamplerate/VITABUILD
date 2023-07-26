@@ -1,7 +1,7 @@
 pkgname=libsamplerate
 pkgver=0.2.2
 pkgrel=1
-url="https://github.com/libsndfile/libsamplerate"
+url="https://libsndfile.github.io/libsamplerate/"
 source=("https://github.com/libsndfile/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('16e881487f184250deb4fcb60432d7556ab12cb58caea71ef23960aec6c0405a')
 

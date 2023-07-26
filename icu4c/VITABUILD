@@ -1,37 +1,46 @@
 pkgname=icu4c
-pkgver=59.2
+pkgver=73.1
 pkgrel=1
-url='http://site.icu-project.org/'
+url='https://icu.unicode.org/'
 source=(
-  "https://github.com/unicode-org/icu/releases/download/release-59-2/icu4c-59_2-src.tgz"
-  "icu-59.2.patch"
+  "https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz"
+  "icu-73.1.patch"
   "build_vita_armv7-a.sh"
 )
 
 sha256sums=(
-  10741648470a0ed106d5f588cc51a03574254849b28bc1c42d4c2eec628d70cd
+  'a457431de164b4aa7eca00ed134d00dfbf88a77c6986a10ae7774fc076bb8c45'
   'SKIP'
   'SKIP'
 )
 
 prepare() {
-  patch -p1 --input="${srcdir}/icu-59.2.patch"
-  mkdir -p "vita"
-  cp ${srcdir}/build_vita_armv7-a.sh vita
-  mkdir -p  build-linux
-  cp icu/source/config/mh-linux icu/source/config/mh-unknown
+  cd icu
+  patch -p1 < ../icu-73.1.patch
+  mkdir -p vita
+  cp ../build_vita_armv7-a.sh vita
+  mkdir -p build-linux
+  cp source/config/mh-linux source/config/mh-unknown
 }
 
-
 build() {
-    cd "build-linux"
-    ../icu/source/runConfigureICU Linux --enable-static --disable-shared
-    make -j$(nproc)
-    cd "../vita"
-    ./build_vita_armv7-a.sh
+  cd icu/build-linux
+  ../source/runConfigureICU Linux --enable-static --disable-shared
+  make -j$(nproc)
+  cd ../vita
+  ./build_vita_armv7-a.sh
 }
 
 package () {
-  cd "vita"
+  cd icu/vita
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/brkitr
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/coll
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/curr
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/lang
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/rbnf
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/region
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/translit
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/unit
+  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/zone
   make DESTDIR=$pkgdir install
 }

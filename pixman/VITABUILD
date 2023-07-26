@@ -1,9 +1,9 @@
 pkgname=pixman
-pkgver=0.40.0
+pkgver=0.42.2
 pkgrel=1
 url="https://cairographics.org/"
 source=("https://cairographics.org/releases/pixman-${pkgver}.tar.gz")
-sha256sums=('6d200dec3740d9ec4ec8d1180e25779c00bc749f94278c8b9021f5534db223fc')
+sha256sums=('ea1480efada2fd948bc75366f7c349e1c96d3297d09a3fe62626e38e234a625e')
 
 build() {
   cd $pkgname-$pkgver

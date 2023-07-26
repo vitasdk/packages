@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 438a0aa..934a330 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -694,8 +694,6 @@ if(SDL2IMAGE_INSTALL)
+         COMPONENT devel
+     )
+ 
+-    if(SDL2IMAGE_BUILD_SHARED_LIBS)
+-        # Only create a .pc file for a shared SDL2_image
+         set(prefix "${CMAKE_INSTALL_PREFIX}")
+         set(exec_prefix "\${prefix}")
+         set(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+@@ -715,7 +713,7 @@ if(SDL2IMAGE_INSTALL)
+         else()
+             set(PC_DESTDIR "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+         endif()
+-        # Only install a SDL2_image.pc file in Release mode
++        # Always install SDL2_net.pc file: libraries might be different between config modes
+         install(CODE "
+             # FIXME: use file(COPY_FILE) if minimum CMake version >= 3.21
+             execute_process(COMMAND \"\${CMAKE_COMMAND}\" -E copy_if_different
+@@ -723,8 +721,7 @@ if(SDL2IMAGE_INSTALL)
+                 \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc\")
+             file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${PC_DESTDIR}\"
+                 TYPE FILE
+-                FILES \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc\")" CONFIG Release COMPONENT devel)
+-    endif()
++                FILES \"${CMAKE_CURRENT_BINARY_DIR}/SDL2_image.pc\")" COMPONENT devel)
+ 
+     if(SDL2IMAGE_BUILD_SHARED_LIBS AND (APPLE OR (UNIX AND NOT ANDROID)))
+         install(
+diff --git a/SDL2_image.pc.in b/SDL2_image.pc.in
+index 8711dd7..cf6b501 100644
+--- a/SDL2_image.pc.in
++++ b/SDL2_image.pc.in
+@@ -1,4 +1,4 @@
+-prefix=@prefix@
++prefix=${VITASDK}/arm-vita-eabi
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+ includedir=@includedir@

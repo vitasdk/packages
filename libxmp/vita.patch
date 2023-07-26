@@ -1,69 +1,27 @@
-diff --git a/src/loaders/med2_load.c b/src/loaders/med2_load.c
-index 50e9c1a..ca6791f 100644
---- a/src/loaders/med2_load.c
-+++ b/src/loaders/med2_load.c
-@@ -28,6 +28,10 @@
- #include <sys/syslimits.h>
- #else
- #include <limits.h>
-+#ifndef PATH_MAX
-+#define PATH_MAX 1024
-+#endif
-+
- #endif
- #include "loader.h"
- #include "period.h"
-diff --git a/src/loaders/mfp_load.c b/src/loaders/mfp_load.c
-index 0dfe15e..3b2befd 100644
---- a/src/loaders/mfp_load.c
-+++ b/src/loaders/mfp_load.c
-@@ -32,6 +32,10 @@
- #include <sys/syslimits.h>
- #else
- #include <limits.h>
-+#ifndef PATH_MAX
-+#define PATH_MAX 1024
-+#endif
-+
- #endif
+diff --git a/libxmp.pc.in b/libxmp.pc.in
+index 665b6be..19de923 100644
+--- a/libxmp.pc.in
++++ b/libxmp.pc.in
+@@ -1,7 +1,7 @@
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@libdir@
+-includedir=@includedir@
++prefix=${VITASDK}/arm-vita-eabi
++exec_prefix=${prefix}
++libdir=${prefix}/lib
++includedir=${prefix}/include
  
- static int mfp_test(HIO_HANDLE *, char *, const int);
-diff --git a/src/loaders/mod_load.c b/src/loaders/mod_load.c
-index 2a3c894..def725d 100644
---- a/src/loaders/mod_load.c
-+++ b/src/loaders/mod_load.c
-@@ -37,6 +37,9 @@
- 
- #include <ctype.h>
- #include <limits.h>
-+#ifndef PATH_MAX
-+#define PATH_MAX 1024
-+#endif
- #include "loader.h"
- #include "mod.h"
- 
-diff --git a/src/loaders/stm_load.c b/src/loaders/stm_load.c
-index 9c5aa63..e706e1e 100644
---- a/src/loaders/stm_load.c
-+++ b/src/loaders/stm_load.c
-@@ -23,6 +23,9 @@
- #include <limits.h>
- #include "loader.h"
- #include "period.h"
-+#ifndef PATH_MAX
-+#define PATH_MAX 1024
-+#endif
- 
- #define STM_TYPE_SONG	0x01
- #define STM_TYPE_MODULE	0x02
+ Name: libxmp
+ Description: Xmp module player library
 diff --git a/src/tempfile.c b/src/tempfile.c
-index 65a1081..6d4754b 100644
+index 6b05820..587d655 100644
 --- a/src/tempfile.c
 +++ b/src/tempfile.c
-@@ -96,6 +96,15 @@ static int get_temp_dir(char *buf, size_t size)
+@@ -99,6 +99,14 @@ static int get_temp_dir(char *buf, size_t size)
+ 
  	return 0;
  }
- 
 +#elif defined __vita__
 +
 +static int get_temp_dir(char *buf, size_t size)
@@ -72,32 +30,27 @@ index 65a1081..6d4754b 100644
 +
 +	return 0;
 +}
-+
+ 
  #else /* unix */
  
- static int get_temp_dir(char *buf, size_t size)
-@@ -113,6 +122,34 @@ static int get_temp_dir(char *buf, size_t size)
- 
+@@ -118,6 +126,31 @@ static int get_temp_dir(char *buf, size_t size)
  #endif
  
+ 
 +#if defined __vita__
-+#ifndef PATH_MAX
-+#define PATH_MAX 1024
-+#endif
-+#include <string.h>
 +
 +FILE *make_temp_file(char **filename) {
-+	char tmp[PATH_MAX];
++	char tmp[XMP_MAXPATH];
 +	char tmpfilename[128];
 +	FILE *tempfd;
 +
-+	if (get_temp_dir(tmp, PATH_MAX) < 0)
++	if (get_temp_dir(tmp, XMP_MAXPATH) < 0)
 +		return NULL;
 +
 +	snprintf(tmpfilename, 128, "xmp_%06x", rand() % 0xFFFFFF);
-+	strncat(tmp, tmpfilename, PATH_MAX - 10);
++	strncat(tmp, tmpfilename, XMP_MAXPATH - 10);
 +
-+	if ((*filename = strdup(tmp)) == NULL)
++	if ((*filename = libxmp_strdup(tmp)) == NULL)
 +		return NULL;
 +	if ((tempfd = fopen(tmp, "w+b")) == NULL)
 +	{
@@ -107,15 +60,17 @@ index 65a1081..6d4754b 100644
 +	return tempfd;
 +}
 +
-+#else
- 
++# else
++
  FILE *make_temp_file(char **filename) {
- 	char tmp[PATH_MAX];
-@@ -145,6 +182,7 @@ FILE *make_temp_file(char **filename) {
-     err:
+ 	char tmp[XMP_MAXPATH];
+ 	FILE *temp;
+@@ -150,6 +183,8 @@ FILE *make_temp_file(char **filename) {
  	return NULL;
  }
-+#endif
  
++#endif
++
  /*
   * Windows doesn't allow you to unlink an open file, so we changed the
+  * temp file cleanup system to remove temporary files after we close it

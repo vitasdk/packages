@@ -1,0 +1,24 @@
+pkgname=cpython
+pkgver=3.11
+pkgrel=1
+url="https://github.com/SonicMastr/cpython-vita"
+source=("git+https://github.com/SonicMastr/cpython-vita.git")
+sha256sums=('SKIP')
+depends=('openssl-1.1.1 libzip xz zlib bzip2')
+
+prepare() {
+  vdpm openssl-1.1.1
+}
+
+build() {
+  echo ""
+}
+
+package () {
+  cd cpython-vita
+  git checkout 3.11
+  sh build_vita.sh $pkgdir
+  sh compile_modules_vita.sh $pkgdir
+  rm -rf $pkgdir/$prefix/bin
+  rm -rf $pkgdir/$prefix/share
+}

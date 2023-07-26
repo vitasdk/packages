@@ -1,9 +1,9 @@
 pkgname=libass
-pkgver=0.16.0
+pkgver=0.17.1
 pkgrel=1
 url="https://github.com/libass/libass"
 source=("https://github.com/libass/libass/releases/download/$pkgver/libass-$pkgver.tar.xz")
-sha256sums=('5dbde9e22339119cf8eed59eea6c623a0746ef5a90b689e68a090109078e3c08')
+sha256sums=('f0da0bbfba476c16ae3e1cfd862256d30915911f7abaa1b16ce62ee653192784')
 depends=('freetype libpng harfbuzz fribidi')
 
 build() {
@@ -14,7 +14,7 @@ build() {
     --disable-asm --enable-large-tiles \
     --disable-require-system-font-provider
 
-  make
+  make -j$(nproc)
 }
 
 package() {

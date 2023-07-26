@@ -2,14 +2,9 @@ pkgname=sdl_ttf
 pkgver=2.0.11.1
 pkgrel=2
 gitrev=eba26b54b5ce7f1c99a75a116c4719a432354f90
-url="https://www.libsdl.org/projects/SDL_ttf/"
-source=(
-    "https://github.com/libsdl-org/SDL_ttf/archive/${gitrev}.zip"
-)
-
-sha256sums=(
-    'SKIP'
-)
+url="https://github.com/libsdl-org/SDL_ttf"
+source=("https://github.com/libsdl-org/SDL_ttf/archive/${gitrev}.zip")
+sha256sums=('SKIP')
 depends=('sdl freetype libpng')
 
 build() {
