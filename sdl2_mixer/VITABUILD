@@ -1,6 +1,6 @@
 pkgname=sdl2_mixer
 pkgver=2.6.3
-pkgrel=2
+pkgrel=3
 url="https://github.com/libsdl-org/SDL_mixer"
 source=("https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.tar.gz"
         "pkg-config-fix.patch"
@@ -11,7 +11,7 @@ sha256sums=(
     "3dc9b332adb6b08af12c7e5e4aa3b0165c9ef4ed3e6d7e8b2f1a57a83118ad2d"
 )
 
-depends=('sdl2' 'libvorbis' 'libxmp-lite' 'libmodplug' 'mpg123' 'flac' 'opusfile')
+depends=('sdl2' 'libvorbis' 'libxmp-lite' 'libmodplug' 'flac' 'opusfile')
 
 prepare() {
   cd "SDL2_mixer-${pkgver}"
