@@ -1,9 +1,9 @@
 pkgname=libintl
-pkgver=0.21.1
+pkgver=0.22
 pkgrel=1
 url="https://www.gnu.org/software/gettext/"
 source=("https://ftp.gnu.org/pub/gnu/gettext/gettext-${pkgver}.tar.gz")
-sha256sums=('e8c3650e1d8cee875c4f355642382c1df83058bd5a11ee8555c0cf276d646d45')
+sha256sums=('49f089be11b490170bbf09ed2f51e5f5177f55be4cc66504a5861820e0fb06ab')
 
 build() {
   cd gettext-$pkgver/gettext-runtime
