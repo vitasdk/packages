@@ -1,28 +1,32 @@
 pkgname=sdl2_mixer
 pkgver=2.6.3
-pkgrel=1
+pkgrel=2
 url="https://github.com/libsdl-org/SDL_mixer"
 source=("https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${pkgver}.tar.gz"
-        "pkg-config-fix.patch")
+        "pkg-config-fix.patch"
+        "libxmp-lite-fix.patch")
 sha256sums=(
     "7a6ba86a478648ce617e3a5e9277181bc67f7ce9876605eea6affd4a0d6eea8f"
     "9de77978b881b0ab61aa60673ec7de92e920f8affd42ab129d8fe153e2698de5"
+    "3dc9b332adb6b08af12c7e5e4aa3b0165c9ef4ed3e6d7e8b2f1a57a83118ad2d"
 )
 
-depends=('sdl2' 'libvorbis' 'libxmp' 'libmodplug' 'mpg123' 'flac' 'opusfile')
+depends=('sdl2' 'libvorbis' 'libxmp-lite' 'libmodplug' 'mpg123' 'flac' 'opusfile')
 
 prepare() {
   cd "SDL2_mixer-${pkgver}"
   patch --strip=1 --input="${srcdir}/pkg-config-fix.patch"
+  patch --strip=1 --input="${srcdir}/libxmp-lite-fix.patch"
 }
 
 build() {
   cd "SDL2_mixer-${pkgver}"
-  mkdir build && cd build
+  mkdir -p build && cd build
   cmake -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF \
         -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DSDL2MIXER_DEPS_SHARED=OFF -DSDL2MIXER_OPUS=ON -DSDL2MIXER_MIDI=ON \
-        -DSDL2MIXER_MIDI_TIMIDITY=ON -DSDL2MIXER_FLAC=ON -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_MOD_XMP=ON -DSDL2MIXER_MP3_MPG123=ON \
-        -DSDL2MIXER_MOD_MODPLUG=ON -DSDL2MIXER_CMD=OFF -DSDL2MIXER_MIDI_FLUIDSYNTH=OFF -DSDL2MIXER_SAMPLES=OFF ..
+        -DSDL2MIXER_MIDI_TIMIDITY=ON -DSDL2MIXER_FLAC=ON -DSDL2MIXER_VORBIS=VORBISFILE -DSDL2MIXER_MOD_XMP=ON -DSDL2MIXER_MP3_MPG123=OFF \
+        -DSDL2MIXER_MOD_MODPLUG=ON -DSDL2MIXER_MOD_XMP_LITE=ON -DSDL2MIXER_CMD=OFF -DSDL2MIXER_MIDI_FLUIDSYNTH=OFF \
+        -DSDL2MIXER_MP3_DRMP3=ON -DSDL2MIXER_MP3=ON -DSDL2MIXER_SAMPLES=OFF -DSDL2MIXER_MOD_XMP_SHARED=OFF ..
   make -j$(nproc)
 }
 
