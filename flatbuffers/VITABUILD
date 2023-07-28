@@ -1,0 +1,37 @@
+# Taken from the official PKGBUILD
+# Original contributors
+#
+# Antonio Rojas <arojas@archlinux.org>
+# Chih-Hsuan Yen <yan12125@archlinux.org>
+# Daichi Shinozaki <dsdseg@gmail.com>
+
+pkgname=flatbuffers
+# https://github.com/google/flatbuffers/blob/master/CHANGELOG.md
+pkgver=23.5.26
+pkgrel=1
+pkgdesc='An efficient cross platform serialization library for C++, with support for Java, C# and Go'
+url='https://google.github.io/flatbuffers/'
+source=("https://github.com/google/$pkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
+sha256sums=('1cce06b17cddd896b6d73cc047e36a254fb8df4d7ea18a46acf16c4c0cd3f3f3')
+
+prepare() {
+  cd $pkgname-$pkgver
+}
+
+build() {
+  cmake \
+    -B build -S $pkgname-$pkgver \
+    -DFLATBUFFERS_BUILD_TESTS=OFF \
+    -DFLATBUFFERS_BUILD_FLATC=OFF \
+    -DFLATBUFFERS_STRICT_MODE=ON \
+    -DFLATBUFFERS_BUILD_FLATHASH=OFF \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS='-DFLATBUFFERS_NO_ABSOLUTE_PATH_RESOLUTION' \
+    -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake \
+    -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
