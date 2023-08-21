@@ -10,12 +10,13 @@ prepare() {
   cd minizip-ng-$pkgver
   patch -p1 < ../no-pic.patch
   patch -p1 < ../no-symlink.patch
+  patch -p1 < ../no-zip_h.patch
 }
 
 build() {
   cd minizip-ng-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DMZ_COMPAT=OFF -DMZ_LZMA=OFF -DUNIX=ON
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DMZ_COMPAT=ON -DMZ_LZMA=OFF -DUNIX=ON
   make -j$(nproc)
 }
 
