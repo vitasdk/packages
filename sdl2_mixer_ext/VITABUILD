@@ -10,7 +10,7 @@ depends=('sdl2' 'libvorbis' 'libxmp' 'libmodplug' 'mpg123' 'flac' 'opusfile')
 build() {
   cd SDL-Mixer-X-${pkgver}
   mkdir build && cd build
-  cmake .. -DVITA=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DVITA=1 -DUSE_OGG_VORBIS_STB=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
   make -j$(nproc)
 }
 
