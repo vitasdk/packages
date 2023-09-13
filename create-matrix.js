@@ -23,18 +23,18 @@ resolveDependency = (name, map) => {
     if (!dependencies) {
         return [];
     }
-
-    dependencies.forEach((dependency) => {
-        const deps = resolveDependency(dependency, map);
-        if (deps.length > 0) {
-            deps.forEach((dep) => {
-                dependencies.push(dep);
-            });
+    const ret = [];
+    dependencies.forEach((dep) => {
+        if (!map.get(dep)) {
+            ret.unshift(dep);
+            return;
         }
+        ret.push(...resolveDependency(dep, map));
+        ret.push(dep);
     });
-
-    return dependencies;
-
+    // reset
+    map.set(name, ret);
+    return ret;
 }
 
 
@@ -76,11 +76,20 @@ directories.forEach(library => {
     const dependencies = dependant.get(library);
     if (dependencies) {
         let info = library;
-        const deps = [];
+        let deps = [];
+        // TODO check the conflict
         dependencies.forEach((dependency) => {
-            if (dependant.get(dependency))
-                deps.push(dependency);
+            if (!deps.includes(dependency)) {
+                deps.unshift(dependency);
+            }
         });
+
+        // HACK: temporary fix openssl & openssl-1.1.1 confliction
+        if (deps.includes('openssl') && deps.includes('openssl-1.1.1')) {
+            deps = deps.filter((x) => x !== 'openssl');
+        }
+
+        // join with reverse order
         deps.forEach(dependency => info = dependency + " " + info);
         output.dependant.push(info);
     } else {
