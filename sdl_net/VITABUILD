@@ -5,7 +5,7 @@ url="https://github.com/libsdl-org/SDL_net/"
 gitrev=283e95e3460e8caca7ffacef4b94d82a80e8700f
 source=("https://github.com/libsdl-org/SDL_net/archive/${gitrev}.tar.gz" "vita.patch")
 sha256sums=('SKIP' 'SKIP')
-depends=('sdl2')
+depends=('sdl')
 
 prepare() {
   cd "SDL_net-${gitrev}"
