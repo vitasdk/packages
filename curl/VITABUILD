@@ -4,7 +4,7 @@ pkgrel=1
 url="https://github.com/d3m3vilurr/vita-curl"
 source=("git+https://github.com/d3m3vilurr/vita-curl.git")
 sha256sums=('SKIP')
-depends=('openssl')
+depends=('openssl' 'zlib')
 
 build() {
   cd vita-curl

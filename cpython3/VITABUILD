@@ -6,10 +6,6 @@ source=("git+https://github.com/SonicMastr/cpython-vita.git")
 sha256sums=('SKIP')
 depends=('openssl-1.1.1 libzip xz zlib bzip2')
 
-prepare() {
-  vdpm openssl-1.1.1
-}
-
 build() {
   echo ""
 }
