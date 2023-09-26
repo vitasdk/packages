@@ -1,17 +1,13 @@
 pkgname=curl
-pkgver=7.85.0
+pkgver=8.3.0
 pkgrel=1
 url="https://curl.se/"
-source=(
-    "https://github.com/curl/curl/releases/download/curl-7_85_0/curl-7.85.0.tar.gz"
-    "fix_curlformoption.patch"
-)
-sha256sums=('78a06f918bd5fde3c4573ef4f9806f56372b32ec1829c9ec474799eeee641c27' SKIP)
+source=("https://github.com/curl/curl/releases/download/curl-8_3_0/curl-8.3.0.tar.gz")
+sha256sums=('d3a19aeea301085a56c32bc0f7d924a818a7893af253e41505d1e26d7db8e95a')
 depends=('mbedtls' 'zlib')
 
 prepare() {
   cd curl-${pkgver}
-  patch --strip=1 --input=${srcdir}/fix_curlformoption.patch # fix CURLformoption
 }
 
 build() {
