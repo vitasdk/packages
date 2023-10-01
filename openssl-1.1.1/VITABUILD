@@ -2,12 +2,11 @@ pkgname=openssl-1.1.1
 pkgver=1.1.1
 pkgrel=1
 url="https://github.com/SonicMastr/vita-openssl3"
-source=("git+https://github.com/SonicMastr/vita-openssl3.git")
+source=("git+https://github.com/SonicMastr/vita-openssl3.git#branch=OpenSSL_1_1_1-vita")
 sha256sums=('SKIP')
 
 build() {
   cd vita-openssl3
-  git checkout OpenSSL_1_1_1-vita
   ./Configure --prefix=$VITASDK/arm-vita-eabi/ no-asm no-pic no-unit-test no-shared vita-cross
   make -j$(nproc)
 }
