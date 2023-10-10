@@ -1,9 +1,9 @@
---- a/CMakeLists.txt	2023-05-19 10:27:46.000000000 -0400
-+++ b/CMakeLists.txt	2023-08-21 11:07:53.676439915 -0400
-@@ -607,10 +607,6 @@
- 
- # Include compatibility layer
+--- a/CMakeLists.txt	2023-10-10 08:03:25.461621800 +0200
++++ b/CMakeLists.txt	2023-10-10 08:45:44.492651500 +0200
+@@ -614,10 +614,6 @@
  if(MZ_COMPAT)
+     set(SOVERSION "1")
+ 
 -    set(FILE_H "zip.h")
 -    set(MZ_COMPAT_FILE "MZ_COMPAT_ZIP")
 -    configure_file(mz_compat_shim.h.in zip.h)
@@ -11,7 +11,7 @@
      set(FILE_H "unzip.h")
      set(MZ_COMPAT_FILE "MZ_COMPAT_UNZIP")
      configure_file(mz_compat_shim.h.in unzip.h)
-@@ -619,7 +615,7 @@
+@@ -626,7 +622,7 @@
          list(APPEND MINIZIP_DEF -DMZ_COMPAT_VERSION=${MZ_COMPAT_VERSION})
      endif()
      list(APPEND MINIZIP_SRC mz_compat.c)
@@ -19,4 +19,4 @@
 +    list(APPEND MINIZIP_HDR mz_compat.h ${CMAKE_CURRENT_BINARY_DIR}/unzip.h)
  endif()
  
- # Set compiler options
+ # Detect available sanitizers
