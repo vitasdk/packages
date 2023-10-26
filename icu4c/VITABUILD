@@ -1,22 +1,22 @@
 pkgname=icu4c
-pkgver=73.1
+pkgver=73.2
 pkgrel=1
 url='https://icu.unicode.org/'
 source=(
-  "https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz"
-  "icu-73.1.patch"
+  "https://github.com/unicode-org/icu/releases/download/release-73-2/icu4c-73_2-src.tgz"
+  "icu-73.2.patch"
   "build_vita_armv7-a.sh"
 )
 
 sha256sums=(
-  'a457431de164b4aa7eca00ed134d00dfbf88a77c6986a10ae7774fc076bb8c45'
+  '818a80712ed3caacd9b652305e01afc7fa167e6f2e94996da44b90c2ab604ce1'
   'SKIP'
   'SKIP'
 )
 
 prepare() {
   cd icu
-  patch -p1 < ../icu-73.1.patch
+  patch -p1 < ../icu-73.2.patch
   mkdir -p vita
   cp ../build_vita_armv7-a.sh vita
   mkdir -p build-linux
@@ -33,14 +33,14 @@ build() {
 
 package () {
   cd icu/vita
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/brkitr
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/coll
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/curr
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/lang
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/rbnf
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/region
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/translit
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/unit
-  mkdir -p $pkgdir/$prefix/share/icu/73.1/icudt73l/zone
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/brkitr
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/coll
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/curr
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/lang
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/rbnf
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/region
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/translit
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/unit
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/zone
   make DESTDIR=$pkgdir install
 }
