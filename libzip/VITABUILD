@@ -1,16 +1,10 @@
 pkgname=libzip
-pkgver=1.10.0
-pkgrel=2
+pkgver=1.10.1
+pkgrel=1
 url="https://libzip.org/"
-source=("https://libzip.org/download/$pkgname-$pkgver.tar.xz" "random.patch")
-sha256sums=('cd2a7ac9f1fb5bfa6218272d9929955dc7237515bba6e14b5ad0e1d1e2212b43'
-            'SKIP')
+source=("https://libzip.org/download/$pkgname-$pkgver.tar.xz")
+sha256sums=('dc3c8d5b4c8bbd09626864f6bcf93de701540f761d76b85d7c7d710f4bd90318')
 depends=('bzip2 openssl xz zlib zstd')
-
-prepare() {
-  cd $pkgname-$pkgver
-  patch -Np1 -i "${srcdir}/random.patch"
-}
 
 build() {
   cd $pkgname-$pkgver
