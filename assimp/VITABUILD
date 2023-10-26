@@ -1,9 +1,9 @@
 pkgname=assimp
-pkgver=5.2.5
+pkgver=5.3.1
 pkgrel=1
 url="https://www.assimp.org/"
 source=("https://github.com/assimp/assimp/archive/refs/tags/v${pkgver}.tar.gz" "assimp-no-pic.patch")
-sha256sums=("b5219e63ae31d895d60d98001ee5bb809fb2c7b2de1e7f78ceeb600063641e1a" "2ecc6246852764b4fd64249dede92454ab4100973450059763d40665f0bb1a83")
+sha256sums=("a07666be71afe1ad4bc008c2336b7c688aca391271188eb9108d0c6db1be53f1" "434e8fb03c3af8635db11ded994ebe907083cdd5e593b860663970f0d58e2414")
 
 prepare() {
   cd assimp-$pkgver
