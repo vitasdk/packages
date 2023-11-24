@@ -1,9 +1,9 @@
 pkgname=minizip
-pkgver=4.0.1
+pkgver=4.0.2
 pkgrel=1
 url="https://github.com/zlib-ng/minizip-ng"
 source=("https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip" "no-symlink.patch" "no-zip_h.patch")
-sha256sums=('cc6fa4cd125e2b47cdab93c30df95969a0686cba4118c91cd928ba60c65acf66' '320ea877cd4f0c3fa6887cc60eb5c247e4249b72bf20f646168b0e42a8437c91' 'b7adc6b85bb169a4597961397ff95e2ab1182561acfe284cb09f8c6e86e5d79b')
+sha256sums=('9203243cc67d3922000eab0b64ffa57e7070b148bb8ef18d69defffd91d33307' '320ea877cd4f0c3fa6887cc60eb5c247e4249b72bf20f646168b0e42a8437c91' 'e1636c3b016b7249ff78e46720c0be807659b6e95cec28e8314802eed539feee')
 depends=('openssl')
 
 prepare() {

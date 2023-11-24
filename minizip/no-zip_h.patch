@@ -1,8 +1,10 @@
---- a/CMakeLists.txt	2023-10-10 08:03:25.461621800 +0200
-+++ b/CMakeLists.txt	2023-10-10 08:45:44.492651500 +0200
-@@ -614,10 +614,6 @@
- if(MZ_COMPAT)
-     set(SOVERSION "1")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0063f9a..b0bfa9a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -619,10 +619,6 @@ if(MZ_COMPAT)
+     set(MZ_COMPAT_FILE "MZ_COMPAT_IOAPI")
+     configure_file(mz_compat_shim.h.in ioapi.h)
  
 -    set(FILE_H "zip.h")
 -    set(MZ_COMPAT_FILE "MZ_COMPAT_ZIP")
@@ -11,12 +13,11 @@
      set(FILE_H "unzip.h")
      set(MZ_COMPAT_FILE "MZ_COMPAT_UNZIP")
      configure_file(mz_compat_shim.h.in unzip.h)
-@@ -626,7 +622,7 @@
-         list(APPEND MINIZIP_DEF -DMZ_COMPAT_VERSION=${MZ_COMPAT_VERSION})
-     endif()
+@@ -634,7 +630,6 @@ if(MZ_COMPAT)
      list(APPEND MINIZIP_SRC mz_compat.c)
--    list(APPEND MINIZIP_HDR mz_compat.h ${CMAKE_CURRENT_BINARY_DIR}/zip.h ${CMAKE_CURRENT_BINARY_DIR}/unzip.h)
-+    list(APPEND MINIZIP_HDR mz_compat.h ${CMAKE_CURRENT_BINARY_DIR}/unzip.h)
+     list(APPEND MINIZIP_HDR mz_compat.h
+         ${CMAKE_CURRENT_BINARY_DIR}/ioapi.h
+-        ${CMAKE_CURRENT_BINARY_DIR}/zip.h
+         ${CMAKE_CURRENT_BINARY_DIR}/unzip.h)
  endif()
  
- # Detect available sanitizers
