@@ -1,7 +1,7 @@
 pkgname=sdl2_mixer
 pkgver=2.6.99
-pkgrel=1
-gitrev=eb005518b0085244630ccfb41977f818af45d2ea
+pkgrel=2
+gitrev=656a45a604bbdd23ebceb9067fb67d1bc3b5bcc5
 url="https://github.com/libsdl-org/SDL_mixer"
 source=("git+https://github.com/libsdl-org/SDL_mixer.git#commit=${gitrev}"
         "pkg-config-fix.patch"
