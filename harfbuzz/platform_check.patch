@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e22f2cfd..474f3fea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -481,7 +481,7 @@ if (HB_BUILD_SUBSET)
+   endif ()
+ endif ()
+
+-if (UNIX OR MINGW)
++if (UNIX OR MINGW OR VITA)
+   # Make symbols link locally
+   include (CheckCXXCompilerFlag)
+   CHECK_CXX_COMPILER_FLAG(-Bsymbolic-functions CXX_SUPPORTS_FLAG_BSYMB_FUNCS)
