@@ -2,8 +2,8 @@ pkgname=zlib
 pkgver=1.3
 pkgrel=1
 url="https://www.zlib.net/"
-source=("https://zlib.net/zlib-${pkgver}.tar.gz")
-sha256sums=('ff0ba4c292013dbc27530b3a81e1f9a813cd39de01ca5e0f8bf355702efa593e')
+source=("https://github.com/madler/zlib/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c')
 
 build() {
   cd zlib-$pkgver
