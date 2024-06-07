@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-20.04
     container: node:lts
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         id: set-matrix
         run: |
@@ -34,7 +34,7 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
         sudo add-apt-repository ppa:deadsnakes/ppa -y
@@ -52,9 +52,9 @@ jobs:
       run: |
         export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
         mv $FILE ${{ matrix.package }}/${{ matrix.package }}.tar.xz
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: package
+        name: ${{ matrix.package }}
         path: ${{ matrix.package }}/*.tar.xz
   build_depends:
     needs: [prepare_jobs, build]
@@ -68,9 +68,17 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v3
-    # TODO only download deps
-    - uses: actions/download-artifact@v3
+    - uses: actions/checkout@v4
+    - name: Generate actions/download-artifact pattern
+      id: generate-download-artifact-pattern
+      run: |
+        PATTERN=`echo ${{ matrix.package }} | awk 'NF{NF-=1};1' | tr ' ' ',' | awk '{ print "{" $0 "}" }'`
+        echo "PATTERN=$PATTERN" >> $GITHUB_OUTPUT
+    - uses: actions/download-artifact@v4
+      with:
+        path: package
+        pattern: ${{ steps.generate-download-artifact-pattern.outputs.PATTERN }}
+        merge-multiple: true
     - name: Install dependencies
       run: |
         sudo add-apt-repository ppa:deadsnakes/ppa -y
@@ -92,21 +100,24 @@ jobs:
       run: |
         export FILE=`echo ${{ env.PACKAGE }}/*-arm.tar.xz`
         mv $FILE ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: package
+        name: ${{ env.PACKAGE }}
         path: ${{ env.PACKAGE }}/*.tar.xz
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
       runs-on: ubuntu-20.04
       steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: package
+          merge-multiple: true
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install libarchive-tools
-      - uses: termux/upload-release-action@v4.0.2
+      - uses: termux/upload-release-action@v4.2.0
         if: contains(github.ref,'refs/heads/master')
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
