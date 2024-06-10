@@ -1,5 +1,5 @@
 --- unix.c	2024-04-15 05:06:53.000000000 +0200
-+++ unix.c	2024-06-09 13:46:43.009847600 +0200
++++ unix.c	2024-06-09 18:33:00.241853200 +0200
 @@ -6,7 +6,9 @@
  
  #include <sys/types.h>
@@ -10,7 +10,18 @@
  #include <sys/time.h>
  #include <netinet/tcp.h>
  #include <netdb.h>
-@@ -303,11 +305,15 @@
+@@ -61,6 +63,10 @@
+ #define MSG_NOSIGNAL 0
+ #endif
+ 
++#ifndef SOMAXCONN
++#define SOMAXCONN 128
++#endif
++
+ static enet_uint32 timeBase = 0;
+ 
+ int
+@@ -303,11 +309,15 @@
      switch (option)
      {
          case ENET_SOCKOPT_NONBLOCK:

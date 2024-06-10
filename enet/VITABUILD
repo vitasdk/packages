@@ -4,7 +4,7 @@ pkgrel=1
 url="https://github.com/lsalzman/enet"
 source=("https://github.com/lsalzman/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz" "enet.patch")
 sha256sums=('28603c895f9ed24a846478180ee72c7376b39b4bb1287b73877e5eae7d96b0dd'
-            'b88e1b046c24fef1211e6227ccb1ab45e17f079cd23e87094abc6171bd38595d')
+            '0b6d59e7eef42914d6f90fa3da87ff13182a39455a729c5490342bbf0ce16490')
 
 build() {
   cd $pkgname-$pkgver
@@ -14,7 +14,10 @@ build() {
 }
 
 package () {
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
+
   cd $pkgname-$pkgver
   cp lib$pkgname.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
-  cp include/$pkgname $pkgdir/$VITASDK/arm-vita-eabi/include/
+  cp -r include/$pkgname $pkgdir/$VITASDK/arm-vita-eabi/include/
 }
