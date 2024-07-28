@@ -72,7 +72,7 @@ jobs:
     - name: Generate actions/download-artifact pattern
       id: generate-download-artifact-pattern
       run: |
-        PATTERN=`echo ${{ matrix.package }} | awk 'NF{NF-=1};1' | tr ' ' ',' | awk '{ print "{" $0 "}" }'`
+        PATTERN=`echo ${{ matrix.package }} | awk 'NF{NF-=1};1' | tr ' ' '|' | awk '{ print "@(" $0 ")" }'`
         echo "PATTERN=$PATTERN" >> $GITHUB_OUTPUT
     - uses: actions/download-artifact@v4
       with:
