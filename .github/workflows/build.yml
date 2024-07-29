@@ -126,3 +126,4 @@ jobs:
           file_glob: true
           tag: ${{ github.ref }}
           release_name: master
+          checksums: sha256
