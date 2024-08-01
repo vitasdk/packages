@@ -1,0 +1,19 @@
+pkgname=uvdb
+pkgver=0.1
+pkgrel=1
+url="https://github.com/sleirsgoevy/vita-uvdb"
+source=("git+https://github.com/sleirsgoevy/vita-uvdb.git#tag=v$pkgver")
+sha256sums=('SKIP')
+depends=('kubridge')
+
+build() {
+  cd vita-uvdb
+  make -j$(nproc)
+}
+
+package () {
+  cd vita-uvdb
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/{include,lib}
+  cp libuvdb.a $pkgdir/$VITASDK/arm-vita-eabi/lib
+  cp uvdb.h $pkgdir/$VITASDK/arm-vita-eabi/include
+}
