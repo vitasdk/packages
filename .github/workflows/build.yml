@@ -106,24 +106,15 @@ jobs:
         path: ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: package
           merge-multiple: true
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install libarchive-tools
-      - uses: termux/upload-release-action@v4.2.0
+      - name: Upload release assets
         if: contains(github.ref,'refs/heads/master')
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: package/*.tar.xz
-          overwrite: true
-          file_glob: true
-          tag: ${{ github.ref }}
-          release_name: master
-          checksums: sha256
+        run: gh release upload master package/*.tar.xz --clobber
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
