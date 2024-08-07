@@ -1,8 +1,8 @@
 pkgname=kubridge
 pkgver=9999
-pkgrel=1
-url="https://github.com/TheOfficialFloW/kubridge"
-source=("git+https://github.com/TheOfficialFloW/kubridge.git")
+pkgrel=2
+url="https://github.com/bythos14/kubridge"
+source=("git+https://github.com/bythos14/kubridge.git#commit=a4ef20fc3ab07b493f9d7d67703272831e445e21")
 sha256sums=('SKIP')
 depends=('taihen')
 
