@@ -1,16 +1,18 @@
 pkgname=libsmb2
 pkgver=9999
 pkgrel=1
+gitrev=0fba3b28533cbfa64143ae230da8342f3bc45141
 url="https://github.com/sahlberg/libsmb2"
-source=("git+https://github.com/sahlberg/libsmb2.git#commit=dccf1dbccd66a8c433e336de4951a249096e1c22")
+source=("git+https://github.com/sahlberg/libsmb2.git#commit=${gitrev}")
 sha256sums=('SKIP')
 
 build() {
   cd $pkgname
-	cmake -S . -B build "-DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
-	cmake --build build
+  cmake -S . -B build "-DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
+  cmake --build build
 }
 
 package () {
-	cmake --build build --target install
+  cd $pkgname
+  cmake --build build --target install
 }
