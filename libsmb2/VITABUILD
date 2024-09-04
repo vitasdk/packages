@@ -9,12 +9,12 @@ sha256sums=('SKIP')
 build() {
   cd $pkgname
   mkdir build && cd build
-  cmake .. "-DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
-  cmake --build .
+  cmake .. "-DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix
+  make -j$(nproc)
 }
 
 package () {
   cd $pkgname
   cd build
-  cmake --build . --target install
+  make DESTDIR=$pkgdir install
 }
