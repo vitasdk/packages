@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ad07183..cfaf98e4 100644
+index ff9c9c27..45367b0b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -720,16 +720,6 @@ if(WITH_TURBOJPEG)
+@@ -754,16 +754,6 @@ if(WITH_TURBOJPEG)
      if(NOT MSVC)
        set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
      endif()
@@ -19,12 +19,12 @@ index 5ad07183..cfaf98e4 100644
    endif()
  endif()
  
-@@ -1727,8 +1717,6 @@ if(WITH_TURBOJPEG)
+@@ -1748,8 +1738,6 @@ if(WITH_TURBOJPEG)
        else()
          set(DIR ${CMAKE_CURRENT_BINARY_DIR})
        endif()
 -      install(PROGRAMS ${DIR}/tjbench-static${EXE}
--        DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME tjbench${EXE})
+-        DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin RENAME tjbench${EXE})
      endif()
    endif()
    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/turbojpeg.h

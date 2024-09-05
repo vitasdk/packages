@@ -1,14 +1,12 @@
 pkgname=opus
-pkgver=1.4
+pkgver=1.5.2
 pkgrel=1
 url="https://opus-codec.org/"
-source=("https://downloads.xiph.org/releases/opus/opus-${pkgver}.tar.gz" "opus-master.patch")
-sha256sums=('c9b32b4253be5ae63d1ff16eea06b94b5f0f2951b7a02aceef58e3a3ce49c51f'
-            '1ba3ab331bdb3011fdaf9027d680f134077ba6fde34c8791438fdc613d67d1d5')
+source=("https://downloads.xiph.org/releases/opus/opus-${pkgver}.tar.gz")
+sha256sums=('65c1d2f78b9f2fb20082c38cbe47c951ad5839345876e46941612ee87f9a7ce1')
 
 prepare() {
   cd $pkgname-$pkgver
-  patch -Np1 -i "${srcdir}/opus-master.patch"
 }
 
 build() {

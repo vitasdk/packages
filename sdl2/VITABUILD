@@ -1,5 +1,5 @@
 pkgname=sdl2
-pkgver=2.30.2
+pkgver=2.30.7
 pkgrel=1
 gitrev=f461d91cd265d7b9a44b4d472b1df0c0ad2855a0
 url='https://www.libsdl.org'
