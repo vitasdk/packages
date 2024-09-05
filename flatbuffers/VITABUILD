@@ -7,12 +7,12 @@
 
 pkgname=flatbuffers
 # https://github.com/google/flatbuffers/blob/master/CHANGELOG.md
-pkgver=23.5.26
+pkgver=24.3.25
 pkgrel=1
 pkgdesc='An efficient cross platform serialization library for C++, with support for Java, C# and Go'
-url='https://google.github.io/flatbuffers/'
+url='https://flatbuffers.dev/'
 source=("https://github.com/google/$pkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('1cce06b17cddd896b6d73cc047e36a254fb8df4d7ea18a46acf16c4c0cd3f3f3')
+sha256sums=('4157c5cacdb59737c5d627e47ac26b140e9ee28b1102f812b36068aab728c1ed')
 
 prepare() {
   cd $pkgname-$pkgver

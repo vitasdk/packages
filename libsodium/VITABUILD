@@ -1,23 +1,23 @@
 pkgname=libsodium
-pkgver=1.0.19
+pkgver=1.0.20
 pkgrel=1
 url="https://doc.libsodium.org/"
 source=("https://download.libsodium.org/libsodium/releases/libsodium-${pkgver}.tar.gz")
-sha256sums=('018d79fe0a045cca07331d37bd0cb57b2e838c51bc48fd837a1472e50068bbea')
+sha256sums=('ebb65ef6ca439333c2bb41a0c1990587288da07f6c7fd07cb3a18cc18d30ce19')
 
 prepare() {
-  cd libsodium-stable
+  cd libsodium-${pkgver}
   # disable -fPIC. Libsodium configure has no flag for that
   sed 's/fPIC=yes/fPIC=no/' -i configure
 }
 
 build() {
-  cd libsodium-stable
+  cd libsodium-${pkgver}
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-pie --without-pic --disable-shared --enable-static
   make -j$(nproc)
 }
 
 package() {
-  cd libsodium-stable
+  cd libsodium-${pkgver}
   make DESTDIR=$pkgdir install
 }

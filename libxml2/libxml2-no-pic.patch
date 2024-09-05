@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 834b35d3..08d07172 100644
+index f99fd368..55715b29 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -419,7 +419,7 @@ set_target_properties(
- 	PROPERTIES
- 	IMPORT_PREFIX lib
- 	OUTPUT_NAME xml2
--	POSITION_INDEPENDENT_CODE ON
-+	POSITION_INDEPENDENT_CODE OFF
- 	PREFIX lib
- 	VERSION ${PROJECT_VERSION}
-         SOVERSION ${LIBXML_MAJOR_VERSION}
+@@ -432,7 +432,7 @@ set_target_properties(
+     PROPERTIES
+     IMPORT_PREFIX lib
+     OUTPUT_NAME xml2
+-    POSITION_INDEPENDENT_CODE ON
++    POSITION_INDEPENDENT_CODE OFF
+     PREFIX lib
+     VERSION ${PROJECT_VERSION}
+     SOVERSION ${LIBXML_MAJOR_VERSION}
