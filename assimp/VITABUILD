@@ -4,6 +4,7 @@ pkgrel=1
 url="https://www.assimp.org/"
 source=("https://github.com/assimp/assimp/archive/refs/tags/v${pkgver}.tar.gz" "assimp-no-pic.patch")
 sha256sums=("66dfbaee288f2bc43172440a55d0235dfc7bf885dda6435c038e8000e79582cb" "434e8fb03c3af8635db11ded994ebe907083cdd5e593b860663970f0d58e2414")
+depends=('minizip zlib')
 
 prepare() {
   cd assimp-$pkgver
@@ -15,7 +16,7 @@ build() {
   mkdir build && cd build
 
   cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix \
-    -DASSIMP_NO_EXPORT=ON -DBUILD_SHARED_LIBS=OFF -DASSIMP_BUILD_ZLIB=ON -DASSIMP_BUILD_TESTS=OFF -DASSIMP_WARNINGS_AS_ERRORS=OFF
+    -DASSIMP_NO_EXPORT=ON -DBUILD_SHARED_LIBS=OFF -DASSIMP_BUILD_TESTS=OFF -DASSIMP_WARNINGS_AS_ERRORS=OFF
 
   make -j$(nproc)
 }
