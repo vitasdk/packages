@@ -13,7 +13,7 @@ build() {
 
   patch -p1 -i $srcdir/libvpx.patch
 
-  CROSS=arm-vita-eabi- ./configure --target=armv7-linux-gcc --prefix=$prefix --disable-shared --enable-static --disable-examples --disable-tools --disable-docs --disable-unit-tests --disable-runtime-cpu-detect
+  CROSS=arm-vita-eabi- ./configure --target=armv7-linux-gcc --prefix=$prefix --disable-shared --enable-static --disable-examples --disable-tools --disable-docs --disable-unit-tests --disable-runtime-cpu-detect --disable-pic
 
   make -j$(nproc)
 
