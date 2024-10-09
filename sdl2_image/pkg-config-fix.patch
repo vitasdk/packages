@@ -1,3 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 65a8811..bc439d2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -691,7 +691,7 @@ if(SDL2IMAGE_WEBP)
+     else()
+         message(STATUS "${PROJECT_NAME}: Using system libwebp")
+         find_package(webp REQUIRED)
+-        list(APPEND PC_REQUIRES libwebp)
++        list(APPEND PC_REQUIRES libwebp libwebpdemux)
+     endif()
+     if(SDL2IMAGE_WEBP_SHARED)
+         target_include_directories(SDL2_image PRIVATE
 diff --git a/SDL2_image.pc.in b/SDL2_image.pc.in
 index 8711dd7..cf6b501 100644
 --- a/SDL2_image.pc.in
