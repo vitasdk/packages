@@ -1,28 +1,23 @@
 pkgname=sdl2
-pkgver=2.30.7
+pkgver=2.30.8
 pkgrel=1
-gitrev=f461d91cd265d7b9a44b4d472b1df0c0ad2855a0
 url='https://www.libsdl.org'
-source=(
-  "https://github.com/libsdl-org/SDL/archive/${gitrev}.tar.gz"
- )
-sha256sums=(
-  SKIP
-)
+source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz")
+sha256sums=('380c295ea76b9bd72d90075793971c8bcb232ba0a69a9b14da4ae8f603350058')
 
 prepare() {
-  cd "SDL-${gitrev}"
+  cd "SDL2-${pkgver}"
 }
 
 build() {
-  cd "SDL-${gitrev}"
+  cd "SDL2-${pkgver}"
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DSDL_TEST=OFF
   make -j$(nproc)
 }
 
 package () {
-  cd "SDL-${gitrev}"
+  cd "SDL2-${pkgver}"
   cd build
   make DESTDIR=$pkgdir install
 }
