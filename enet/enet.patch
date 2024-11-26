@@ -1,0 +1,39 @@
+--- unix.c	2024-04-15 05:06:53.000000000 +0200
++++ unix.c	2024-06-09 18:33:00.241853200 +0200
+@@ -6,7 +6,9 @@
+ 
+ #include <sys/types.h>
+ #include <sys/socket.h>
++#ifndef __vita__
+ #include <sys/ioctl.h>
++#endif
+ #include <sys/time.h>
+ #include <netinet/tcp.h>
+ #include <netdb.h>
+@@ -61,6 +63,10 @@
+ #define MSG_NOSIGNAL 0
+ #endif
+ 
++#ifndef SOMAXCONN
++#define SOMAXCONN 128
++#endif
++
+ static enet_uint32 timeBase = 0;
+ 
+ int
+@@ -303,11 +309,15 @@
+     switch (option)
+     {
+         case ENET_SOCKOPT_NONBLOCK:
++#ifdef __vita__
++            result = setsockopt (socket, SOL_SOCKET, SO_NONBLOCK, (char *) & value, sizeof (int));
++#else
+ #ifdef HAS_FCNTL
+             result = fcntl (socket, F_SETFL, (value ? O_NONBLOCK : 0) | (fcntl (socket, F_GETFL) & ~O_NONBLOCK));
+ #else
+             result = ioctl (socket, FIONBIO, & value);
+ #endif
++#endif
+             break;
+ 
+         case ENET_SOCKOPT_BROADCAST:
