@@ -1,19 +1,12 @@
 pkgname=sdl2
-pkgver=2.30.9
-pkgrel=2
+pkgver=2.30.10
+pkgrel=1
 url='https://www.libsdl.org'
-source=(
-    "https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz"
-    "https://github.com/libsdl-org/SDL/pull/11442.patch"
-)
-sha256sums=(
-    '24b574f71c87a763f50704bbb630cbe38298d544a1f890f099a4696b1d6beba4'
-    'd5270c65a773bc76b76e814d35a2cb8077f7629a929800b1dfbe8303ddf7fc91'
-)
+source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz")
+sha256sums=('f59adf36a0fcf4c94198e7d3d776c1b3824211ab7aeebeb31fe19836661196aa')
 
 prepare() {
   cd "SDL2-${pkgver}"
-  patch -p1 < "${srcdir}/11442.patch"
 }
 
 build() {
