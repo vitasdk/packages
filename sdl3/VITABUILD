@@ -1,10 +1,10 @@
 pkgname=sdl3
-pkgver=3.2.0
+pkgver=3.2.2
 pkgrel=1
 url='https://www.libsdl.org'
 license=('Zlib')
 source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL3-${pkgver}.tar.gz")
-sha256sums=('bf308f92c5688b1479faf5cfe24af72f3cd4ce08d0c0670d6ce55bc2ec1e9a5e')
+sha256sums=('d3dcf1b2f64746be0f248ef27b35aec4f038dafadfb83491f98a7fecdaf6efec')
 
 build() {
   cd "SDL3-${pkgver}"
