@@ -1,9 +1,9 @@
 pkgname=sdl2
-pkgver=2.30.10
+pkgver=2.32.2
 pkgrel=1
 url='https://www.libsdl.org'
 source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz")
-sha256sums=('f59adf36a0fcf4c94198e7d3d776c1b3824211ab7aeebeb31fe19836661196aa')
+sha256sums=('c5f30c427fd8107ee4a400c84d4447dd211352512eaf0b6e89cc6a50a2821922')
 
 prepare() {
   cd "SDL2-${pkgver}"
