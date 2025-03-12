@@ -1,14 +1,16 @@
 pkgname=harfbuzz
-pkgver=9.0.0
+pkgver=10.4.0
 pkgrel=1
 url="https://harfbuzz.github.io/"
+license=('MIT')
 source=("https://github.com/harfbuzz/harfbuzz/releases/download/${pkgver}/harfbuzz-${pkgver}.tar.xz")
-sha256sums=('a41b272ceeb920c57263ec851604542d9ec85ee3030506d94662067c7b6ab89e')
+sha256sums=('480b6d25014169300669aa1fc39fb356c142d5028324ea52b3a27648b9beaad8')
+depends=('freetype')
 
 build() {
   cd harfbuzz-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DHB_HAVE_FREETYPE=ON
   make -j$(nproc)
 }
 
