@@ -1,0 +1,23 @@
+pkgname=liblzma
+pkgver=5.2.10
+pkgrel=1
+url="https://github.com/tukaani-project/xz/"
+source=("https://github.com/tukaani-project/xz/releases/download/v${pkgver}/xz-${pkgver}.tar.bz2")
+sha256sums=('01b71df61521d9da698ce3c33148bff06a131628ff037398c09482f3a26e5408')
+depends=()
+
+prepare() {
+  cd "xz-${pkgver}"
+  ./autogen.sh --no-po4a --host=arm-vita-eabi
+}
+
+build() {
+  cd "xz-${pkgver}/src/${pkgname}"
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  make -j$(nproc)
+}
+
+package () {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
