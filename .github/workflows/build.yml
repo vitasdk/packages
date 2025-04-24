@@ -80,9 +80,11 @@ jobs:
         merge-multiple: true
     - name: Install dependencies
       run: |
-        sudo add-apt-repository ppa:deadsnakes/ppa -y
         sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools pkg-config libc6-dev-i386 python2.7 python3.11
+        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools pkg-config libc6-dev-i386 python2.7
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
     - name: Prepare Build
       run: |
         bash ./prepare.sh
