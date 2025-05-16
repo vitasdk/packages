@@ -1,9 +1,9 @@
 pkgname=libopenmpt
-pkgver=0.5.32
+pkgver=0.5.36
 pkgrel=1
 url="https://lib.openmpt.org/libopenmpt/"
 source=("https://lib.openmpt.org/files/${pkgname}/src/${pkgname}-${pkgver}+release.autotools.tar.gz")
-sha256sums=('bc274e836f9512a798c020592e822fd3d20a2ce362046dbbc4389e0f329d8e19')
+sha256sums=('4ec40a1e795d612e26708eecd9f43cbe4dcd951fd55dbb53f623dd97b5697828')
 depends=('zlib libvorbis libogg mpg123')
 
 build() {

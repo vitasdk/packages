@@ -1,9 +1,9 @@
 pkgname=ffmpeg
-pkgver=7.0.2
+pkgver=7.1.1
 pkgrel=1
 url="https://ffmpeg.org/"
 source=("https://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz")
-sha256sums=('8646515b638a3ad303e23af6a3587734447cb8fc0a0c064ecdb8e95c4fd8b389')
+sha256sums=('733984395e0dbbe5c046abda2dc49a5544e7e0e1e2366bba849222ae9e3a03b1')
 depends=('lame' 'libvorbis' 'flac' 'opus')
 
 prepare() {
