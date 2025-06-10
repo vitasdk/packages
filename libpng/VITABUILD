@@ -1,5 +1,5 @@
 pkgname=libpng
-pkgver=1.6.43
+pkgver=1.6.48
 pkgrel=1
 url="http://www.libpng.org/pub/png/libpng.html"
 source=("git+https://git.code.sf.net/p/libpng/code#tag=v$pkgver")
