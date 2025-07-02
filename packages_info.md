@@ -1,0 +1,144 @@
+# List of Available Packages
+
+
+| Package         | URL                                         | Description                                                                                                 |
+|-----------------|---------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| imgui-vita2d    | https://github.com/cy33hc/imgui-vita2d      | Implementation of Dear ImGui using vita2d for PlayStation Vita. Rendering is based on pkgj and touch control on imgui-vita with vitaGL. |
+| zlib            | https://www.zlib.net/                       | Widely used, patent-free lossless data compression library.                   |
+| kubridge        | https://github.com/bythos14/kubridge         | Kernel-user bridge module for PS Vita, enables communication between user and kernel space.             |
+| vita-libdl      | https://github.com/v-atamanenko/vita-libdl  | Implementation of libdl (dynamic library loading) for PS Vita based on taihen.                        |
+| zstd            | https://facebook.github.io/zstd/            | Fast and efficient compression algorithm with high compression ratio and very fast decompression.      |
+| SDL_net         | https://github.com/libsdl-org/SDL_net/       | Cross-platform networking library for SDL, simplifies TCP/IP socket usage.                              |
+| yaml-cpp        | https://github.com/jbeder/yaml-cpp          | YAML parser and emitter in C++ compatible with YAML 1.2 specification.                            |
+| xz              | https://tukaani.org/xz/                     | Tools and library for .xz file compression, based on the LZMA algorithm.           |
+| wslay           | https://tatsuhiro-t.github.io/wslay/        | C library for the WebSocket protocol (RFC 6455), with high and low level API.                       |
+| vitaGL          | https://github.com/Rinnegatamante/vitaGL    | OpenGL wrapper for PlayStation Vita, allows porting OpenGL applications to the console.                   |
+| TinyGL          | https://github.com/Cpasjuste/VTinyGL        | Software implementation of a subset of OpenGL for embedded systems and games, focused on being small and fast. |
+| TinyXML2        | https://leethomason.github.io/tinyxml2/     | Small and efficient C++ library for parsing, modifying, and saving XML files using a DOM model.        |
+| asio            | https://think-async.com/Asio/               | Cross-platform C++ library for asynchronous networking and I/O, base of Boost.Asio.                  |
+| assimp          | https://www.assimp.org/                     | Library to import and export over 40 3D file formats to a common in-memory structure.    |
+| boost           | https://www.boost.org/                      | Collection of over 165 peer-reviewed, portable, high-quality C++ libraries for multiple purposes. |
+| box2d           | https://box2d.org/                          | 2D physics engine for games, widely used for simulating rigid bodies and collisions.           |
+| bullet          | https://github.com/DrakonPL/bullet-physics-vita | Port of Bullet Physics Engine 2.87 for PS Vita, 3D physics engine in C++ for collision and dynamics simulation of rigid and soft bodies. |
+| bzip2           | https://sourceware.org/bzip2/               | Free, high-quality data compressor, known for its .bz2 format and good compression ratio.    |
+| cpr             | https://docs.libcpr.org/                    | Modern C++ HTTP library inspired by Python Requests, makes web requests easy. |
+| cpython         | https://github.com/SonicMastr/cpython-vita  | Python 2.7.18 and 3.11.2 interpreter and libraries adapted for PlayStation Vita.                           |
+
+| cpython3         | https://github.com/SonicMastr/cpython-vita   | Python 3.11.2 and 2.7.18 interpreter and libraries adapted for PlayStation Vita. Allows running Python scripts and applications on the console. |
+| curl             | https://curl.se/                             | Command-line tool and library for transferring data with URLs. Supports multiple protocols (HTTP, FTP, SMTP, etc.) and is widely used in all kinds of devices and applications. |
+| curlpp           | https://www.curlpp.org/                      | Object-oriented C++ wrapper for the libcurl library. Makes URL data transfers easier in C++ applications. |
+| expat            | https://libexpat.github.io/                  | C library for stream-oriented XML parsing. Known for its performance and ability to handle large XML files. |
+| ffmpeg           | https://ffmpeg.org/                          | Complete, cross-platform solution for recording, converting, and streaming audio and video. Includes tools and libraries for multimedia manipulation. |
+
+| ALmixer           | https://github.com/Rinnegatamante/ALmixer     | Cross-platform audio library based on OpenAL, inspired by SDL_mixer. Makes sound and music playback and management easy, with a simple API and support for multiple formats. |
+| FluidLite         | https://github.com/divideconcept/FluidLite/   | Lightweight version of FluidSynth for MIDI sound synthesis. No hardware or external library dependencies, supports SF2/SF3 files. |
+| SceShaccCgExt     | https://github.com/bythos14/SceShaccCgExt     | Extension library for SceShaccCg that adds support for extensions, intrinsics, and Cg-specific pragmas on PS Vita. |
+| fftw              | https://www.fftw.org/                         | C library for fast computation of the Fourier transform (DFT) in one or more dimensions, efficient and portable. |
+| flac              | https://xiph.org/flac/                        | Free Lossless Audio Codec, widely supported, patent-free, and with open reference implementation. |
+
+| gifdec           | https://github.com/lecram/gifdec              | Small C library for decoding GIF files. Supports all standard features of the format, portable and public domain. |
+| glm              | https://github.com/g-truc/glm                 | C++ mathematics library oriented to graphics, based on GLSL specifications. Provides vectors, matrices, and utilities for OpenGL and 3D graphics. |
+| harfbuzz         | https://harfbuzz.github.io/                   | Text shaping library that converts Unicode sequences into properly positioned glyphs for any writing system. Used in browsers and office suites. |
+| henkaku          | https://github.com/henkaku/henkaku            | Homebrew enabler for PlayStation Vita. Allows running homebrew software and unlocking system access. Key project in the PS Vita scene. |
+| icu4c            | https://icu.unicode.org/                      | Set of C/C++ and Java libraries for Unicode and globalization support. Provides encoding conversion, collation, date/time formats, and more. Used in global systems and applications. |
+
+| imgui           | https://github.com/Rinnegatamante/imgui-vita  | Port of dear ImGui for PlayStation Vita (vitasdk). Allows creating modern and fast graphical interfaces in homebrew and console applications. |
+| jansson         | https://github.com/akheron/jansson            | C library for encoding, decoding, and manipulating JSON data. Simple API, no external dependencies, and full Unicode support. |
+| jsoncpp         | https://github.com/open-source-parsers/jsoncpp | C++ library for manipulating JSON data: serialization, deserialization, and editing. Widely used in cross-platform projects. |
+| kuio            | https://github.com/Rinnegatamante/kuio        | Kernel-user module for PS Vita/taiHen that allows access to basic I/O operations from user space. |
+| lame            | https://lame.sourceforge.io/                   | High-quality MP3 encoder (MPEG Audio Layer III), free and open source. Reference in digital audio compression. |
+
+| libarchive      | https://www.libarchive.org/                    | Multipurpose library for handling compressed and packaged files (tar, zip, cpio, etc). Supports multiple formats and compression, used in bsdtar and bsdcpio. |
+| libass          | https://github.com/libass/libass               | Portable subtitle renderer for the ASS/SSA format. Used in media players and compatible with VSFilter. |
+| libbaremetal    | https://github.com/xerpi/vita-libbaremetal     | Library and example of bare-metal payload for PS Vita. Allows hardware initialization and running code without an operating system. |
+| libconfig       | https://hyperrealm.github.io/libconfig/        | C/C++ library for processing structured configuration files, compact and suitable for embedded systems. |
+| libdebugnet     | https://github.com/psxdev/debugnet             | Library for remote debugging of homebrew on PS Vita via UDP. Allows sending debug messages from the console to a PC. |
+| libexif         | https://libexif.github.io/                       | C library for reading and writing EXIF metadata in image files. Allows access and manipulation of information embedded by digital cameras, such as shooting data, GPS, and more. |
+| libftpvita      | https://github.com/xerpi/libftpvita              | FTP server for the PlayStation Vita console, allowing file transfer between the console and other devices over the network. |
+| libimagequant   | https://github.com/ImageOptim/libimagequant      | Palette quantization library that converts RGBA images to 8-bit indexed images, used to optimize PNGs and generate high-quality GIFs. |
+| libintl         | https://www.gnu.org/software/gettext/            | Part of GNU gettext, provides utilities and libraries for internationalization and localization of programs, making it easier to translate messages into multiple languages. |
+| libjpeg-turbo   | https://www.libjpeg-turbo.org/                   | JPEG image codec that uses SIMD instructions to accelerate compression and decompression, offering 2-6x performance over standard libjpeg on various architectures. |
+
+| libk            | https://github.com/DaveeFTW/libk                  | Ultra-small utility library for PS Vita plugins, written in C, designed to facilitate common tasks in plugin development. |
+| libmad          | https://github.com/cpasjuste/libmad-psp2          | Port for PS Vita of the mad library, a high-quality and accurate MPEG (MP3) audio decoder. |
+| libmathneon     | https://github.com/Rinnegatamante/math-neon       | Port of math-neon for PS Vita. Implements optimized math and matrix functions in ARM NEON to improve performance on ARM platforms. |
+| libmikmod       | https://mikmod.sourceforge.net/                   | Library and player for audio modules (MOD, S3M, IT, XM, etc.), cross-platform and open source, widely used for playing video game and demo music. |
+| libmodplug      | https://github.com/Konstanty/libmodplug           | Library for decoding and playing music files in MOD and related formats (XM, S3M, IT, etc.), based on the ModPlug engine, with support for multiple formats and effects. |
+
+| libmpeg2        | https://libmpeg2.sourceforge.io/                    | Free library for decoding MPEG-1 and MPEG-2 video streams. Known for its speed, standards compliance, and portability. Used in players like VLC, MPlayer, and others. |
+| libogg          | https://www.xiph.org/ogg/                           | Open and free multimedia container format, native to Xiph.org codecs (Vorbis, Theora, Opus). Allows efficient encapsulation and streaming of audio and video, ideal for streaming. |
+| libopenmpt      | https://lib.openmpt.org/libopenmpt/                 | C/C++ library for decoding module music files (MOD, XM, S3M, IT, etc.) to PCM. Based on OpenMPT, cross-platform and widely used in players and audio engines. |
+| libpcre2        | https://www.pcre.org/                               | Perl 5 compatible regular expression implementation (PCRE2). Provides a powerful and efficient API for pattern searching and manipulation in text, used in many open source and commercial projects. |
+| libpng          | http://www.libpng.org/pub/png/libpng.html           | Official reference library for the PNG image format. Supports almost all standard features, portable and widely used in applications and operating systems. |
+
+| libsamplerate    | https://libsndfile.github.io/libsamplerate/          | Also known as Secret Rabbit Code, a library for audio sample rate conversion. Allows converting audio between different frequencies (e.g., 44.1kHz to 48kHz) with high quality and support for arbitrary and real-time conversions. |
+| libsigc++-2.0    | https://libsigcplusplus.github.io/libsigcplusplus/   | Typesafe callback framework for C++. Allows defining signals and connecting functions or methods as callbacks, facilitating event-driven programming and object communication in C++ applications. |
+| libsigc++-3.0    | https://libsigcplusplus.github.io/libsigcplusplus/   | Modern version of libsigc++ with support for C++17 and variadic templates. Provides a safe and efficient signal and slot system for C++ applications. |
+| libsmb2          | https://github.com/sahlberg/libsmb2                  | User-space library for accessing SMB2/SMB3 network shares. Supports synchronous and asynchronous operations, NTLM/Kerberos authentication, and is cross-platform, used for modern SMB clients and servers. |
+| libsndfile       | http://www.mega-nerd.com/libsndfile                  | C library for reading and writing audio files in many formats (WAV, AIFF, FLAC, Ogg/Vorbis, etc.). Offers a simple API, format conversion, and is widely used in audio and DSP applications. |
+
+| libtheora        | https://www.theora.org/                              | Theora is a free and open video compression format from the Xiph.org Foundation, designed for royalty-free video distribution and competitive at low bitrates. |
+| libtoloader      | https://github.com/Rinnegatamante/libtoloader        | Tiniest Obj Loader: a very lightweight C library for loading WaveFront OBJ models, easy to integrate with OpenGL. |
+| libtremor        | https://xiph.org/                                    | Tremor is a fixed-point Vorbis decoder developed by Xiph.Org, ideal for embedded devices without FPU. |
+| libunistring     | https://www.gnu.org/software/libunistring/           | GNU library for Unicode string manipulation and advanced text functions according to the Unicode standard. |
+| libvita2d        | https://github.com/xerpi/libvita2d                   | Simple and fast 2D library for PlayStation Vita, GPU-based, for efficient graphics and rendering. |
+| libvita2d_ext    | https://github.com/frangarcj/libvita2d_ext           | Extensions for libvita2d that expand its functionality on PlayStation Vita. |
+| libvita2d_vgl    | https://github.com/Rinnegatamante/libvita2d_vgl      | Adaptation of libvita2d for PS Vita using VitaGL as backend, allows efficient 2D rendering integration in 3D OpenGL projects. |
+| libvorbis        | https://xiph.org/vorbis/                             | Vorbis is a patent-free, high-quality compressed audio format, ideal for music and general audio, developed by Xiph.Org. |
+| libvpx           | https://chromium.googlesource.com/webm/libvpx        | Reference library for VP8 and VP9 video codecs, used in WebM formats and web video applications. |
+| libwebp          | https://developers.google.com/speed/webp             | Modern image format offering superior compression with and without loss for the web, enabling smaller and faster images. |
+| libxml2          | https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home  | C library for XML processing, widely used and standards-compliant, developed by GNOME. |
+| libxmp           | https://github.com/libxmp/libxmp                        | Library for playing and converting module music files (MOD, XM, S3M, IT, etc.) to PCM. Supports over 90 formats and integrated compression. |
+| libxmp-lite      | https://github.com/libxmp/libxmp                        | Lightweight version of libxmp, focused on efficient playback of module music files on embedded systems. |
+| libzip           | https://libzip.org/                                     | C library for reading, creating, and modifying ZIP files. Efficient, cross-platform, and used in projects like KDE, Chromium, and ImageMagick. |
+| luajit           | https://luajit.org                                      | Highly efficient and compatible Just-In-Time (JIT) implementation of Lua, ideal for applications requiring fast and flexible scripting. |
+| mbedtls          | https://www.trustedfirmware.org/projects/mbed-tls/      | Cryptography and TLS/SSL library for C, with support for X.509, PSA Crypto API, and small footprint, ideal for embedded systems. |
+| minizip-ng       | https://github.com/zlib-ng/minizip-ng                    | C library for ZIP file manipulation: create, extract, encrypt, and compress with support for multiple algorithms and platforms. |
+| mpg123           | https://www.mpg123.de                                    | Fast, cross-platform MPEG (MP3) audio decoder and player library, supporting multiple architectures and high quality. |
+| onigmo           | https://github.com/k-takata/Onigmo                       | C regular expression library derived from Oniguruma, with advanced Perl syntax support, used by Ruby. |
+| openal-soft      | https://openal-soft.org/                                 | Software implementation of OpenAL, provides a cross-platform 3D audio API for games and multimedia applications. |
+| opensles         | https://github.com/frangarcj/opensles                    | OpenSL ES implementation for PlayStation Vita, audio API for multimedia applications and games. |
+| flatbuffers      | https://flatbuffers.dev/                                   | FlatBuffers is an efficient cross-platform serialization library for C++, C#, Go, Java, Kotlin, JavaScript, Lua, TypeScript, PHP, Python, Rust, and Swift, created by Google for high-performance applications. Allows access to serialized data without unpacking or parsing, with low memory usage and high compatibility. |
+| fluidsynth-lite  | https://github.com/fgsfdsfgs/fluidsynth-lite              | FluidSynth-Lite is a reduced version of FluidSynth, a real-time software synthesizer based on SoundFont 2. Removes dependencies and sound drivers to be lighter, intended for integrations like Doom64EX and platforms like PSVita and Switch. |
+| fmt              | https://fmt.dev/                                           | fmt is a modern and efficient text formatting library for C++, inspired by Python, allowing safe and fast string formatting. |
+| freetype         | https://freetype.org/                                      | FreeType is a free software library for rendering fonts, written in C, designed to be small, efficient, highly customizable, and portable, capable of producing high-quality glyph images from most vector and bitmap font formats. |
+| fribidi          | https://github.com/fribidi/fribidi                         | GNU FriBidi is a free implementation of the Unicode Bidirectional Algorithm (UAX #9), used for Arabic and Hebrew text support in free software. Widely adopted in projects like Pango, GNOME, and VLC. |
+| openssl           | https://github.com/d3m3vilurr/vita-openssl                   | Port of OpenSSL for PlayStation Vita. Robust, open-source toolkit for general cryptography and SSL/TLS protocols, widely used for secure communications and X.509 certificate management. |
+| uvdb              | https://github.com/sleirsgoevy/vita-uvdb               | Intra-process GDB stub for PS Vita that enables remote debugging of homebrew in user mode using GDB, supports breakpoints, single-stepping, and memory read/write. Uses kubridge for exception handling. |
+| vitaShaRK         | https://github.com/Rinnegatamante/vitaShaRK            | Library for real-time shader compilation (Runtime Shader Compiler) on PS Vita/PSTV using the SceShaccCg module. Allows compiling and managing shaders in homebrew and games. |
+| websocketpp       | https://www.zaphoyd.com/projects/websocketpp/           | Header-only C++ library for implementing WebSocket clients and servers (RFC6455 and RFC7692). Flexible, portable, and widely used for real-time applications and web dashboards. |
+| vita-rss-libdl    | https://github.com/isage/vita-rss-libdl                | Simple implementation of libdl for PS Vita (vitasdk), allows dynamic module loading using dlopen/dlsym, compatible with taihen and replaces vita-libdl. |
+| un7zip            | https://github.com/bucanero/libun7zip                  | C library for handling and extracting 7-Zip (.7z) files on PS3, PS4, and PS Vita. Based on the 7-Zip SDK and AndroidUn7zip, allows extracting, listing, and testing compressed files. |
+| physfs            | https://icculus.org/physfs/                 | C library for abstract file and archive access (ZIP, 7z, ISO, etc.), designed for games. Allows mounting multiple sources as a single virtual file system, with security and portability. |
+| pib               | https://github.com/SonicMastr/Pigs-In-A-Blanket | Wrapper for Piglet/ShaccCg for OpenGL ES 2.0 on PS Vita. Facilitates initialization, extension usage, and shader management, supporting native and upscaled resolutions on Vita and PSTV. |
+| pixman            | https://cairographics.org/                  | Image manipulation and pixel composition library, used as a rendering backend in Cairo and other graphics projects. Supports efficient blending, scaling, and transformation operations. |
+| polarssl          | https://www.trustedfirmware.org/projects/mbed-tls/ | Old version of mbedTLS, cryptography and SSL/TLS library in C, lightweight and portable, ideal for embedded systems and secure applications. |
+| opus              | https://opus-codec.org/                     | Open, versatile, royalty-free audio codec, optimized for real-time voice and music, storage, and streaming. IETF standard (RFC 6716), supports from low to high quality and multiple channels. |
+| opusfile           | https://opus-codec.org/                     | C library for decoding Opus (.opus) files, based on libopus and libogg. Facilitates reading and handling Opus streams in multimedia applications. |
+| quirc              | https://github.com/dlbeer/quirc/            | C library for QR code decoding. Allows detecting and extracting information from QR code images efficiently and portably. |
+| sdl                | https://www.libsdl.org                      | Simple DirectMedia Layer 1.2: cross-platform library for game and multimedia development, provides access to graphics, audio, and input. |
+| sdl2               | https://www.libsdl.org                      | Simple DirectMedia Layer 2.0: modern and improved version of SDL, widely used for game, emulator, and multimedia application development. |
+| sdl2_gfx           | https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/ | Extension for SDL2 that adds graphic primitives (lines, circles, polygons) and image manipulation functions, useful for games and visualizations. |
+
+| sdl2_image      | https://github.com/libsdl-org/SDL_image      | Library for SDL2 that allows loading images in multiple formats (BMP, PNG, JPEG, GIF, TIFF, WebP, etc.) as SDL surfaces. Makes graphics integration easy in applications and games. |
+| sdl2_mixer      | https://github.com/libsdl-org/SDL_mixer      | Multichannel audio mixer for SDL2. Supports playback of music and effects in formats like WAV, MP3, Ogg, FLAC, MOD, MIDI, and Opus, enabling advanced audio in games and multimedia applications. |
+| sdl2_mixer_ext  | https://github.com/WohlSoft/SDL-Mixer-X      | Extended fork of SDL_mixer that adds support for more audio formats, advanced playback, cross-fade, multiple streams, and greater customization of MIDI backends and effects. |
+| sdl2_net        | https://github.com/libsdl-org/SDL_net/        | Cross-platform networking library for SDL2, provides a simple API for TCP/IP socket usage and facilitates network communication in games and applications. |
+| sdl2_ttf        | https://github.com/libsdl-org/SDL_ttf         | Library for rendering TrueType (.ttf) fonts in SDL2 using FreeType and HarfBuzz. Allows displaying text with custom fonts in games and applications. |
+
+| sdl3             | https://www.libsdl.org                         | Simple DirectMedia Layer 3.0: cross-platform library for game and multimedia development. Provides access to graphics, audio, input, and more, with modern and cross-platform support. |
+| sdl3_image        | https://github.com/libsdl-org/SDL_image        | Library for SDL3 that allows loading images in many formats (BMP, PNG, JPEG, GIF, TIFF, WebP, AVIF, SVG, etc.) as SDL surfaces. Makes graphics integration easy in modern applications and games. |
+| sdl3_ttf          | https://github.com/libsdl-org/SDL_ttf          | Library for rendering TrueType (.ttf) fonts in SDL3 using FreeType and HarfBuzz. Allows displaying text with custom fonts in modern games and applications. |
+| sdl_gfx           | https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/ | Graphics primitives and support functions library for SDL1.2. Allows drawing lines, circles, polygons, performing rotozoom, controlling framerate, and applying image filters in software. |
+| sdl_image         | https://github.com/libsdl-org/SDL_image        | Library for SDL1.2 that allows loading images in multiple formats (BMP, PNG, JPEG, GIF, TIFF, WebP, etc.) as SDL surfaces. Makes graphics integration easy in classic applications and games. |
+| soloud            | https://solhsa.com/soloud/                    | Easy-to-use, portable, and free C/C++ audio engine for games. Allows playing, mixing, and manipulating sounds with multiple voices, filters, effects, 3D audio, and support for various formats. zlib/libpng license. |
+| speexdsp          | https://speex.org/                            | Audio signal processing (DSP) library for Speex, includes echo cancellation, noise reduction, and voice preprocessing. Used in VoIP and real-time communication applications. |
+| libsodium         | https://libsodium.org/                        | Modern, easy-to-use, portable cryptography library designed to replace NaCl. Provides secure cryptographic primitives for encryption, signatures, hashing, and authentication, widely used in secure software and networks. |
+| minizip           | https://github.com/nmoinvaz/minizip           | C library for creating, reading, and modifying PKWARE-compatible ZIP files. Derived from zlib, supports compression, encryption, and standard ZIP file handling. |
+| openssl-1.1.1     | https://www.openssl.org/                      | Version 1.1.1 of OpenSSL, widely used cryptography and SSL/TLS toolkit for secure communications, encryption, and digital certificate management. |
+| sdl_mixer         | https://www.libsdl.org/projects/SDL_mixer/    | Multichannel audio mixing library for SDL 1.2. Allows playback of music and effects in various formats (WAV, MP3, Ogg, MOD, MIDI, etc.) in classic games and multimedia applications. |
+| sdl_net           | https://www.libsdl.org/projects/SDL_net/      | Cross-platform networking library for SDL 1.2. Simplifies TCP/IP socket usage and network communication in old games and applications. |
+| sdl_ttf           | https://www.libsdl.org/projects/SDL_ttf/      | Library for rendering TrueType (.ttf) fonts in SDL 1.2 using FreeType. Allows displaying text with custom fonts in classic games and applications. |
+| unrar             | https://www.rarlab.com/rar_add.htm            | Library and utilities for extracting RAR files. Allows extracting files from RAR archives on multiple platforms. |
+| taihen            | https://github.com/yifanlu/taiHEN             | CFW framework for PS Vita that allows loading plugins, applying system patches, and disabling signatures. Foundation of the modern homebrew scene, with API for plugin developers and kernel/user support. |
+| taipool           | https://github.com/Rinnegatamante/taipool     | Minimalist mempool library for user plugins in taiHEN. Allows memory management in environments without malloc/free using stacks of uninitialized threads. |
