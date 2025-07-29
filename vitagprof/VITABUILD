@@ -1,0 +1,17 @@
+pkgname=vitagprof
+pkgver=1.0.1
+pkgrel=1
+url="https://github.com/Aztorius/vita-gprof"
+source=("https://github.com/Aztorius/vita-gprof/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('bfd9ed4867277662c7612da397cb39f1d5c0a26d37394843c2acb5c2c1670dec')
+
+build() {
+  cd vita-gprof-$pkgver
+  cmake -B build .
+  cmake --build build
+}
+
+package () {
+  cd vita-gprof-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
