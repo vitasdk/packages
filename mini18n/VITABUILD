@@ -1,0 +1,22 @@
+pkgname=mini18n
+pkgver=0.2.1
+pkgrel=1
+gitrev=1850682c1e56e93d04b0f352946c01dab475f88a
+url="https://github.com/bucanero/mini18n/"
+source=("git+https://github.com/bucanero/${pkgname}#commit=${gitrev}")
+sha256sums=('SKIP')
+
+prepare() {
+  mkdir -p "$pkgname/build"
+}
+
+build() {
+  cd ${pkgname}/build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release
+  make -j$(nproc) mini18n-static
+}
+
+package () {
+  cd "$pkgname/build"
+  make DESTDIR=$pkgdir install
+}
