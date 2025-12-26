@@ -1,25 +1,25 @@
 pkgname=libarchive
-pkgver=3.3.2
-pkgrel=3
+pkgver=3.8.4
+pkgrel=1
 url="https://www.libarchive.org/"
-source=("https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz" "libarchive-3.3.2-vita.patch")
-sha256sums=('22560b89d420b11a4a724877bc6672b7d7c0f239e77d42a39dcc5a9c3b28db82' 'SKIP')
+source=("https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz" "libarchive.patch")
+sha256sums=('e67100e84e95019907f8c616e3382a92f37e3389e4a8e447a1d50ea5b8e30868' 'SKIP')
 depends=('zlib')
 
 prepare() {
   cd ${pkgname}-${pkgver}
-  patch -Np1 -i "${srcdir}/libarchive-3.3.2-vita.patch"
+  patch -p1 < "../libarchive.patch"
 }
 
 build() {
-  cd ${pkgname}-${pkgver}/build
-  ./autogen.sh
-  cd ..
-  ./configure --prefix=${prefix} --host=arm-vita-eabi --disable-shared --enable-static --disable-bsdtar --disable-bsdcat --disable-bsdcpio --disable-acl --without-xml2
+  cd ${pkgname}-${pkgver}
+  mkdir _build && cd _build
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix \
+    -DBUILD_SHARED_LIBS=OFF -DENABLE_ACL=OFF -DENABLE_CAT=OFF -DENABLE_CPIO=OFF -DENABLE_CPIO=OFF -DENABLE_LIBXML2=OFF -DENABLE_TAR=OFF -DENABLE_TEST=OFF -DENABLE_UNZIP=OFF
   make -j$(nproc)
 }
 
 package () {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}-${pkgver}/_build
   make DESTDIR=$pkgdir install
 }

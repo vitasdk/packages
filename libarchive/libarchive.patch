@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b15be875..1c18d6ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -365,10 +365,6 @@ ENDMACRO (GENERATE_LIST_H)
+ #
+ MACRO (INSTALL_MAN __mans)
+   IF(ENABLE_INSTALL)
+-    FOREACH (_man ${ARGV})
+-      STRING(REGEX REPLACE "^.+[.]([1-9])" "\\1" _mansect ${_man})
+-      INSTALL(FILES ${_man} DESTINATION "share/man/man${_mansect}")
+-    ENDFOREACH (_man)
+   ENDIF(ENABLE_INSTALL)
+ ENDMACRO (INSTALL_MAN __mans)
+ #
+diff --git a/libarchive/archive_read_support_filter_program.c b/libarchive/archive_read_support_filter_program.c
+index 2c8e4530..208f5dd1 100644
+--- a/libarchive/archive_read_support_filter_program.c
++++ b/libarchive/archive_read_support_filter_program.c
+@@ -57,7 +57,13 @@
+ #include "archive_read_private.h"
+ #include "filter_fork.h"
+ 
+-
++#ifdef __vita__
++int
++__archive_read_program(struct archive_read_filter *self, const char *cmd)
++{
++	return (ARCHIVE_OK);
++}
++#else
+ #if ARCHIVE_VERSION_NUMBER < 4000000
+ /* Deprecated; remove in libarchive 4.0 */
+ int
+@@ -490,3 +496,4 @@ program_filter_close(struct archive_read_filter *self)
+ 
+ 	return (e);
+ }
++#endif
+diff --git a/libarchive/archive_write_set_format_iso9660.c b/libarchive/archive_write_set_format_iso9660.c
+index c275c1ec..a55148dd 100644
+--- a/libarchive/archive_write_set_format_iso9660.c
++++ b/libarchive/archive_write_set_format_iso9660.c
+@@ -2511,7 +2511,7 @@ get_gmoffset(struct tm *tm)
+ 
+ #if defined(HAVE__GET_TIMEZONE)
+ 	_get_timezone(&offset);
+-#elif defined(__CYGWIN__) || defined(__MINGW32__) || defined(__BORLANDC__)
++#elif defined(__CYGWIN__) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__vita__)
+ 	offset = _timezone;
+ #else
+ 	offset = timezone;
