@@ -1,11 +1,11 @@
 diff --git a/vp8/common/generic/systemdependent.c b/vp8/common/generic/systemdependent.c
-index cd1b02c..a6959fc 100644
+index 58c778aba..fbcb06336 100644
 --- a/vp8/common/generic/systemdependent.c
 +++ b/vp8/common/generic/systemdependent.c
-@@ -40,7 +40,9 @@ static int get_cpu_count() {
+@@ -38,7 +38,9 @@ static int get_cpu_count(void) {
    int core_count = 16;
  
- #if HAVE_UNISTD_H && !defined(__OS2__)
+ #if HAVE_UNISTD_H
 -#if defined(_SC_NPROCESSORS_ONLN)
 +#if defined(__vita__)
 +  core_count = 3;
