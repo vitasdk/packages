@@ -1,15 +1,15 @@
 pkgname=box2d
-pkgver=2.4.2
+pkgver=3.1.1
 pkgrel=1
 url="https://box2d.org/"
 source=("https://github.com/erincatto/box2d/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('85b9b104d256c985e6e244b4227d447897fac429071cc114e5cc819dae848852')
+sha256sums=('fb6ef914b50f4312d7d921a600eabc12318bb3c55a0b8c0b90608fa4488ef2e4')
 
 build() {
   cd box2d-$pkgver
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix \
-    -DCMAKE_BUILD_TYPE=Release -DBOX2D_BUILD_DOCS=OFF -DBOX2D_BUILD_UNIT_TESTS=OFF -DBOX2D_BUILD_TESTBED=OFF
+    -DCMAKE_BUILD_TYPE=Release -DBOX2D_SAMPLES=OFF -DBOX2D_VALIDATE=OFF -DBOX2D_UNIT_TESTS=OFF
   make -j$(nproc)
 }
 
