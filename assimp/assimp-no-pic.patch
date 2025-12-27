@@ -1,18 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75b160c6f..04766510e 100644
+index cd8f51537..1257dc549 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -260,7 +260,7 @@ ENDIF()
+@@ -312,7 +312,7 @@ ENDIF()
  # Grouped compiler settings ########################################
- IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT MINGW)
+ IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT MINGW AND NOT HAIKU)
    IF(NOT ASSIMP_HUNTER_ENABLED)
 -    SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 +    SET(CMAKE_POSITION_INDEPENDENT_CODE OFF)
    ENDIF()
-   
-   IF(CMAKE_CXX_COMPILER_VERSION GREATER_EQUAL 13)
-@@ -296,7 +296,7 @@ ELSEIF(MSVC)
-   SET(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG:FULL /PDBALTPATH:%_PDB% /OPT:REF /OPT:ICF")
+ 
+   IF(CMAKE_CXX_COMPILER_VERSION GREATER_EQUAL 13 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+@@ -358,7 +358,7 @@ ELSEIF(MSVC)
+ 
  ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
    IF(NOT ASSIMP_HUNTER_ENABLED)
 -    SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -20,7 +20,7 @@ index 75b160c6f..04766510e 100644
    ENDIF()
    SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall -Wno-long-long ${CMAKE_CXX_FLAGS}" )
    SET(CMAKE_C_FLAGS "-fno-strict-aliasing ${CMAKE_C_FLAGS}")
-@@ -308,7 +308,7 @@ ELSEIF( MINGW )
+@@ -370,7 +370,7 @@ ELSEIF( MINGW )
    ENDIF()
    IF(NOT ASSIMP_HUNTER_ENABLED)
      SET(CMAKE_CXX_FLAGS "-std=gnu++17 ${CMAKE_CXX_FLAGS}")
@@ -28,4 +28,4 @@ index 75b160c6f..04766510e 100644
 +    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
    ENDIF()
      IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
-       SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall -Wno-long-long -Wa,-mbig-obj -g ${CMAKE_CXX_FLAGS}")
+       SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wno-dangling-reference -Wall -Wno-long-long -Wa,-mbig-obj -g ${CMAKE_CXX_FLAGS}")

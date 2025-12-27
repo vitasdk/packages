@@ -1,9 +1,9 @@
 pkgname=freetype
-pkgver=2.13.2
+pkgver=2.14.1
 pkgrel=1
 url="https://freetype.org/"
-source=("https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.gz")
-sha256sums=('1ac27e16c134a7f2ccea177faba19801131116fd682efc1f5737037c5db224b5')
+source=("https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.xz")
+sha256sums=('32427e8c471ac095853212a37aef816c60b42052d4d9e48230bab3bdf2936ccc')
 depends=('bzip2 libpng zlib')
 
 build() {

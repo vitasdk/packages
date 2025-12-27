@@ -1,9 +1,9 @@
 pkgname=assimp
-pkgver=5.4.3
+pkgver=6.0.2
 pkgrel=1
 url="https://www.assimp.org/"
 source=("https://github.com/assimp/assimp/archive/refs/tags/v${pkgver}.tar.gz" "assimp-no-pic.patch")
-sha256sums=("66dfbaee288f2bc43172440a55d0235dfc7bf885dda6435c038e8000e79582cb" "434e8fb03c3af8635db11ded994ebe907083cdd5e593b860663970f0d58e2414")
+sha256sums=("d1822d9a19c9205d6e8bc533bf897174ddb360ce504680f294170cc1d6319751" "SKIP")
 depends=('minizip zlib')
 
 prepare() {

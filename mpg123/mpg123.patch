@@ -1,9 +1,9 @@
-diff -Naur mpg123-1.25.10-old/configure.ac mpg123-1.25.10/configure.ac
---- mpg123-1.25.10-old/configure.ac	2017-08-29 01:49:00.661996762 +0200
-+++ mpg123-1.25.10/configure.ac	2017-08-29 01:49:41.609026671 +0200
-@@ -1217,6 +1217,20 @@
- #	AC_DEFINE( 
- #fi
+diff --color -Naur mpg123-1.33.3.orig/configure.ac mpg123-1.33.3/configure.ac
+--- mpg123-1.33.3.orig/configure.ac	2025-10-05 22:59:02.000000000 +0200
++++ mpg123-1.33.3/configure.ac	2025-10-21 14:49:00.629579286 +0200
+@@ -1582,6 +1582,20 @@
+ # Optionally use platform macros for byte swapping.
+ AC_CHECK_HEADERS([byteswap.h])
  
 +if test x"$ac_cv_header_sys_signal_h" = xyes; then
 +	AC_CHECK_FUNCS( sigemptyset sigaddset sigprocmask sigaction )
@@ -22,94 +22,22 @@ diff -Naur mpg123-1.25.10-old/configure.ac mpg123-1.25.10/configure.ac
  dnl ############## Choose compiler flags and CPU
  
  # do not assume gcc here, so no flags by default
-diff -Naur mpg123-1.25.10-old/src/compat/compat.c mpg123-1.25.10/src/compat/compat.c
---- mpg123-1.25.10-old/src/compat/compat.c	2017-08-29 01:49:00.675330213 +0200
-+++ mpg123-1.25.10/src/compat/compat.c	2017-08-29 01:50:35.966177221 +0200
-@@ -45,6 +45,15 @@
- #  endif
+diff --color -Naur mpg123-1.33.3.orig/src/compat/compat.c mpg123-1.33.3/src/compat/compat.c
+--- mpg123-1.33.3.orig/src/compat/compat.c	2025-10-05 22:59:02.000000000 +0200
++++ mpg123-1.33.3/src/compat/compat.c	2025-10-21 15:10:38.369364458 +0200
+@@ -520,7 +520,7 @@
+ 
+ #ifdef DONT_CATCH_SIGNALS
+ 	fprintf (stderr, "Not catching any signals.\n");
+-	return ((void (*)()) -1);
++	return ((void (*)(int)) -1);
  #endif
  
-+/* vitasdk support */
-+#ifdef PSP2
-+#  include <psp2/io/dirent.h>
-+#  include <psp2/io/stat.h>
-+
-+#  define opendir sceIoDopen
-+#  define closedir sceIoDclose
-+#endif
-+
- #include "debug.h"
- 
- #ifndef WINDOWS_UWP
-@@ -423,6 +432,8 @@
- 	int gotone; /* Got a result stored from FindFirstFileW. */
- 	WIN32_FIND_DATAW d;
- 	HANDLE ffn;
-+#elif PSP2
-+	int dir;
- #else
- 	DIR* dir;
- #endif
-@@ -509,15 +520,25 @@
- 	}
- #else
- 	{
-+#ifdef PSP2
-+		struct SceIoDirent dp;
-+		while (sceIoDread(cd->dir, &dp) > 0)
-+#else
- 		struct dirent *dp;
- 		while((dp = readdir(cd->dir)))
-+#endif
- 		{
- 			struct stat fst;
--			char *fullpath = compat_catpath(cd->path, dp->d_name);
-+#ifdef PSP2
-+			char *d_name = dp.d_name;
-+#else
-+			char *d_name = dp->d_name;
-+#endif
-+			char *fullpath = compat_catpath(cd->path, d_name);
- 			if(fullpath && !stat(fullpath, &fst) && S_ISREG(fst.st_mode))
- 			{
- 				free(fullpath);
--				return compat_strdup(dp->d_name);
-+				return compat_strdup(d_name);
- 			}
- 			free(fullpath);
- 		}
-@@ -543,15 +564,25 @@
- 	}
- #else
- 	{
-+#ifdef PSP2
-+		struct SceIoDirent dp;
-+		while (sceIoDread(cd->dir, &dp) > 0)
-+#else
- 		struct dirent *dp;
- 		while((dp = readdir(cd->dir)))
-+#endif
- 		{
- 			struct stat fst;
--			char *fullpath = compat_catpath(cd->path, dp->d_name);
-+#ifdef PSP2
-+			char *d_name = dp.d_name;
-+#else
-+			char *d_name = dp->d_name;
-+#endif
-+			char *fullpath = compat_catpath(cd->path, d_name);
- 			if(fullpath && !stat(fullpath, &fst) && S_ISDIR(fst.st_mode))
- 			{
- 				free(fullpath);
--				return compat_strdup(dp->d_name);
-+				return compat_strdup(d_name);
- 			}
- 			free(fullpath);
- 		}
-diff -Naur mpg123-1.25.10-old/src/compat/compat.h mpg123-1.25.10/src/compat/compat.h
---- mpg123-1.25.10-old/src/compat/compat.h	2017-08-29 01:49:00.675330213 +0200
-+++ mpg123-1.25.10/src/compat/compat.h	2017-08-29 01:50:34.099493907 +0200
-@@ -85,7 +85,8 @@
+ 	new_sa.sa_handler = handler;
+diff --color -Naur mpg123-1.33.3.orig/src/compat/compat.h mpg123-1.33.3/src/compat/compat.h
+--- mpg123-1.33.3.orig/src/compat/compat.h	2025-10-05 22:59:02.000000000 +0200
++++ mpg123-1.33.3/src/compat/compat.h	2025-10-21 14:49:00.630023566 +0200
+@@ -94,7 +94,8 @@
  #include <sys/time.h>
  #endif
  /* For select(), I need select.h according to POSIX 2001, else: sys/time.h sys/types.h unistd.h */
@@ -119,12 +47,12 @@ diff -Naur mpg123-1.25.10-old/src/compat/compat.h mpg123-1.25.10/src/compat/comp
  #include <sys/select.h>
  #endif
  
-diff -Naur mpg123-1.25.10-old/src/control_generic.c mpg123-1.25.10/src/control_generic.c
---- mpg123-1.25.10-old/src/control_generic.c	2017-08-29 01:49:00.668663487 +0200
-+++ mpg123-1.25.10/src/control_generic.c	2017-08-29 01:50:15.649329482 +0200
-@@ -28,8 +28,10 @@
+diff --color -Naur mpg123-1.33.3.orig/src/control_generic.c mpg123-1.33.3/src/control_generic.c
+--- mpg123-1.33.3.orig/src/control_generic.c	2025-10-05 22:59:02.000000000 +0200
++++ mpg123-1.33.3/src/control_generic.c	2025-10-21 14:49:00.630277569 +0200
+@@ -29,8 +29,10 @@
  #include <ctype.h>
- #if !defined (WIN32) || defined (__CYGWIN__)
+ #if !defined (_WIN32) || defined (__CYGWIN__)
  #include <sys/wait.h>
 +#ifdef NETWORK
  #include <sys/socket.h>
@@ -133,24 +61,22 @@ diff -Naur mpg123-1.25.10-old/src/control_generic.c mpg123-1.25.10/src/control_g
  #include <errno.h>
  #include <string.h>
  
-@@ -311,8 +313,11 @@
-  		outstream = stderr;
-  	else
-  		outstream = stdout;
-- 		
--#ifndef WIN32
-+
-+#if defined(GEKKO) || defined(_3DS)
+@@ -408,7 +410,10 @@
+ 		outstream = stdout;
+ 		out_is_term = stdout_is_term;
+ 	}
+-#ifndef _WIN32
++#if defined(GEKKO) || defined(_3DS) || defined(__SWITCH__)
 +	fprintf(outstream, "The control interface is not supported on this platform\n");
 +	return 0;
 +#elif !defined(WIN32)
   	setlinebuf(outstream);
  #else /* perhaps just use setvbuf as it's C89 */
  	/*
-diff -Naur mpg123-1.25.10-old/src/mpg123.c mpg123-1.25.10/src/mpg123.c
---- mpg123-1.25.10-old/src/mpg123.c	2017-08-29 01:49:00.668663487 +0200
-+++ mpg123-1.25.10/src/mpg123.c	2017-08-29 01:49:54.475807710 +0200
-@@ -1239,6 +1239,8 @@
+diff --color -Naur mpg123-1.33.3.orig/src/mpg123.c mpg123-1.33.3/src/mpg123.c
+--- mpg123-1.33.3.orig/src/mpg123.c	2025-10-05 22:59:02.000000000 +0200
++++ mpg123-1.33.3/src/mpg123.c	2025-10-21 14:49:00.630634577 +0200
+@@ -1341,6 +1341,8 @@
  			if(param.verbose > 2) fprintf(stderr, "Note: pausing %i seconds before next track.\n", param.delay);
  #ifdef WIN32
  			Sleep(param.delay*1000);

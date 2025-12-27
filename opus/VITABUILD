@@ -1,9 +1,9 @@
 pkgname=opus
-pkgver=1.5.2
+pkgver=1.6
 pkgrel=1
 url="https://opus-codec.org/"
 source=("https://downloads.xiph.org/releases/opus/opus-${pkgver}.tar.gz")
-sha256sums=('65c1d2f78b9f2fb20082c38cbe47c951ad5839345876e46941612ee87f9a7ce1')
+sha256sums=('b7637334527201fdfd6dd6a02e67aceffb0e5e60155bbd89175647a80301c92c')
 
 prepare() {
   cd $pkgname-$pkgver

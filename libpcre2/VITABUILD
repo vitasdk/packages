@@ -1,24 +1,24 @@
 pkgname=libpcre2
-pkgver=10.40
+pkgver=10.47
 pkgrel=1
 url='https://www.pcre.org/'
-source=("https://github.com/PhilipHazel/pcre2/releases/download/pcre2-${pkgver}/pcre2-${pkgver}.tar.gz")
-sha256sums=('ded42661cab30ada2e72ebff9e725e745b4b16ce831993635136f2ef86177724')
+source=("https://github.com/PhilipHazel/pcre2/releases/download/pcre2-${pkgver}/pcre2-${pkgver}.tar.gz" "libpcre2.patch")
+sha256sums=('c08ae2388ef333e8403e670ad70c0a11f1eed021fd88308d7e02f596fcd9dc16' 'SKIP')
+
+prepare() {
+  cd pcre2-$pkgver
+  patch -p1 < ../libpcre2.patch
+}
 
 build() {
   cd pcre2-$pkgver
-
-  # Disable building programs & tests.
-  sed -i 's/^bin_PROGRAMS = .*//' Makefile.in
-  sed -i 's/^TESTS = .*//' Makefile.in
-  sed -i 's/^noinst_PROGRAMS = .*//' Makefile.in
-
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --enable-pcre2-16 --enable-pcre2-32
-
+  mkdir build && cd build
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake \
+           -DPCRE2_BUILD_PCRE2_16=ON -DPCRE2_BUILD_PCRE2_32=ON -DPCRE2_BUILD_TESTS=OFF -DPCRE2_BUILD_PCRE2GREP=OFF
   make -j$(nproc)
 }
 
 package() {
-  cd pcre2-$pkgver
+  cd pcre2-$pkgver/build
   make DESTDIR="$pkgdir" install
 }
