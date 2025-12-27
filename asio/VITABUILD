@@ -1,7 +1,7 @@
 pkgname=asio
-pkgver=1.28.0
-pkgrel=1
-_commit='4bcf552fcea3e1ae555dde2ab33bc9fa6770da4d'
+pkgver=1.19.2
+pkgrel=2
+_commit='cfbe961e2d6e2978d5e081231e4f798df46437c5'
 url="https://think-async.com/Asio/"
 source=("git+https://github.com/diasurgical/${pkgname}.git#commit=${_commit}")
 sha256sums=('SKIP')
