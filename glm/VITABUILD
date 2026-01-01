@@ -1,9 +1,9 @@
 pkgname=glm
-pkgver=1.0.2
+pkgver=1.0.3
 pkgrel=1
 url="https://github.com/g-truc/glm"
 source=("https://github.com/g-truc/glm/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('19edf2e860297efab1c74950e6076bf4dad9de483826bc95e2e0f2c758a43f65')
+sha256sums=('6775e47231a446fd086d660ecc18bcd076531cfedd912fbd66e576b118607001')
 
 build() {
   cd glm-$pkgver
