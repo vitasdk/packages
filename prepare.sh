@@ -1,6 +1,5 @@
 #!/bin/bash
 
-sudo apt-get install sshpass bsdtar xutils-dev
 mkdir -p ~/.ssh/
 touch ~/.ssh/known_hosts
 echo "|1|K7QZQZJexBCVdpiZ9eTIRbn7ZyA=|uP3PBfEWXFeesWyVtr8kdAbYGsM= ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDe/4u7lBdfESLXtU1abKORjOUHRql1sjNeUQHqAfOCUsuxR6LFhOP3vuOe1/473xr8u6JOj8E8XtA4nREv6jXhscV/Q/+/VeLKTWWYw+CQNt+Lz4/WSzq9lb5NQK0aMDds1VD6x2h26SVtSGehz9niwIhEDMvtvOzxRBmZhCqj2gE+OIJ3FGUmxIWuAncA8B6ZfMAjqcv30s5fzZwUacjr5WXnEmdo4C/vsTSpJUPaSpt1qGkrqHeWCJfnM27XWTFQVx/ZMk+bFycptNGVhHOf5Yqtj4e/FdVeHBvmJTFsHLgdp+YZiWkK7WsWeVmjcBR1kOAefdafi513sCxmdXeF" >> ~/.ssh/known_hosts

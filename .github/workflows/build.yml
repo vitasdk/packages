@@ -37,8 +37,11 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
+        : # libarchive-tools provides bsdtar
+        : # libtool-bin is required to build libtremor
+        : # xutils-dev is required to build openssl
         sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools xutils-dev
+        sudo apt-get install libarchive-tools libtool-bin xutils-dev
     - name: Prepare Build
       run: |
         bash ./prepare.sh
@@ -80,8 +83,11 @@ jobs:
         merge-multiple: true
     - name: Install dependencies
       run: |
+        : # libarchive-tools provides bsdtar
+        : # libc6-dev-i386 is required to build luajit
+        : # python2.7 is required to build cpython
         sudo apt-get update
-        sudo apt-get install fakeroot cmake cmake-data texinfo libtool-bin libarchive-tools pkg-config libc6-dev-i386 python2.7
+        sudo apt-get install libarchive-tools libc6-dev-i386 python2.7
     - uses: actions/setup-python@v5
       with:
         python-version: '3.11'
