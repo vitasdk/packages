@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     container: node:lts
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install dependencies
         id: set-matrix
         run: |
@@ -34,7 +34,7 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Install dependencies
       run: |
         : # libarchive-tools provides bsdtar
@@ -54,7 +54,7 @@ jobs:
       run: |
         export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
         mv $FILE ${{ matrix.package }}/${{ matrix.package }}.tar.xz
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: ${{ matrix.package }}
         path: ${{ matrix.package }}/${{ matrix.package }}.tar.xz
@@ -70,13 +70,13 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Generate actions/download-artifact pattern
       id: generate-download-artifact-pattern
       run: |
         PATTERN=`echo ${{ matrix.package }} | awk 'NF{NF-=1};1' | tr ' ' '|' | awk '{ print "@(" $0 ")" }'`
         echo "PATTERN=$PATTERN" >> $GITHUB_OUTPUT
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v7
       with:
         path: package
         pattern: ${{ steps.generate-download-artifact-pattern.outputs.PATTERN }}
@@ -88,7 +88,7 @@ jobs:
         : # python2.7 is required to build cpython
         sudo apt-get update
         sudo apt-get install libarchive-tools libc6-dev-i386 python2.7
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       with:
         python-version: '3.11'
     - name: Prepare Build
@@ -107,7 +107,7 @@ jobs:
       run: |
         export FILE=`echo ${{ env.PACKAGE }}/*-arm.tar.xz`
         mv $FILE ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: ${{ env.PACKAGE }}
         path: ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
@@ -115,8 +115,8 @@ jobs:
       needs: [prepare_jobs, build, build_depends]
       runs-on: ubuntu-latest
       steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v7
         with:
           path: package
           merge-multiple: true
