@@ -1,17 +1,18 @@
 pkgname=xz
 pkgver=5.8.2
-pkgrel=1
+pkgrel=2
 url="https://tukaani.org/xz/"
 source=("https://github.com/tukaani-project/xz/releases/download/v${pkgver}/xz-${pkgver}.tar.gz")
 sha256sums=('ce09c50a5962786b83e5da389c90dd2c15ecd0980a258dd01f70f9e7ce58a8f1')
 
 build() {
   cd ${pkgname}-${pkgver}
-  ./configure --prefix=${prefix} --host=arm-vita-eabi --disable-xz --disable-xzdec --disable-lzmadec --disable-lzmainfo --disable-lzma-links --disable-scripts --disable-doc
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_TESTING=OFF -DXZ_DOC=OFF -DXZ_TOOL_LZMADEC=OFF -DXZ_TOOL_LZMAINFO=OFF -DXZ_TOOL_XZ=OFF -DXZ_TOOL_XZDEC=OFF
   make -j$(nproc)
 }
 
 package () {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}-${pkgver}/build
   make DESTDIR=$pkgdir install
 }
