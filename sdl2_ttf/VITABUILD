@@ -1,11 +1,11 @@
 pkgname=sdl2_ttf
-pkgver=2.20.2
-pkgrel=2
+pkgver=2.24.0
+pkgrel=1
 url="https://github.com/libsdl-org/SDL_ttf"
 source=("https://github.com/libsdl-org/SDL_ttf/releases/download/release-${pkgver}/SDL2_ttf-${pkgver}.tar.gz"
         "pkg-config-fix.patch")
-sha256sums=("9dc71ed93487521b107a2c4a9ca6bf43fb62f6bddd5c26b055e6b91418a22053"
-            "799aef6bd3f30cfc0e61470499fc63048292050dceb9885c25e599470c9f192e")
+sha256sums=("0b2bf1e7b6568adbdbc9bb924643f79d9dedafe061fa1ed687d1d9ac4e453bfd"
+            "40f84dc3a518bcb6f170cd9c92ce30dd76fda5a8e59ae6776910c540df1ec852")
 depends=('sdl2 freetype harfbuzz')
 
 prepare() {
