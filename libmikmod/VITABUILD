@@ -1,15 +1,15 @@
 pkgname=libmikmod
-pkgver=3.3.11
+pkgver=3.3.13
 pkgrel=1
 url="https://mikmod.sourceforge.net/"
-source=("git+https://github.com/usineur/mikmod.git#branch=vita")
+source=("git+https://github.com/sezero/mikmod.git#commit=6b9bab2460052156de6a2a847fd14e51b187061a")
 sha256sums=('SKIP')
 
 build() {
   cd mikmod/libmikmod/
   mkdir build
   cd build
-  cmake -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DENABLE_VITA=1 ..
+  cmake -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DENABLE_SHARED=OFF -DENABLE_DOC=OFF ..
   make -j$(nproc)
 }
 
