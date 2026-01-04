@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b0e1cfe6c..a844a251b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -644,6 +644,7 @@ set(PNG_LIBRARY_TARGETS "")
+ 
+ # Initialize the libpng library file names.
+ if(UNIX
++   OR VITA
+    OR (WIN32 AND NOT CMAKE_SHARED_LIBRARY_PREFIX STREQUAL "")
+    OR (WIN32 AND NOT CMAKE_STATIC_LIBRARY_PREFIX STREQUAL ""))
+   # We are on a Unix or Unix-like toolchain like the GNU toolchain on Windows.
