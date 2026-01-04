@@ -57,6 +57,7 @@ jobs:
       with:
         name: ${{ matrix.package }}
         path: ${{ matrix.package }}/${{ matrix.package }}.tar.xz
+        if-no-files-found: error
   build_depends:
     needs: [prepare_jobs, build]
     runs-on: ubuntu-22.04
@@ -110,6 +111,7 @@ jobs:
       with:
         name: ${{ env.PACKAGE }}
         path: ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
+        if-no-files-found: error
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
       runs-on: ubuntu-latest
