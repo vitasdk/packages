@@ -47,7 +47,7 @@ jobs:
     - name: Build package
       run: |
         export VITASDK=/usr/local/vitasdk
-        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
+        export PATH=$VITASDK/bin:$PATH
         bash ./build.sh ${{ matrix.package }}
     - name: Rename package
       run: |
@@ -97,7 +97,7 @@ jobs:
     - name: Install and Build packages
       run: |
         export VITASDK=/usr/local/vitasdk
-        export PATH=$(pwd)/../vita-makepkg:$VITASDK/bin:$PATH
+        export PATH=$VITASDK/bin:$PATH
         for f in ${{ matrix.package }}; do bash ./install_or_build.sh $f; done
     - name: Export package
       run: |
