@@ -1,24 +1,20 @@
 pkgname=libsndfile
-pkgver=1.0.28
+pkgver=1.2.2
 pkgrel=1
-url="http://www.mega-nerd.com/libsndfile"
-source=("http://www.mega-nerd.com/libsndfile/files/libsndfile-${pkgver}.tar.gz" "libsndfile.patch")
-sha256sums=('1ff33929f042fa333aed1e8923aa628c3ee9e1eb85512686c55092d1e5a9dfa9' '36900159b7800458ab964e0ebfc9952db7bdd7416fa6bfc43ed15873beb41c6e')
-depends=('flac libogg libvorbis')
-
-prepare() {
-  cd $pkgname-$pkgver
-  patch -Np1 -i "${srcdir}/libsndfile.patch"
-  autoreconf -fi
-}
+url="https://libsndfile.github.io/libsndfile/"
+source=("https://github.com/$pkgname/$pkgname/releases/download/$pkgver/$pkgname-$pkgver.tar.xz")
+sha256sums=('3799ca9924d3125038880367bf1468e53a1b7e3686a934f098b7e1d286cdb80e')
+depends=('flac lame libogg libvorbis mpg123 opus')
 
 build() {
   cd $pkgname-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-full-suite
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix \
+   -DBUILD_EXAMPLES=OFF -DBUILD_PROGRAMS=OFF -DBUILD_TESTING=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   make -j$(nproc)
 }
 
-package () {
-  cd $pkgname-$pkgver
+package() {
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
