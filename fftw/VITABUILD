@@ -1,17 +1,18 @@
 pkgname=fftw
 pkgver=3.3.10
-pkgrel=1
+pkgrel=2
 url="https://www.fftw.org/"
 source=("https://www.fftw.org/fftw-${pkgver}.tar.gz")
 sha256sums=('56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467')
 
 build() {
   cd fftw-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-fortran --without-g77-wrappers
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DDISABLE_FORTRAN=ON
   make -j$(nproc)
 }
 
 package () {
-  cd fftw-$pkgver
+  cd fftw-$pkgver/build
   make DESTDIR=$pkgdir install
 }

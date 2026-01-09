@@ -1,21 +1,18 @@
 pkgname=opus
 pkgver=1.6
-pkgrel=1
+pkgrel=2
 url="https://opus-codec.org/"
 source=("https://downloads.xiph.org/releases/opus/opus-${pkgver}.tar.gz")
 sha256sums=('b7637334527201fdfd6dd6a02e67aceffb0e5e60155bbd89175647a80301c92c')
 
-prepare() {
-  cd $pkgname-$pkgver
-}
-
 build() {
   cd $pkgname-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-doc --disable-extra-programs --disable-shared --enable-static --enable-fixed-point
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DOPUS_MAY_HAVE_NEON=OFF -DOPUS_PRESUME_NEON=ON
   make -j$(nproc)
 }
 
 package () {
-  cd $pkgname-$pkgver
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }

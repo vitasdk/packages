@@ -1,17 +1,18 @@
 pkgname=jansson
 pkgver=2.14.1
-pkgrel=1
+pkgrel=2
 url="https://github.com/akheron/jansson"
 source=("https://github.com/akheron/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
 sha256sums=('2521cd51a9641d7a4e457f7215a4cd5bb176f690bc11715ddeec483e85d9e2b3')
 
 build() {
   cd $pkgname-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-simd
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DJANSSON_BUILD_DOCS=OFF -DJANSSON_EXAMPLES=OFF -DJANSSON_WITHOUT_TESTS=ON
   make -j$(nproc)
 }
 
 package () {
-  cd $pkgname-$pkgver
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
