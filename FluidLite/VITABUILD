@@ -1,7 +1,7 @@
 pkgname=FluidLite
 pkgver=1.2.2
-pkgrel=3
-_commit='7c150b021f8b7e7d4f624bbad644fd2f96e5826b'
+pkgrel=4
+_commit='4a01cf1c67419e71da971d209f2855bbf4f3bab8'
 url="https://github.com/divideconcept/FluidLite/"
 source=("git+https://github.com/divideconcept/${pkgname}.git#commit=${_commit}")
 sha256sums=('SKIP')
