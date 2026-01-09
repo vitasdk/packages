@@ -1,5 +1,5 @@
 pkgname=sdl3_ttf
-pkgver=3.2.0
+pkgver=3.2.2
 pkgrel=1
 license=('Zlib')
 url="https://github.com/libsdl-org/SDL_ttf"
@@ -8,7 +8,7 @@ source=(
     "pkg-config-fix.patch"
 )
 sha256sums=(
-    "9a741defb7c7d6dff658d402cb1cc46c1409a20df00949e1572eb9043102eb62"
+    "63547d58d0185c833213885b635a2c0548201cc8f301e6587c0be1a67e1e045d"
     "5c13ff3faa6ad0a650a93d890068c69532b606f67909d5fb1af1eabd90d94e59"
 )
 depends=('sdl3 freetype harfbuzz')
