@@ -115,14 +115,13 @@ jobs:
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
       runs-on: ubuntu-latest
+      if: contains(github.ref,'refs/heads/master')
       steps:
-      - uses: actions/checkout@v6
       - uses: actions/download-artifact@v7
         with:
           path: package
           merge-multiple: true
       - name: Upload release assets
-        if: contains(github.ref,'refs/heads/master')
         run: gh release upload master package/*.tar.xz --clobber
         env:
           GITHUB_TOKEN: ${{ github.token }}
