@@ -1,4 +1,4 @@
-pkgname=libzstd
+pkgname=zstd
 pkgver=1.5.7
 pkgrel=1
 url='https://facebook.github.io/zstd/'

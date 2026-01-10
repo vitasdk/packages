@@ -1,4 +1,4 @@
-pkgname=libfribidi
+pkgname=fribidi
 pkgver=1.0.16
 pkgrel=1
 url="https://github.com/fribidi/fribidi"

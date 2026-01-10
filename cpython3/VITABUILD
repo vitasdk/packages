@@ -1,4 +1,4 @@
-pkgname=cpython
+pkgname=cpython3
 pkgver=3.11
 pkgrel=1
 url="https://github.com/SonicMastr/cpython-vita"
