@@ -1,24 +1,8 @@
-diff --git a/libxmp.pc.in b/libxmp.pc.in
-index 665b6be..19de923 100644
---- a/libxmp.pc.in
-+++ b/libxmp.pc.in
-@@ -1,7 +1,7 @@
--prefix=@prefix@
--exec_prefix=@exec_prefix@
--libdir=@libdir@
--includedir=@includedir@
-+prefix=${VITASDK}/arm-vita-eabi
-+exec_prefix=${prefix}
-+libdir=${prefix}/lib
-+includedir=${prefix}/include
- 
- Name: libxmp
- Description: Xmp module player library
 diff --git a/src/tempfile.c b/src/tempfile.c
-index 6b05820..587d655 100644
+index ac7af63b..8bb3a33c 100644
 --- a/src/tempfile.c
 +++ b/src/tempfile.c
-@@ -99,6 +99,14 @@ static int get_temp_dir(char *buf, size_t size)
+@@ -103,6 +103,14 @@ static int get_temp_dir(char *buf, size_t size)
  
  	return 0;
  }
@@ -33,7 +17,7 @@ index 6b05820..587d655 100644
  
  #else /* unix */
  
-@@ -118,6 +126,31 @@ static int get_temp_dir(char *buf, size_t size)
+@@ -122,6 +130,31 @@ static int get_temp_dir(char *buf, size_t size)
  #endif
  
  
@@ -65,7 +49,7 @@ index 6b05820..587d655 100644
  FILE *make_temp_file(char **filename) {
  	char tmp[XMP_MAXPATH];
  	FILE *temp;
-@@ -150,6 +183,8 @@ FILE *make_temp_file(char **filename) {
+@@ -154,6 +187,8 @@ FILE *make_temp_file(char **filename) {
  	return NULL;
  }
  

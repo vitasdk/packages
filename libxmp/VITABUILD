@@ -1,13 +1,13 @@
 pkgname=libxmp
 pkgver=4.6.3
-pkgrel=1
+pkgrel=2
 url="https://github.com/libxmp/libxmp"
-source=("https://github.com/libxmp/libxmp/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz" "vita.patch")
-sha256sums=('b189a2ff3f3eef0008512e0fb27c2cdc27480bc1066b82590a84d02548fab96d' '28db5b694cf93d706d1e5e1176931175c4b117903ff48ac2a172da3b47cb7262')
+source=("https://github.com/libxmp/libxmp/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz" "libxmp.patch")
+sha256sums=('b189a2ff3f3eef0008512e0fb27c2cdc27480bc1066b82590a84d02548fab96d' 'a99b6206c329f30ede9ea99f589d7a7195ef0c62fc54b5b39dc6a085b8e9f96b')
 
 prepare() {
   cd $pkgname-$pkgver
-  patch -p1 < ../vita.patch
+  patch -p1 < ../libxmp.patch
 }
 
 build() {

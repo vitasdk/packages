@@ -1,23 +1,20 @@
 pkgname=sdl2_mixer
 pkgver=2.8.1
-pkgrel=1
+pkgrel=2
 license=('Zlib')
 url="https://github.com/libsdl-org/SDL_mixer"
 source=(
     "https://github.com/libsdl-org/SDL_mixer/releases/download/release-${pkgver}/SDL2_mixer-${pkgver}.tar.gz"
-    "pkg-config-fix.patch"
     "cmake.patch"
 )
 sha256sums=(
     "cb760211b056bfe44f4a1e180cc7cb201137e4d1572f2002cc1be728efd22660"
-    "ebb6ec149fed3a824542c94f102f45b33e33e38252e6441f12f922adb89fa409"
     "dc578350b4101dafd579660cc579818e830e0294360c722309d672372070f622"
 )
 
 depends=('sdl2' 'libvorbis' 'libxmp-lite' 'libmodplug' 'flac' 'opusfile')
 prepare() {
   cd "SDL2_mixer-${pkgver}"
-  patch --strip=1 --input="${srcdir}/pkg-config-fix.patch"
   patch --strip=1 --input="${srcdir}/cmake.patch"
 }
 
