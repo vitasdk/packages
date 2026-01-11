@@ -1,31 +1,8 @@
-diff --color -Naur mpg123-1.33.3.orig/configure.ac mpg123-1.33.3/configure.ac
---- mpg123-1.33.3.orig/configure.ac	2025-10-05 22:59:02.000000000 +0200
-+++ mpg123-1.33.3/configure.ac	2025-10-21 14:49:00.629579286 +0200
-@@ -1582,6 +1582,20 @@
- # Optionally use platform macros for byte swapping.
- AC_CHECK_HEADERS([byteswap.h])
- 
-+if test x"$ac_cv_header_sys_signal_h" = xyes; then
-+	AC_CHECK_FUNCS( sigemptyset sigaddset sigprocmask sigaction )
-+	if test x"$ac_cv_func_sigemptyset" = xno ||
-+	   test x"$ac_cv_func_sigaddset" = xno ||
-+	   test x"$ac_cv_func_sigprocmask" = xno ||
-+	   test x"$ac_cv_func_sigaction" = xno; then
-+		AC_DEFINE(DONT_CATCH_SIGNALS, 1, [ Signal handling is not supported on this platform ])
-+	fi
-+else
-+	AC_DEFINE(DONT_CATCH_SIGNALS, 1, [ Signal handling is not supported on this platform ])
-+fi
-+
-+AC_CHECK_FUNCS( sleep, [ have_sleep=yes ], [ have_sleep=no ] )
-+
- dnl ############## Choose compiler flags and CPU
- 
- # do not assume gcc here, so no flags by default
-diff --color -Naur mpg123-1.33.3.orig/src/compat/compat.c mpg123-1.33.3/src/compat/compat.c
---- mpg123-1.33.3.orig/src/compat/compat.c	2025-10-05 22:59:02.000000000 +0200
-+++ mpg123-1.33.3/src/compat/compat.c	2025-10-21 15:10:38.369364458 +0200
-@@ -520,7 +520,7 @@
+diff --git a/src/compat/compat.c b/src/compat/compat.c
+index 7890012..0149c41 100644
+--- a/src/compat/compat.c
++++ b/src/compat/compat.c
+@@ -520,7 +520,7 @@ void (*INT123_catchsignal(int signum, void(*handler)(int)))(int)
  
  #ifdef DONT_CATCH_SIGNALS
  	fprintf (stderr, "Not catching any signals.\n");
@@ -34,54 +11,26 @@ diff --color -Naur mpg123-1.33.3.orig/src/compat/compat.c mpg123-1.33.3/src/comp
  #endif
  
  	new_sa.sa_handler = handler;
-diff --color -Naur mpg123-1.33.3.orig/src/compat/compat.h mpg123-1.33.3/src/compat/compat.h
---- mpg123-1.33.3.orig/src/compat/compat.h	2025-10-05 22:59:02.000000000 +0200
-+++ mpg123-1.33.3/src/compat/compat.h	2025-10-21 14:49:00.630023566 +0200
-@@ -94,7 +94,8 @@
- #include <sys/time.h>
- #endif
- /* For select(), I need select.h according to POSIX 2001, else: sys/time.h sys/types.h unistd.h */
--#ifdef HAVE_SYS_SELECT_H
-+/* PSP2: Including sys/select.h results in fd_set undefined error */
-+#if defined(HAVE_SYS_SELECT_H) && !defined(PSP2)
- #include <sys/select.h>
- #endif
+diff --git a/src/libmpg123/getcpuflags_arm.c b/src/libmpg123/getcpuflags_arm.c
+index 8d0249a..920d600 100644
+--- a/src/libmpg123/getcpuflags_arm.c
++++ b/src/libmpg123/getcpuflags_arm.c
+@@ -19,6 +19,13 @@
  
-diff --color -Naur mpg123-1.33.3.orig/src/control_generic.c mpg123-1.33.3/src/control_generic.c
---- mpg123-1.33.3.orig/src/control_generic.c	2025-10-05 22:59:02.000000000 +0200
-+++ mpg123-1.33.3/src/control_generic.c	2025-10-21 14:49:00.630277569 +0200
-@@ -29,8 +29,10 @@
- #include <ctype.h>
- #if !defined (_WIN32) || defined (__CYGWIN__)
- #include <sys/wait.h>
-+#ifdef NETWORK
- #include <sys/socket.h>
- #endif
-+#endif
- #include <errno.h>
- #include <string.h>
+ extern void INT123_check_neon(void);
  
-@@ -408,7 +410,10 @@
- 		outstream = stdout;
- 		out_is_term = stdout_is_term;
- 	}
--#ifndef _WIN32
-+#if defined(GEKKO) || defined(_3DS) || defined(__SWITCH__)
-+	fprintf(outstream, "The control interface is not supported on this platform\n");
++#ifdef __vita__
++unsigned int INT123_getcpuflags(struct cpuflags* cf)
++{
++	cf->has_neon = 1;
 +	return 0;
-+#elif !defined(WIN32)
-  	setlinebuf(outstream);
- #else /* perhaps just use setvbuf as it's C89 */
- 	/*
-diff --color -Naur mpg123-1.33.3.orig/src/mpg123.c mpg123-1.33.3/src/mpg123.c
---- mpg123-1.33.3.orig/src/mpg123.c	2025-10-05 22:59:02.000000000 +0200
-+++ mpg123-1.33.3/src/mpg123.c	2025-10-21 14:49:00.630634577 +0200
-@@ -1341,6 +1341,8 @@
- 			if(param.verbose > 2) fprintf(stderr, "Note: pausing %i seconds before next track.\n", param.delay);
- #ifdef WIN32
- 			Sleep(param.delay*1000);
-+#elif !defined(HAVE_SLEEP)
-+			fprintf(stderr, "sleep not supported on this platform\n");
++}
++#else
+ #ifndef _M_ARM
+ static sigjmp_buf jmpbuf;
  #else
- 			sleep(param.delay);
- #endif
+@@ -65,3 +72,4 @@ unsigned int INT123_getcpuflags(struct cpuflags* cf)
+ 	
+ 	return 0;
+ }
++#endif
