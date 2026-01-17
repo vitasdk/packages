@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 360becc..3ff5d85 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -90,8 +90,6 @@ enable_testing()
+ 
+ 
+ add_subdirectory (sigc++)
+-add_subdirectory (examples)
+-add_subdirectory (tests)
+ 
+ 
+ set (PROJECT_CMAKE_NAME		"${PROJECT_NAME}-3")
