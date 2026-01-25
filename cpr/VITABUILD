@@ -1,6 +1,6 @@
 pkgname=cpr
 pkgver=1.14.1
-pkgrel=1
+pkgrel=2
 url="https://docs.libcpr.org/"
 source=("https://github.com/libcpr/cpr/archive/refs/tags/$pkgver.tar.gz")
 sha256sums=('213ccc7c98683d2ca6304d9760005effa12ec51d664bababf114566cb2b1e23c')
@@ -9,7 +9,7 @@ depends=('curl')
 build() {
   cd $pkgname-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCPR_USE_SYSTEM_CURL=ON -DBUILD_SHARED_LIBS=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCPR_USE_SYSTEM_CURL=ON -DCPR_FORCE_MBEDTLS_BACKEND=ON -DBUILD_SHARED_LIBS=OFF
   make -j$(nproc)
 }
 
