@@ -9,7 +9,7 @@ sha256sums=(
     c7759b68610e0df6fdcd6e46ed0f629ccc6aad31bcdb2ffa3870aeedb15c0cc9
     f5d084943d5b79e2affd3ffbde7ef4b39bde460f363de56b6a2f3e66f852ff61
 )
-depends=('sdl' 'libvorbis' 'libmikmod' 'libmodplug' 'mpg123' 'flac')
+depends=('sdl' 'libvorbis' 'libmikmod' 'libmodplug' 'mpg123' 'flac' 'libogg')
 
 prepare() {
   cd "SDL_mixer-${pkgver}"
