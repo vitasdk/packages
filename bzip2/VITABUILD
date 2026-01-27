@@ -2,8 +2,14 @@ pkgname=bzip2
 pkgver=1.0.8
 pkgrel=1
 url="https://sourceware.org/bzip2/"
-source=("https://sourceware.org/pub/bzip2/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269')
+source=("https://sourceware.org/pub/bzip2/${pkgname}-${pkgver}.tar.gz" "bzip2.pc")
+sha256sums=('ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269' 'a2ebcf54e7992693e6884e6a8796581655cb06020d2c4a78c4f24f011b6a8013')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  cp ../bzip2.pc bzip2.pc
+  sed "s|@VERSION@|$pkgver|" -i bzip2.pc
+}
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -14,6 +20,8 @@ package () {
   cd ${pkgname}-${pkgver}
   mkdir -p ${pkgdir}/${prefix}/include
   mkdir -p ${pkgdir}/${prefix}/lib
+  mkdir -p ${pkgdir}/${prefix}/lib/pkgconfig/
   cp -f libbz2.a ${pkgdir}/${prefix}/lib/
   cp -f bzlib.h ${pkgdir}/${prefix}/include/
+  cp -f bzip2.pc ${pkgdir}/${prefix}/lib/pkgconfig/
 }

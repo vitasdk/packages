@@ -1,0 +1,10 @@
+prefix=$VITASDK/arm-vita-eabi
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: bzip2
+Description: Lossless, block-sorting data compression
+Version: @VERSION@
+Libs: -L${libdir} -lbz2
+Cflags: -I${includedir}
