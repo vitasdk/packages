@@ -1,6 +1,6 @@
 pkgname=bullet
 pkgver=2.87
-pkgrel=1
+pkgrel=2
 url="https://github.com/DrakonPL/bullet-physics-vita"
 source=("git+https://github.com/DrakonPL/bullet-physics-vita.git")
 sha256sums=('SKIP')
@@ -8,7 +8,7 @@ sha256sums=('SKIP')
 build() {
   cd bullet-physics-vita
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   make -j$(nproc)
 }
 
