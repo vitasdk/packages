@@ -1,6 +1,6 @@
 pkgname=libdebugnet
 pkgver=9999
-pkgrel=1
+pkgrel=2
 url="https://github.com/psxdev/debugnet"
 source=("git+https://github.com/psxdev/debugnet.git")
 sha256sums=('SKIP')
@@ -8,7 +8,7 @@ sha256sums=('SKIP')
 build() {
   cd debugnet/libdebugnet
   mkdir build && cd build
-  cmake ..  -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake ..  -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   make -j$(nproc)
 }
 

@@ -1,19 +1,19 @@
 pkgname=libvorbis
 pkgver=1.3.7
-pkgrel=2
+pkgrel=3
 url="https://xiph.org/vorbis/"
-source=("http://downloads.xiph.org/releases/vorbis/$pkgname-$pkgver.tar.gz")
-sha256sums=('0e982409a9c3fc82ee06e08205b1355e5c6aa4c36bca58146ef399621b0ce5ab')
+source=("git+https://gitlab.xiph.org/xiph/vorbis.git#commit=2d79800b6751dddd4b8b4ad50832faa5ae2a00d9")
+sha256sums=('SKIP')
 depends=('libogg')
 
 build() {
-  cd $pkgname-$pkgver
+  cd vorbis
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix
   make -j$(nproc)
 }
 
 package () {
-  cd $pkgname-$pkgver/build
+  cd vorbis/build
   make DESTDIR=$pkgdir install
 }

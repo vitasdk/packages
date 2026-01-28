@@ -1,6 +1,6 @@
 pkgname=kubridge
 pkgver=9999
-pkgrel=2
+pkgrel=3
 url="https://github.com/bythos14/kubridge"
 source=("git+https://github.com/bythos14/kubridge.git#commit=a4ef20fc3ab07b493f9d7d67703272831e445e21")
 sha256sums=('SKIP')
@@ -9,7 +9,7 @@ depends=('taihen')
 build() {
   cd $pkgname
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   make -j$(nproc)
 }
 

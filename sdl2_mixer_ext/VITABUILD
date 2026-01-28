@@ -1,9 +1,9 @@
 pkgname=sdl2_mixer_ext
-pkgver=d149f1ecb1052ee207ca413e36b01923870faf17
-pkgrel=1
+pkgver=ca7875c85515adf8d9ff5d11703479ec34b907bb
+pkgrel=2
 url="https://github.com/WohlSoft/SDL-Mixer-X"
 source=("https://github.com/WohlSoft/SDL-Mixer-X/archive/${pkgver}.zip")
-sha256sums=("a4005a2e45838dd1d0f1205b7cb1e9c58b555b835bb5f651cfd4ab46de079b32")
+sha256sums=("2910c90dace002fc00872f262d9182c3d7e7bd80a823f138568fac64d3d2bca3")
 
 depends=('sdl2' 'libvorbis' 'libxmp' 'libmodplug' 'mpg123' 'flac' 'opusfile')
 

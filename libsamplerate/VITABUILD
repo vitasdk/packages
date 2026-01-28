@@ -1,18 +1,18 @@
 pkgname=libsamplerate
 pkgver=0.2.2
-pkgrel=1
+pkgrel=2
 url="https://libsndfile.github.io/libsamplerate/"
-source=("https://github.com/libsndfile/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('16e881487f184250deb4fcb60432d7556ab12cb58caea71ef23960aec6c0405a')
+source=("git+https://github.com/libsndfile/${pkgname}.git#commit=2ccde9568cca73c7b32c97fefca2e418c16ae5e3")
+sha256sums=('SKIP')
 
 build() {
-  cd $pkgname-$pkgver
+  cd $pkgname
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DLIBSAMPLERATE_EXAMPLES=Off -DBUILD_TESTING=Off
   make -j$(nproc)
 }
 
 package () {
-  cd $pkgname-$pkgver/build
+  cd $pkgname/build
   make DESTDIR=$pkgdir install
 }
