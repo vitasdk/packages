@@ -1,6 +1,6 @@
 pkgname=libk
 pkgver=0.0.0.r7.g5aa300c
-pkgrel=1
+pkgrel=2
 url="https://github.com/DaveeFTW/libk"
 source=("git+https://github.com/DaveeFTW/libk.git#commit=5aa300ce6c3c72c91fc417bd01df298ea6410044")
 _follow=dev
@@ -9,7 +9,7 @@ sha256sums=('SKIP')
 build() {
   cd libk
   mkdir build && cd build
-  cmake ..  -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake ..  -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   make -j$(nproc)
 }
 

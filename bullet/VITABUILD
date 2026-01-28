@@ -1,6 +1,6 @@
 pkgname=bullet
 pkgver=3.25
-pkgrel=1
+pkgrel=2
 url="http://www.bulletphysics.com/Bullet/"
 source=("https://github.com/bulletphysics/bullet3/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('c45afb6399e3f68036ddb641c6bf6f552bf332d5ab6be62f7e6c54eda05ceb77')
@@ -13,7 +13,7 @@ prepare() {
 build() {
   cd bullet3-${pkgver}
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_BULLET2_DEMOS=OFF -DBUILD_CPU_DEMOS=OFF -DBUILD_EXTRAS=OFF -DBUILD_UNIT_TESTS=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DBUILD_BULLET2_DEMOS=OFF -DBUILD_CPU_DEMOS=OFF -DBUILD_EXTRAS=OFF -DBUILD_UNIT_TESTS=OFF
   make -j$(nproc)
 }
 
