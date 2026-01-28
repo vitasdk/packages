@@ -1,6 +1,6 @@
 pkgname=libmodplug
 pkgver=0.8.9.0.r461.gd1b97ed
-pkgrel=1
+pkgrel=2
 url="https://github.com/Konstanty/libmodplug"
 source=("git+https://github.com/Konstanty/libmodplug.git#commit=d1b97ed0020bc620a059d3675d1854b40bd2608d" "modplug.patch")
 _follow=HEAD
@@ -15,7 +15,7 @@ prepare() {
 build() {
   cd ${pkgname}
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DHAVE_SINF=1
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DHAVE_SINF=1
   make -j$(nproc)
 }
 
