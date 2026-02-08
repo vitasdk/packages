@@ -1,0 +1,23 @@
+pkgname=enet
+pkgver=1.3.18
+pkgrel=1
+url="https://github.com/lsalzman/enet"
+source=("https://github.com/lsalzman/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz" "enet.patch")
+sha256sums=('28603c895f9ed24a846478180ee72c7376b39b4bb1287b73877e5eae7d96b0dd'
+            '0b6d59e7eef42914d6f90fa3da87ff13182a39455a729c5490342bbf0ce16490')
+
+build() {
+  cd $pkgname-$pkgver
+  patch unix.c "${srcdir}/enet.patch"
+  cmake -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake
+  make -j$(nproc)
+}
+
+package () {
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/lib
+  mkdir -p $pkgdir/$VITASDK/arm-vita-eabi/include
+
+  cd $pkgname-$pkgver
+  cp lib$pkgname.a $pkgdir/$VITASDK/arm-vita-eabi/lib/
+  cp -r include/$pkgname $pkgdir/$VITASDK/arm-vita-eabi/include/
+}
