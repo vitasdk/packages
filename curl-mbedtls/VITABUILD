@@ -1,0 +1,23 @@
+pkgname=curl-mbedtls
+pkgver=8.18.0
+pkgrel=1
+url="https://curl.se/"
+source=("https://github.com/curl/curl/releases/download/curl-8_18_0/curl-8.18.0.tar.gz")
+sha256sums=('e9274a5f8ab5271c0e0e6762d2fce194d5f98acc568e4ce816845b2dcc0cf88f')
+depends=('mbedtls' 'zlib' 'zstd')
+
+build() {
+  cd curl-${pkgver}
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_CURL_EXE=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DENABLE_IPV6=OFF -DCURL_DISABLE_SOCKETPAIR=ON \
+    -DHAVE_FCNTL_O_NONBLOCK=OFF -DENABLE_THREADED_RESOLVER=OFF -DBUILD_LIBCURL_DOCS=OFF -DBUILD_MISC_DOCS=OFF \
+    -DENABLE_CURL_MANUAL=OFF -DCURL_CA_BUNDLE="vs0:data/external/cert/CA_LIST.cer" -DCURL_USE_LIBPSL=OFF \
+    -DCURL_USE_MBEDTLS=ON -DHAVE_PIPE2=0
+  make -j$(nproc)
+}
+
+package () {
+  cd curl-${pkgver}/build
+  make DESTDIR=$pkgdir install
+}
