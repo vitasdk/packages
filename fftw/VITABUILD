@@ -1,6 +1,6 @@
 pkgname=fftw
 pkgver=3.3.10
-pkgrel=2
+pkgrel=3
 url="https://www.fftw.org/"
 source=("https://www.fftw.org/fftw-${pkgver}.tar.gz")
 sha256sums=('56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467')
@@ -8,7 +8,7 @@ sha256sums=('56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467')
 build() {
   cd fftw-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DDISABLE_FORTRAN=ON
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF -DDISABLE_FORTRAN=ON
   make -j$(nproc)
 }
 
