@@ -1,9 +1,9 @@
 pkgname=ALmixer
-pkgver=0.5
-pkgrel=2
+pkgver=0.5.1
+pkgrel=1
 url="https://github.com/Rinnegatamante/ALmixer"
 source=("https://github.com/Rinnegatamante/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('57e81731197bba8d56e2cd279d80a2a8ee6629ad8b194dd051d9acba49630f49')
+sha256sums=('7cf752c931379aa8cdf10523ecd744e527c68222c1355d03bff24536d21c1bec')
 depends=('libvorbis' 'mpg123' 'libogg' 'openal-soft')
 
 build() {
