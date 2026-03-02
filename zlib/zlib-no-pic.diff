@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index bc72344..115d0e9 100755
+--- a/configure
++++ b/configure
+@@ -245,7 +245,7 @@ show $cc -c $test.c
+ if test "$gcc" -eq 1 && ($cc -c $test.c) >> configure.log 2>&1; then
+   echo ... using gcc >> configure.log
+   CC="$cc"
+-  CFLAGS="${CFLAGS--O3} -fPIC"
++  CFLAGS="${CFLAGS--O3}"
+   SFLAGS="${CFLAGS--O3}"
+   if test "$ARCHS"; then
+     CFLAGS="${CFLAGS} ${ARCHS}"
