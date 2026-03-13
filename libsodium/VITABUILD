@@ -1,9 +1,9 @@
 pkgname=libsodium
-pkgver=1.0.20
+pkgver=1.0.21
 pkgrel=1
 url="https://doc.libsodium.org/"
 source=("https://download.libsodium.org/libsodium/releases/libsodium-${pkgver}.tar.gz")
-sha256sums=('ebb65ef6ca439333c2bb41a0c1990587288da07f6c7fd07cb3a18cc18d30ce19')
+sha256sums=('9e4285c7a419e82dedb0be63a72eea357d6943bc3e28e6735bf600dd4883feaf')
 
 prepare() {
   cd libsodium-${pkgver}
