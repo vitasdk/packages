@@ -1,6 +1,6 @@
 pkgname=SceShaccCgExt
 pkgver=1.0.1
-pkgrel=1
+pkgrel=2
 url="https://github.com/bythos14/$pkgname"
 source=("https://github.com/bythos14/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('a1cda9f3d637032cc597f2f4fdbc17813e5c7c90943a7d44c2e35f013c8dbc0b')
@@ -9,7 +9,7 @@ depends=('taihen')
 build() {
   cd $pkgname-$pkgver
   mkdir build && cd build
-  cmake ..
+  cmake .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   make -j$(nproc)
 }
 

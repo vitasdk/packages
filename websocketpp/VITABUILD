@@ -1,19 +1,19 @@
 pkgname=websocketpp
 pkgver=0.8.2
-pkgrel=1
+pkgrel=2
 url="https://www.zaphoyd.com/projects/websocketpp/"
-source=("https://github.com/zaphoyd/websocketpp/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('6ce889d85ecdc2d8fa07408d6787e7352510750daa66b5ad44aacb47bea76755')
+source=("git+https://github.com/zaphoyd/websocketpp.git#commit=4dfe1be74e684acca19ac1cf96cce0df9eac2a2d")
+sha256sums=('SKIP')
 depends=('boost')
 
 build() {
-  cd $pkgname-$pkgver
+  cd $pkgname
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake
   make -j$(nproc)
 }
 
 package () {
-  cd $pkgname-$pkgver/build
+  cd $pkgname/build
   make DESTDIR=$pkgdir install
 }
