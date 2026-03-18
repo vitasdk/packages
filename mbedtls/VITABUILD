@@ -8,6 +8,8 @@ sha256sums=('4a11f1777bb95bf4ad96721cac945a26e04bf19f57d905f241fe77ebeddf46d8' '
 prepare() {
   cd $pkgname-$pkgver
   patch --strip=1 --input=${srcdir}/mbedtls.patch
+  python scripts/config.py set MBEDTLS_THREADING_C
+  python scripts/config.py set MBEDTLS_THREADING_PTHREAD
 }
 
 build() {
