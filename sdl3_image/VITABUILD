@@ -1,10 +1,10 @@
 pkgname=sdl3_image
-pkgver=3.4.0
+pkgver=3.4.2
 pkgrel=1
 url="https://github.com/libsdl-org/SDL_image"
 license=('Zlib')
 source=("https://github.com/libsdl-org/SDL_image/releases/download/release-${pkgver}/SDL3_image-${pkgver}.tar.gz")
-sha256sums=("2ceb75eab4235c2c7e93dafc3ef3268ad368ca5de40892bf8cffdd510f29d9d8")
+sha256sums=("82fdb88cf1a9cbdc1c77797aaa3292e6d22ce12586be718c8ea43530df1536b4")
 depends=('sdl3 libwebp libpng libjpeg-turbo zlib')
 
 build() {
