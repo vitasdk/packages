@@ -1,5 +1,5 @@
 pkgname=libxml2
-pkgver=2.15.2
+pkgver=2.15.3
 pkgrel=1
 url="https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home"
 source=("https://download.gnome.org/sources/libxml2/2.15/libxml2-2.15.2.tar.xz" "libxml2-no-pic.patch")
