@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare_jobs:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - name: Install dependencies
@@ -24,7 +24,7 @@ jobs:
 
   build:
     needs: [prepare_jobs]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -60,7 +60,7 @@ jobs:
         if-no-files-found: error
   build_depends:
     needs: [prepare_jobs, build]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -87,10 +87,10 @@ jobs:
         : # libc6-dev-i386 is required to build luajit
         : # python2.7 is required to build cpython
         sudo apt-get update
-        sudo apt-get install libarchive-tools libc6-dev-i386 python2.7 subversion
+        sudo apt-get install libarchive-tools libc6-dev-i386 subversion
     - uses: actions/setup-python@v6
       with:
-        python-version: '3.11'
+        python-version: '2.7'
     - name: Prepare Build
       run: |
         bash ./prepare.sh
@@ -114,7 +114,7 @@ jobs:
         if-no-files-found: error
   upload-releases:
       needs: [prepare_jobs, build, build_depends]
-      runs-on: ubuntu-22.04
+      runs-on: ubuntu-latest
       if: contains(github.ref,'refs/heads/master')
       steps:
       - uses: actions/checkout@v6
