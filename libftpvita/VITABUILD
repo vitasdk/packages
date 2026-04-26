@@ -7,7 +7,7 @@ sha256sums=('SKIP')
 
 build() {
   cd $pkgname/$pkgname
-  make -j$(nproc)
+  make -j$(nproc) CFLAGS="$CFLAGS -std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
 }
 
 package () {

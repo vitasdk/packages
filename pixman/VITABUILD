@@ -9,7 +9,11 @@ build() {
   cd $pkgname-$pkgver
   sed -i.bak 's/SUBDIRS = pixman demos test/SUBDIRS = pixman/' Makefile.am
   autoreconf -fi
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static
+  # Fix assembler issues for GCC 15
+  sed -i 's/ | / + /g' pixman/pixman-arm-simd-asm.h
+  sed -i 's/01f/1f/g; s/02f/2f/g; s/01:/1:/g; s/02:/2:/g' pixman/pixman-arm-simd-asm.S
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static \
+    CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   make -j$(nproc)
 }
 
