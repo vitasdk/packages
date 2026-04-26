@@ -1,0 +1,11 @@
+--- Makefile.orig	2024-04-26 12:48:19.000000000 +0200
++++ Makefile	2024-04-26 12:51:00.000000000 +0200
+@@ -17,7 +17,7 @@
+ PREFIX ?= $(SDKPATH)/arm-$(SDKPREFIX)-eabi
+ CC      = arm-$(SDKPREFIX)-eabi-gcc
+ AR      = arm-$(SDKPREFIX)-eabi-ar
+-CFLAGS += -Wl,-q -Wall -Wno-incompatible-pointer-types -Wno-pointer-sign -O3 -nostartfiles -nostdlib -DVITA -D__VITA__
++CFLAGS += -Wl,-q -Wall -Wno-incompatible-pointer-types -Wno-pointer-sign -O3 -nostartfiles -nostdlib -DVITA -D__VITA__ -std=gnu11
+ ASFLAGS = $(CFLAGS)
+ 
+ all: lib

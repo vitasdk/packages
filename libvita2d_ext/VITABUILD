@@ -2,14 +2,18 @@ pkgname=libvita2d_ext
 pkgver=9999
 pkgrel=1
 url="https://github.com/frangarcj/libvita2d_ext"
-source=("git+https://github.com/frangarcj/libvita2d_ext.git")
+source=("git+https://github.com/frangarcj/libvita2d_ext.git" "fini.patch")
+
 sha256sums=('SKIP')
 depends=('libvita2d')
 
 build() {
-  cd $pkgname/$pkgname
+  cd $pkgname
+  patch -Np0 -i ../fini.patch
+  cd $pkgname
   make -j$(nproc) CFLAGS='-Wl,-q -Wall -O3 -I$(INCLUDES)' # lto is broken on Windows vita-gcc for some reason
 }
+
 
 package () {
   cd $pkgname/$pkgname

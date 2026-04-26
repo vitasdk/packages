@@ -1,0 +1,68 @@
+name: Build Package
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: inputs.package != '__dummy__'
+    steps:
+      - uses: actions/checkout@v6
+      - name: Get Dependencies
+        id: get-deps
+        run: |
+          PATTERN=$(node create-matrix.js deps ${{ inputs.package }})
+          echo "PATTERN=$PATTERN" >> $GITHUB_OUTPUT
+      - uses: actions/download-artifact@v4
+        if: steps.get-deps.outputs.PATTERN != '@()'
+        with:
+          path: package
+          pattern: ${{ steps.get-deps.outputs.PATTERN }}
+          merge-multiple: true
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libarchive-tools libtool-bin xutils-dev subversion libc6-dev-i386
+      - name: Setup Python 2.7 (source build)
+        if: inputs.package == 'cpython'
+        run: |
+          wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz
+          tar -xf Python-2.7.18.tar.xz
+          cd Python-2.7.18
+          ./configure --prefix=/usr/local
+          make -j$(nproc)
+          sudo make install
+      - name: Setup Python 3.11 for CPython3
+        if: inputs.package == 'cpython3'
+        run: |
+          sudo ln -sf /usr/bin/python3 /usr/bin/python3.11
+      - name: Prepare Build
+        run: bash ./prepare.sh
+      - name: Install dependencies into sysroot
+        if: steps.get-deps.outputs.PATTERN != '@()'
+        run: |
+          export VITASDK=/usr/local/vitasdk
+          mkdir -p $VITASDK/arm-vita-eabi
+          for file in package/*.tar.xz; do
+            if [ -f "$file" ]; then
+              tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
+            fi
+          done
+      - name: Build package
+        run: |
+          export VITASDK=/usr/local/vitasdk
+          export PATH=$VITASDK/bin:$PATH
+          bash ./build.sh ${{ inputs.package }}
+      - name: Rename package
+        run: |
+          export FILE=`echo ${{ inputs.package }}/*-arm.tar.xz`
+          mv $FILE ${{ inputs.package }}/${{ inputs.package }}.tar.xz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.package }}
+          path: ${{ inputs.package }}/${{ inputs.package }}.tar.xz
+          if-no-files-found: error

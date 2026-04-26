@@ -2,13 +2,16 @@ pkgname=kuio
 pkgver=9999
 pkgrel=1
 url="https://github.com/Rinnegatamante/kuio"
-source=("git+https://github.com/Rinnegatamante/kuio.git")
+source=("git+https://github.com/Rinnegatamante/kuio.git" "vitasdk.patch")
+
 sha256sums=('SKIP')
 depends=('taihen')
 
 build() {
   cd $pkgname
+  patch -Np0 -i ../vitasdk.patch
   mkdir build && cd build
+
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
   make -j$(nproc)
 }
