@@ -3,8 +3,7 @@ pkgver=2.0
 pkgrel=1
 url="https://github.com/SonicMastr/Pigs-In-A-Blanket"
 source=("git+https://github.com/SonicMastr/Pigs-In-A-Blanket.git" "std.patch")
-
-sha256sums=('SKIP')
+sha256sums=('SKIP' 'SKIP')
 depends=('taihen')
 
 build() {

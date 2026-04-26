@@ -3,8 +3,7 @@ pkgver=9999
 pkgrel=1
 url="https://github.com/frangarcj/libvita2d_ext"
 source=("git+https://github.com/frangarcj/libvita2d_ext.git" "fini.patch")
-
-sha256sums=('SKIP')
+sha256sums=('SKIP' 'SKIP')
 depends=('libvita2d')
 
 build() {
