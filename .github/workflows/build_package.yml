@@ -32,8 +32,10 @@ jobs:
           sudo make install
       - name: Setup Python 3.11 for CPython3
         if: inputs.package == 'cpython3'
-        run: |
-          sudo ln -sf /usr/bin/python3 /usr/bin/python3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Prepare Build
         run: bash ./prepare.sh
       - name: Install dependencies into sysroot
