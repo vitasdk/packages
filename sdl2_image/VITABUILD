@@ -22,7 +22,9 @@ build() {
   cd SDL2_image-${pkgver}
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix \
-   -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DBUILD_SHARED_LIBS=OFF -DSDL2IMAGE_SAMPLES=OFF -DSDL2IMAGE_WEBP=ON -DSDL2IMAGE_DEPS_SHARED=OFF -DSDL2IMAGE_AVIF=OFF -DSDL2IMAGE_TIF=OFF
+   -DCMAKE_POSITION_INDEPENDENT_CODE=OFF -DBUILD_SHARED_LIBS=OFF -DSDL2IMAGE_SAMPLES=OFF -DSDL2IMAGE_WEBP=ON -DSDL2IMAGE_DEPS_SHARED=OFF -DSDL2IMAGE_AVIF=OFF -DSDL2IMAGE_TIF=OFF \
+   -DCMAKE_C_FLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion" \
+   -DCMAKE_CXX_FLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   make -j$(nproc)
 }
 
