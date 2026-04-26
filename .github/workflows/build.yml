@@ -97,6 +97,10 @@ jobs:
         ./configure --prefix=/usr/local
         make -j$(nproc)
         sudo make install
+    - name: Setup Python 3.11 for CPython3
+      if: matrix.package == 'cpython3'
+      run: |
+        sudo ln -sf /usr/bin/python3 /usr/bin/python3.11
     - name: Prepare Build
       run: |
         bash ./prepare.sh

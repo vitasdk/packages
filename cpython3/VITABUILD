@@ -12,6 +12,8 @@ build() {
 
 package () {
   cd cpython-vita
+  export CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types"
+  export CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types"
   sh build_vita.sh $pkgdir
   sh compile_modules_vita.sh $pkgdir
   rm -rf $pkgdir/$prefix/bin
