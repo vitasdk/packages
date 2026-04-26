@@ -1,11 +1,13 @@
 --- Makefile.orig	2024-04-26 12:48:19.000000000 +0200
-+++ Makefile	2024-04-26 12:51:00.000000000 +0200
-@@ -17,7 +17,7 @@
- PREFIX ?= $(SDKPATH)/arm-$(SDKPREFIX)-eabi
++++ Makefile	2024-04-26 13:05:00.000000000 +0200
+@@ -18,6 +18,10 @@
  CC      = arm-$(SDKPREFIX)-eabi-gcc
  AR      = arm-$(SDKPREFIX)-eabi-ar
--CFLAGS += -Wl,-q -Wall -Wno-incompatible-pointer-types -Wno-pointer-sign -O3 -nostartfiles -nostdlib -DVITA -D__VITA__
-+CFLAGS += -Wl,-q -Wall -Wno-incompatible-pointer-types -Wno-pointer-sign -O3 -nostartfiles -nostdlib -DVITA -D__VITA__ -std=gnu11
+ CFLAGS += -Wl,-q -Wall -Wno-incompatible-pointer-types -Wno-pointer-sign -O3 -nostartfiles -nostdlib -DVITA -D__VITA__
++ifeq ($(findstring g++,$(CC)),)
++CFLAGS += -std=gnu11
++endif
++
  ASFLAGS = $(CFLAGS)
  
  all: lib
