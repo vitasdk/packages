@@ -129,3 +129,24 @@ if (args[0] === 'deps' && args[1]) {
     }
     process.exit(0);
 }
+
+if (args[0] === 'deps-list' && args[1]) {
+    const pkg = args[1];
+    const resolveDependency = (name, map) => {
+        const deps = map.get(name);
+        if (!deps) return [];
+        const ret = [];
+        deps.forEach((dep) => {
+            ret.push(...resolveDependency(dep, map));
+            ret.push(dep);
+        });
+        return ret;
+    }
+    let deps = resolveDependency(pkg, dependant);
+    deps = [...new Set(deps)];
+    if (deps.includes('openssl') && deps.includes('openssl-1.1.1')) {
+        deps = deps.filter((x) => x !== 'openssl');
+    }
+    console.log(deps.join(' '));
+    process.exit(0);
+}

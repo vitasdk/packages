@@ -12,17 +12,11 @@ jobs:
     if: inputs.package != '__dummy__'
     steps:
       - uses: actions/checkout@v6
-      - name: Get Dependencies
-        id: get-deps
-        run: |
-          PATTERN=$(node create-matrix.js deps ${{ inputs.package }})
-          echo "PATTERN=$PATTERN" >> $GITHUB_OUTPUT
       - uses: actions/download-artifact@v4
-        if: steps.get-deps.outputs.PATTERN != '@()'
         with:
           path: package
-          pattern: ${{ steps.get-deps.outputs.PATTERN }}
           merge-multiple: true
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -43,15 +37,22 @@ jobs:
       - name: Prepare Build
         run: bash ./prepare.sh
       - name: Install dependencies into sysroot
-        if: steps.get-deps.outputs.PATTERN != '@()'
         run: |
           export VITASDK=/usr/local/vitasdk
           mkdir -p $VITASDK/arm-vita-eabi
-          for file in package/*.tar.xz; do
-            if [ -f "$file" ]; then
-              tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
-            fi
-          done
+          if [ -d "package" ]; then
+            for file in package/*.tar.xz; do
+              if [ -f "$file" ]; then
+                pkgname=$(basename "$file" .tar.xz)
+                # Avoid conflict between openssl versions if both are present
+                if [ "$pkgname" == "openssl" ] && [ -f "package/openssl-1.1.1.tar.xz" ]; then
+                  continue
+                fi
+                tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
+              fi
+            done
+          fi
+
       - name: Build package
         run: |
           export VITASDK=/usr/local/vitasdk
