@@ -88,6 +88,15 @@ jobs:
         : # python2.7 is required to build cpython
         sudo apt-get update
         sudo apt-get install libarchive-tools libc6-dev-i386 subversion
+    - name: Setup Python 2.7 (source build)
+      if: matrix.package == 'cpython'
+      run: |
+        wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz
+        tar -xf Python-2.7.18.tar.xz
+        cd Python-2.7.18
+        ./configure --prefix=/usr/local
+        make -j$(nproc)
+        sudo make install
     - name: Prepare Build
       run: |
         bash ./prepare.sh

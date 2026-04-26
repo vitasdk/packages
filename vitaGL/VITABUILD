@@ -8,7 +8,7 @@ depends=('libmathneon vitaShaRK taihen SceShaccCgExt')
 
 build() {
   cd $pkgname
-  make HAVE_SBRK=1 NO_DEBUG=1 CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion" CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion" -j$(nproc)
+  make HAVE_SBRK=1 NO_DEBUG=1 CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types" CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types" -j$(nproc)
 }
 
 package () {
