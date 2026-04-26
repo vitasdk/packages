@@ -2,14 +2,16 @@ pkgname=TinyGL
 pkgver=0.4
 pkgrel=1
 url="https://github.com/Cpasjuste/VTinyGL"
-source=("git+https://github.com/Cpasjuste/VTinyGL.git")
-sha256sums=('SKIP')
+source=("git+https://github.com/Cpasjuste/VTinyGL.git" "vitasdk.patch")
+sha256sums=('SKIP' 'SKIP')
 depends=('libvita2d')
 
 build() {
-  cd V$pkgname
+  cd VTinyGL
+  patch -Np0 -i ../vitasdk.patch
   make -j$(nproc)
 }
+
 
 package () {
   cd V$pkgname

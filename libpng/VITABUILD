@@ -14,7 +14,9 @@ prepare() {
 build() {
   cd $pkgname
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DPNG_ARM_NEON=on -DPNG_SHARED=OFF -DSKIP_INSTALL_EXECUTABLES=ON
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DPNG_ARM_NEON=on -DPNG_SHARED=OFF -DSKIP_INSTALL_EXECUTABLES=ON \
+   -DCMAKE_C_FLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion" \
+   -DCMAKE_CXX_FLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   make -j$(nproc)
 }
 

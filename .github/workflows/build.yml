@@ -16,109 +16,138 @@ jobs:
       - name: Install dependencies
         id: set-matrix
         run: |
-          echo "dependant=$(node create-matrix.js dependant)" >> $GITHUB_OUTPUT
-          echo "non_dependant=$(node create-matrix.js non_dependant)" >> $GITHUB_OUTPUT
+          echo "matrix<<EOF" >> $GITHUB_OUTPUT
+          node create-matrix.js >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
     outputs:
-      dependant: ${{ steps.set-matrix.outputs.dependant }}
-      non_dependant: ${{ steps.set-matrix.outputs.non_dependant }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
-  build:
-    needs: [prepare_jobs]
-    runs-on: ubuntu-22.04
+  build_tier0_main:
+    needs: prepare_jobs
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJson(needs.prepare_jobs.outputs.non_dependant) }}
-    env:
-      SSHPASS: ${{ secrets.SSHPASS }}
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-    - uses: actions/checkout@v6
-    - name: Install dependencies
-      run: |
-        : # libarchive-tools provides bsdtar
-        : # libtool-bin is required to build libtremor
-        : # xutils-dev is required to build openssl
-        sudo apt-get update
-        sudo apt-get install libarchive-tools libtool-bin xutils-dev
-    - name: Prepare Build
-      run: |
-        bash ./prepare.sh
-    - name: Build package
-      run: |
-        export VITASDK=/usr/local/vitasdk
-        export PATH=$VITASDK/bin:$PATH
-        bash ./build.sh ${{ matrix.package }}
-    - name: Rename package
-      run: |
-        export FILE=`echo ${{ matrix.package }}/*-arm.tar.xz`
-        mv $FILE ${{ matrix.package }}/${{ matrix.package }}.tar.xz
-    - uses: actions/upload-artifact@v6
-      with:
-        name: ${{ matrix.package }}
-        path: ${{ matrix.package }}/${{ matrix.package }}.tar.xz
-        if-no-files-found: error
-  build_depends:
-    needs: [prepare_jobs, build]
-    runs-on: ubuntu-22.04
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier0_main }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
+  build_tier0_slow:
+    needs: prepare_jobs
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJson(needs.prepare_jobs.outputs.dependant) }}
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier0_slow }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
 
-    env:
-      SSHPASS: ${{ secrets.SSHPASS }}
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-    - uses: actions/checkout@v6
-    - name: Generate actions/download-artifact pattern
-      id: generate-download-artifact-pattern
-      run: |
-        PATTERN=`echo ${{ matrix.package }} | awk 'NF{NF-=1};1' | tr ' ' '|' | awk '{ print "@(" $0 ")" }'`
-        echo "PATTERN=$PATTERN" >> $GITHUB_OUTPUT
-    - uses: actions/download-artifact@v7
-      with:
-        path: package
-        pattern: ${{ steps.generate-download-artifact-pattern.outputs.PATTERN }}
-        merge-multiple: true
-    - name: Install dependencies
-      run: |
-        : # libarchive-tools provides bsdtar
-        : # libc6-dev-i386 is required to build luajit
-        : # python2.7 is required to build cpython
-        sudo apt-get update
-        sudo apt-get install libarchive-tools libc6-dev-i386 python2.7
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.11'
-    - name: Prepare Build
-      run: |
-        bash ./prepare.sh
-    - name: Install and Build packages
-      run: |
-        export VITASDK=/usr/local/vitasdk
-        export PATH=$VITASDK/bin:$PATH
-        for f in ${{ matrix.package }}; do bash ./install_or_build.sh $f; done
-    - name: Export package
-      run: |
-        export PACKAGE=`echo ${{ matrix.package }} | awk '{print $NF}'`
-        echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
-    - name: Rename package
-      run: |
-        export FILE=`echo ${{ env.PACKAGE }}/*-arm.tar.xz`
-        mv $FILE ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
-    - uses: actions/upload-artifact@v6
-      with:
-        name: ${{ env.PACKAGE }}
-        path: ${{ env.PACKAGE }}/${{ env.PACKAGE }}.tar.xz
-        if-no-files-found: error
+  build_tier1_main:
+    needs: [prepare_jobs, build_tier0_main]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier1_main }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
+  build_tier1_slow:
+    needs: [prepare_jobs, build_tier0_main, build_tier0_slow]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier1_slow }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
+  build_tier2_main:
+    needs: [prepare_jobs, build_tier1_main]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier2_main }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
+  build_tier2_slow:
+    needs: [prepare_jobs, build_tier1_main, build_tier1_slow]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier2_slow }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
+  build_tier3_main:
+    needs: [prepare_jobs, build_tier2_main]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier3_main }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
+  build_tier3_slow:
+    needs: [prepare_jobs, build_tier2_main, build_tier2_slow]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier3_slow }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
+  build_tier4_main:
+    needs: [prepare_jobs, build_tier3_main]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier4_main }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
+  build_tier4_slow:
+    needs: [prepare_jobs, build_tier3_main, build_tier3_slow]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier4_slow }}
+    uses: ./.github/workflows/build_package.yml
+    with:
+      package: ${{ matrix.package }}
+    secrets: inherit
+
   upload-releases:
-      needs: [prepare_jobs, build, build_depends]
-      runs-on: ubuntu-latest
-      if: contains(github.ref,'refs/heads/master')
-      steps:
+    needs: [prepare_jobs, build_tier0_main, build_tier0_slow, build_tier1_main, build_tier1_slow, build_tier2_main, build_tier2_slow, build_tier3_main, build_tier3_slow, build_tier4_main, build_tier4_slow]
+    runs-on: ubuntu-latest
+    if: contains(github.ref,'refs/heads/master')
+    steps:
       - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v4
         with:
           path: package
           merge-multiple: true
