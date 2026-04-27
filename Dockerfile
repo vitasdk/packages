@@ -45,6 +45,7 @@ RUN apt-get update && \
     linux-libc-dev \
     gcc-multilib \
     libssl-dev \
+    unzip \
     zlib1g-dev \
     libncurses5-dev \
     libncursesw5-dev \
