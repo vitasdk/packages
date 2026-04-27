@@ -23,6 +23,7 @@ RUN apt-get update && \
     cmake \
     make \
     patch \
+    fakeroot \
     libarchive-tools \
     libtool-bin \
     xutils-dev \
