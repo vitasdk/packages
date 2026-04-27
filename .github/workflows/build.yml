@@ -23,8 +23,29 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
+  prepare_docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}/vitasdk:latest
+
   build_tier0_main:
-    needs: prepare_jobs
+    needs: [prepare_jobs, prepare_docker]
+
     strategy:
       fail-fast: false
       matrix:
@@ -35,7 +56,8 @@ jobs:
     secrets: inherit
 
   build_tier0_slow:
-    needs: prepare_jobs
+    needs: [prepare_jobs, prepare_docker]
+
     strategy:
       fail-fast: false
       matrix:
@@ -46,7 +68,8 @@ jobs:
     secrets: inherit
 
   build_tier1_main:
-    needs: [prepare_jobs, build_tier0_main]
+    needs: [prepare_jobs, prepare_docker, build_tier0_main]
+
 
     strategy:
       fail-fast: false
@@ -58,7 +81,8 @@ jobs:
     secrets: inherit
 
   build_tier1_slow:
-    needs: [prepare_jobs, build_tier0_main, build_tier0_slow]
+    needs: [prepare_jobs, prepare_docker, build_tier0_main, build_tier0_slow]
+
 
     strategy:
       fail-fast: false
@@ -70,7 +94,8 @@ jobs:
     secrets: inherit
 
   build_tier2_main:
-    needs: [prepare_jobs, build_tier1_main]
+    needs: [prepare_jobs, prepare_docker, build_tier1_main]
+
 
     strategy:
       fail-fast: false
@@ -82,7 +107,8 @@ jobs:
     secrets: inherit
 
   build_tier2_slow:
-    needs: [prepare_jobs, build_tier1_main, build_tier1_slow]
+    needs: [prepare_jobs, prepare_docker, build_tier1_main, build_tier1_slow]
+
 
     strategy:
       fail-fast: false
@@ -94,7 +120,8 @@ jobs:
     secrets: inherit
 
   build_tier3_main:
-    needs: [prepare_jobs, build_tier2_main]
+    needs: [prepare_jobs, prepare_docker, build_tier2_main]
+
 
     strategy:
       fail-fast: false
@@ -106,7 +133,8 @@ jobs:
     secrets: inherit
 
   build_tier3_slow:
-    needs: [prepare_jobs, build_tier2_main, build_tier2_slow]
+    needs: [prepare_jobs, prepare_docker, build_tier2_main, build_tier2_slow]
+
 
     strategy:
       fail-fast: false
@@ -118,7 +146,8 @@ jobs:
     secrets: inherit
 
   build_tier4_main:
-    needs: [prepare_jobs, build_tier3_main]
+    needs: [prepare_jobs, prepare_docker, build_tier3_main]
+
 
     strategy:
       fail-fast: false
@@ -130,7 +159,8 @@ jobs:
     secrets: inherit
 
   build_tier4_slow:
-    needs: [prepare_jobs, build_tier3_main, build_tier3_slow]
+    needs: [prepare_jobs, prepare_docker, build_tier3_main, build_tier3_slow]
+
 
     strategy:
       fail-fast: false
