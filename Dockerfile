@@ -4,13 +4,19 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Create a non-root user for building
-RUN useradd -m vita && echo "vita ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN useradd -m vita
+
+# Install sudo first and separately to avoid dependency issues in Docker
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sudo && \
+    echo "vita ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install dependencies needed for vdpm and building packages
 RUN apt-get update && \
     ARCH=$(dpkg --print-architecture) && \
     if [ "$ARCH" = "amd64" ]; then LIBC32="libc6-dev-i386"; else LIBC32=""; fi && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     curl \
     wget \
     git \
@@ -25,7 +31,6 @@ RUN apt-get update && \
     python3 \
     python3-pip \
     7zip \
-    sudo \
     build-essential \
     libssl-dev \
     zlib1g-dev \
@@ -42,7 +47,7 @@ RUN apt-get update && \
     libffi-dev \
     software-properties-common \
     && add-apt-repository ppa:deadsnakes/ppa \
-    && apt-get update && apt-get install -y python3.11 python3.11-dev \
+    && apt-get update && apt-get install -y --no-install-recommends python3.11 python3.11-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python 2.7 from source
