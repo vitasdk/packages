@@ -33,6 +33,15 @@ RUN apt-get update && \
     python3-pip \
     7zip \
     build-essential \
+    autoconf \
+    automake \
+    autotools-dev \
+    m4 \
+    libtool \
+    pkg-config \
+    gperf \
+    bison \
+    flex \
     libssl-dev \
     zlib1g-dev \
     libncurses5-dev \
