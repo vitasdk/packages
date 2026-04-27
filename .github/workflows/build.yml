@@ -28,6 +28,7 @@ jobs:
 
   prepare_docker:
     runs-on: ubuntu-latest
+    needs: prepare_jobs
     permissions:
       contents: read
       packages: write
