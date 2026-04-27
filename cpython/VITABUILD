@@ -20,6 +20,7 @@ package () {
   export TOKEN=${GITHUB_TOKEN}
   bash install_extra_modules.sh $pkgdir
 
+  sed -i 's/7z a -l/7z a/' compile_modules_vita.sh
   bash compile_modules_vita.sh $pkgdir
   rm -rf $pkgdir/$prefix/bin
   rm -rf $pkgdir/$prefix/share
