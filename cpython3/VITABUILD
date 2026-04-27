@@ -15,8 +15,8 @@ package () {
   sed -i 's/CFLAGS="/CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types /' build_vita.sh
   sed -i 's/CPPFLAGS="/LDFLAGS="-lpthread" CPPFLAGS="/' build_vita.sh
 
-  sh build_vita.sh $pkgdir
-  sh compile_modules_vita.sh $pkgdir
+  bash build_vita.sh $pkgdir
+  bash compile_modules_vita.sh $pkgdir
 
   rm -rf $pkgdir/$prefix/bin
   rm -rf $pkgdir/$prefix/share

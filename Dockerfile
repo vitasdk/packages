@@ -42,6 +42,8 @@ RUN apt-get update && \
     gperf \
     bison \
     flex \
+    linux-libc-dev \
+    gcc-multilib \
     libssl-dev \
     zlib1g-dev \
     libncurses5-dev \
