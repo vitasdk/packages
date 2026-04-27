@@ -55,7 +55,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier0_main }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -69,7 +68,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier0_slow }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -84,7 +82,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier1_main }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -99,7 +96,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier1_slow }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -114,7 +110,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier2_main }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -129,7 +124,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier2_slow }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -144,7 +138,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier3_main }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -159,7 +152,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier3_slow }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -174,7 +166,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier4_main }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}
@@ -190,7 +181,6 @@ jobs:
       matrix:
         package: ${{ fromJson(needs.prepare_jobs.outputs.matrix).tier4_slow }}
     uses: ./.github/workflows/build_package.yml
-    continue-on-error: true
     with:
       package: ${{ matrix.package }}
       image_tag: ${{ needs.prepare_jobs.outputs.tag }}

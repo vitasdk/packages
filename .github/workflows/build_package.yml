@@ -13,6 +13,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    continue-on-error: true
     container:
       image: ghcr.io/${{ github.repository }}/vitasdk:${{ inputs.image_tag }}
     if: inputs.package != '__dummy__'
