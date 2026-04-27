@@ -167,6 +167,8 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
+
     secrets: inherit
 
   build_tier4_slow:
@@ -180,6 +182,8 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
+
     secrets: inherit
 
   upload-releases:
