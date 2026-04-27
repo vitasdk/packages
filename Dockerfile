@@ -3,6 +3,9 @@ FROM ubuntu:24.04
 # Avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Create a non-root user for building
+RUN useradd -m vita && echo "vita ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
 # Install dependencies needed for vdpm and building packages
 RUN apt-get update && apt-get install -y \
     curl \
@@ -59,4 +62,8 @@ RUN git clone --depth=1 https://github.com/vitasdk/vdpm.git /vdpm \
 ENV VITASDK=/usr/local/vitasdk
 ENV PATH=$VITASDK/bin:$PATH
 
+# Ensure the non-root user owns the vitasdk directory
+RUN chown -R vita:vita /usr/local/vitasdk
+
+USER vita
 WORKDIR /workspace
