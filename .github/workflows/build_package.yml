@@ -5,12 +5,16 @@ on:
       package:
         required: true
         type: string
+      image_tag:
+        required: true
+        type: string
+
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository }}/vitasdk:${{ github.ref_name }}
+      image: ghcr.io/${{ github.repository }}/vitasdk:${{ inputs.image_tag }}
     if: inputs.package != '__dummy__'
 
     steps:

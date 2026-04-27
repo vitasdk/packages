@@ -19,9 +19,12 @@ jobs:
           echo "matrix<<EOF" >> $GITHUB_OUTPUT
           node create-matrix.js >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+          TAG=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9._-]/-/g')
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
 
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      tag: ${{ steps.set-matrix.outputs.tag }}
 
   prepare_docker:
     runs-on: ubuntu-latest
@@ -41,7 +44,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}/vitasdk:${{ github.ref_name }}
+          tags: ghcr.io/${{ github.repository }}/vitasdk:${{ needs.prepare_jobs.outputs.tag }}
 
   build_tier0_main:
     needs: [prepare_jobs, prepare_docker]
@@ -53,6 +56,7 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
     secrets: inherit
 
   build_tier0_slow:
@@ -65,6 +69,7 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
     secrets: inherit
 
   build_tier1_main:
@@ -78,6 +83,7 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
     secrets: inherit
 
   build_tier1_slow:
@@ -91,6 +97,7 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
     secrets: inherit
 
   build_tier2_main:
@@ -104,6 +111,7 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
     secrets: inherit
 
   build_tier2_slow:
@@ -117,6 +125,7 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
     secrets: inherit
 
   build_tier3_main:
@@ -130,6 +139,7 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
     secrets: inherit
 
   build_tier3_slow:
@@ -143,6 +153,7 @@ jobs:
     uses: ./.github/workflows/build_package.yml
     with:
       package: ${{ matrix.package }}
+      image_tag: ${{ needs.prepare_jobs.outputs.tag }}
     secrets: inherit
 
   build_tier4_main:
