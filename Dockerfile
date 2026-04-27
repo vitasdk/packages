@@ -7,7 +7,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN useradd -m vita && echo "vita ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Install dependencies needed for vdpm and building packages
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+    ARCH=$(dpkg --print-architecture) && \
+    if [ "$ARCH" = "amd64" ]; then LIBC32="libc6-dev-i386"; else LIBC32=""; fi && \
+    apt-get install -y \
     curl \
     wget \
     git \
@@ -18,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     libtool-bin \
     xutils-dev \
     subversion \
-    libc6-dev-i386 \
+    $LIBC32 \
     python3 \
     python3-pip \
     7zip \
