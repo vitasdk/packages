@@ -26,6 +26,7 @@ jobs:
           merge-multiple: true
 
       - name: Install dependencies into sysroot
+        shell: bash
         run: |
           export VITASDK=/usr/local/vitasdk
           mkdir -p $VITASDK/arm-vita-eabi
@@ -45,22 +46,29 @@ jobs:
             ALL_DEPS=$(get_deps ${{ inputs.package }} | sort -u)
             echo "Recursive dependencies: $ALL_DEPS"
             
-            WANT_111=$(echo "$ALL_DEPS" | grep -q "openssl-1.1.1" && echo "yes" || echo "no")
-            WANT_102=$(echo "$ALL_DEPS" | grep -qE "^openssl$" && echo "yes" || echo "no")
+            # Explicitly choose OpenSSL version for Python builds
+            SKIP_OPENSSL="no"
+            SKIP_OPENSSL_111="no"
             
+            if [ "${{ inputs.package }}" = "cpython3" ]; then
+                SKIP_OPENSSL="yes"
+            elif [ "${{ inputs.package }}" = "cpython" ]; then
+                SKIP_OPENSSL_111="yes"
+            fi
+
             for file in package/*.tar.xz; do
               if [ -f "$file" ]; then
                 pkgname=$(basename "$file" .tar.xz)
                 
-                # If package is an explicit dependency, always install it
-                if echo "$ALL_DEPS" | grep -qE "^$pkgname$"; then
-                  tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
-                  continue
+                # Handle OpenSSL conflicts
+                if [ "$pkgname" = "openssl" ] && [ "$SKIP_OPENSSL" = "yes" ]; then
+                    echo "Skipping $pkgname for ${{ inputs.package }}"
+                    continue
                 fi
-                
-                # Otherwise, handle special cases or just install if no conflict
-                if [ "$pkgname" == "openssl" ] && [ "$WANT_111" == "yes" ]; then continue; fi
-                if [ "$pkgname" == "openssl-1.1.1" ] && [ "$WANT_102" == "yes" ]; then continue; fi
+                if [ "$pkgname" = "openssl-1.1.1" ] && [ "$SKIP_OPENSSL_111" = "yes" ]; then
+                    echo "Skipping $pkgname for ${{ inputs.package }}"
+                    continue
+                fi
                 
                 tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
               fi
