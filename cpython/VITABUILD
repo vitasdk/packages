@@ -14,6 +14,8 @@ package () {
   cd cpython-vita
   sed -i 's/CFLAGS="/CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types /' build_vita.sh
   sed -i 's/CXXFLAGS="/CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types /' build_vita.sh
+  sed -i 's/LDFLAGS="/LDFLAGS="-lpthread /' build_vita.sh
+
   sh build_vita.sh $pkgdir
   sh install_extra_modules.sh $pkgdir
 
