@@ -26,18 +26,12 @@ jobs:
           merge-multiple: true
 
       - name: Install dependencies into sysroot
-
         run: |
           export VITASDK=/usr/local/vitasdk
           mkdir -p $VITASDK/arm-vita-eabi
           if [ -d "package" ]; then
             for file in package/*.tar.xz; do
               if [ -f "$file" ]; then
-                pkgname=$(basename "$file" .tar.xz)
-                # Avoid conflict between openssl versions if both are present
-                if [ "$pkgname" == "openssl" ] && [ -f "package/openssl-1.1.1.tar.xz" ]; then
-                  continue
-                fi
                 tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
               fi
             done
@@ -48,6 +42,8 @@ jobs:
           export VITASDK=/usr/local/vitasdk
           export PATH=$VITASDK/bin:$PATH
           bash ./build.sh ${{ inputs.package }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Rename package
         run: |
           export FILE=`echo ${{ inputs.package }}/*-arm.tar.xz`
