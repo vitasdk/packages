@@ -1,0 +1,19 @@
+pkgname=openssl3
+pkgver=3.0.8
+pkgrel=1
+url="https://github.com/SonicMastr/vita-openssl3"
+source=("git+https://github.com/SonicMastr/vita-openssl3.git")
+sha256sums=('SKIP')
+
+build() {
+  cd vita-openssl3
+  ./Configure --prefix=$VITASDK/arm-vita-eabi/ no-asm no-pic no-unit-test no-shared vita-cross
+  make -j$(nproc)
+}
+
+package () {
+  cd vita-openssl3
+  printf '#!/bin/bash\nmkdir -p $@\n' > util/mkdir-p.pl
+  make DESTDIR=$pkgdir install
+  rm -rf $pkgdir/$prefix/share # remove useless man pages
+}

@@ -17,6 +17,7 @@ package () {
   sed -i 's/LDFLAGS="/LDFLAGS="-lpthread /' build_vita.sh
 
   bash build_vita.sh $pkgdir
+  export TOKEN=${GITHUB_TOKEN}
   bash install_extra_modules.sh $pkgdir
 
   bash compile_modules_vita.sh $pkgdir
