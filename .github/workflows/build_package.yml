@@ -32,6 +32,11 @@ jobs:
           if [ -d "package" ]; then
             for file in package/*.tar.xz; do
               if [ -f "$file" ]; then
+                pkgname=$(basename "$file" .tar.xz)
+                # Avoid conflict between openssl versions if both are present
+                if [ "$pkgname" == "openssl" ] && [ -f "package/openssl-1.1.1.tar.xz" ]; then
+                  continue
+                fi
                 tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
               fi
             done
