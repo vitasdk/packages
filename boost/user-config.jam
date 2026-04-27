@@ -1,4 +1,4 @@
-using gcc : arm : arm-vita-eabi-g++ ;
+using gcc : arm : arm-vita-eabi-g++ : <compileflags>"-std=gnu++11" ;
 
 
 # Stop on first error

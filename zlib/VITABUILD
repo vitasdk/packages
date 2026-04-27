@@ -12,7 +12,8 @@ prepare() {
 
 build() {
   cd zlib-$pkgver
-  ./configure --prefix=$prefix
+  ./configure --prefix=$prefix \
+    CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   make -j$(nproc)
 }
 

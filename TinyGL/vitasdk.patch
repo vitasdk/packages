@@ -1,0 +1,7 @@
+--- src/vertex.c.orig	2024-04-26 12:50:51.000000000 +0200
++++ src/vertex.c	2024-04-26 12:55:00.000000000 +0200
+@@ -1,3 +1,4 @@
++#include <string.h>
+ #include "zgl.h"
+ 
+ void glopNormal(GLContext * c, GLParam * p)
