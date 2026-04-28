@@ -43,8 +43,6 @@ jobs:
           }
           
           if [ -d "package" ]; then
-            ALL_DEPS=$(get_deps ${{ inputs.package }} | sort -u)
-            echo "Recursive dependencies: $ALL_DEPS"
             
             # Explicitly choose OpenSSL version for Python builds
             SKIP_OPENSSL="no"
