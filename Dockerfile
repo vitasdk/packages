@@ -74,7 +74,9 @@ RUN wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz \
 
 # Clone and install VitaSDK
 # We use the existing bootstrap-vitasdk.sh logic
-RUN git clone --depth=1 https://github.com/vitasdk/vdpm.git /vdpm \
+ARG VITASDK_CACHE_BUST
+RUN echo "VitaSDK Cache Bust: $VITASDK_CACHE_BUST" && \
+    git clone --depth=1 https://github.com/vitasdk/vdpm.git /vdpm \
     && cd /vdpm \
     && bash bootstrap-vitasdk.sh \
     && rm -rf /vdpm
