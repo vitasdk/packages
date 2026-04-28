@@ -46,6 +46,10 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository }}/vitasdk:${{ needs.prepare_jobs.outputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VITASDK_CACHE_BUST=${{ github.run_id }}-${{ github.run_attempt }}
 
   build_tier0_main:
     needs: [prepare_jobs, prepare_docker]
