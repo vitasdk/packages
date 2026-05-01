@@ -5,11 +5,19 @@ on:
       package:
         required: true
         type: string
+      image_tag:
+        required: true
+        type: string
+
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    continue-on-error: true
+    container:
+      image: ghcr.io/${{ github.repository }}/vitasdk:${{ inputs.image_tag }}
     if: inputs.package != '__dummy__'
+
     steps:
       - uses: actions/checkout@v6
       - uses: actions/download-artifact@v4
@@ -17,39 +25,49 @@ jobs:
           path: package
           merge-multiple: true
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install libarchive-tools libtool-bin xutils-dev subversion libc6-dev-i386
-      - name: Setup Python 2.7 (source build)
-        if: inputs.package == 'cpython'
-        run: |
-          wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz
-          tar -xf Python-2.7.18.tar.xz
-          cd Python-2.7.18
-          ./configure --prefix=/usr/local
-          make -j$(nproc)
-          sudo make install
-      - name: Setup Python 3.11 for CPython3
-        if: inputs.package == 'cpython3'
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Prepare Build
-        run: bash ./prepare.sh
       - name: Install dependencies into sysroot
+        shell: bash
         run: |
           export VITASDK=/usr/local/vitasdk
           mkdir -p $VITASDK/arm-vita-eabi
+          
+          # Function to get all recursive dependencies
+          get_deps() {
+            local pkg=$1
+            [ -f "$pkg/VITABUILD" ] || return 0
+            local deps=$(bash -c "source $pkg/VITABUILD && echo \${depends[@]}")
+            for d in $deps; do
+              echo $d
+              get_deps $d
+            done
+          }
+          
           if [ -d "package" ]; then
+            
+            # Explicitly choose OpenSSL version for Python builds
+            SKIP_OPENSSL="no"
+            SKIP_OPENSSL_111="no"
+            
+            if [ "${{ inputs.package }}" = "cpython3" ]; then
+                SKIP_OPENSSL="yes"
+            elif [ "${{ inputs.package }}" = "cpython" ]; then
+                SKIP_OPENSSL_111="yes"
+            fi
+
             for file in package/*.tar.xz; do
               if [ -f "$file" ]; then
                 pkgname=$(basename "$file" .tar.xz)
-                # Avoid conflict between openssl versions if both are present
-                if [ "$pkgname" == "openssl" ] && [ -f "package/openssl-1.1.1.tar.xz" ]; then
-                  continue
+                
+                # Handle OpenSSL conflicts
+                if [ "$pkgname" = "openssl" ] && [ "$SKIP_OPENSSL" = "yes" ]; then
+                    echo "Skipping $pkgname for ${{ inputs.package }}"
+                    continue
                 fi
+                if [ "$pkgname" = "openssl-1.1.1" ] && [ "$SKIP_OPENSSL_111" = "yes" ]; then
+                    echo "Skipping $pkgname for ${{ inputs.package }}"
+                    continue
+                fi
+                
                 tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
               fi
             done
@@ -60,6 +78,8 @@ jobs:
           export VITASDK=/usr/local/vitasdk
           export PATH=$VITASDK/bin:$PATH
           bash ./build.sh ${{ inputs.package }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Rename package
         run: |
           export FILE=`echo ${{ inputs.package }}/*-arm.tar.xz`

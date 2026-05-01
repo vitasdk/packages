@@ -4,7 +4,7 @@ pkgrel=1
 url="https://github.com/SonicMastr/cpython-vita"
 source=("git+https://github.com/SonicMastr/cpython-vita.git#branch=3.11")
 sha256sums=('SKIP')
-depends=('openssl-1.1.1 libzip xz zlib bzip2')
+depends=('openssl-1.1.1' libzip xz zlib bzip2)
 
 build() {
   echo ""
@@ -13,10 +13,11 @@ build() {
 package () {
   cd cpython-vita
   sed -i 's/CFLAGS="/CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types /' build_vita.sh
-  sed -i 's/CPPFLAGS="/LDFLAGS="-lpthread" CPPFLAGS="/' build_vita.sh
+  sed -i 's/configure/configure LDFLAGS="-lpthread"/' build_vita.sh
 
-  sh build_vita.sh $pkgdir
-  sh compile_modules_vita.sh $pkgdir
+  bash build_vita.sh $pkgdir
+  sed -i 's/7z a -l/7z a/' compile_modules_vita.sh
+  bash compile_modules_vita.sh $pkgdir
 
   rm -rf $pkgdir/$prefix/bin
   rm -rf $pkgdir/$prefix/share

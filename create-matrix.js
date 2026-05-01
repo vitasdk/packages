@@ -21,10 +21,16 @@ directories.forEach(directory => {
 
 // Calculate Depth (Tier)
 const depth = new Map();
+const visitingDepth = new Set();
 function getDepth(pkg) {
     if (depth.has(pkg)) return depth.get(pkg);
+    if (visitingDepth.has(pkg)) {
+        throw new Error(`Circular dependency detected in getDepth for package: ${pkg}`);
+    }
+    visitingDepth.add(pkg);
     const deps = dependant.get(pkg) || [];
     if (deps.length === 0) {
+        visitingDepth.delete(pkg);
         depth.set(pkg, 0);
         return 0;
     }
@@ -32,6 +38,7 @@ function getDepth(pkg) {
     deps.forEach(dep => {
         maxDepDepth = Math.max(maxDepDepth, getDepth(dep));
     });
+    visitingDepth.delete(pkg);
     depth.set(pkg, maxDepDepth + 1);
     return maxDepDepth + 1;
 }
@@ -97,21 +104,30 @@ if (args[0] !== 'deps') {
 }
 
 
+const visitingDeps = new Set();
+const resolveDependency = (name, map) => {
+    if (visitingDeps.has(name)) {
+        throw new Error(`Circular dependency detected in resolveDependency for package: ${name}`);
+    }
+    visitingDeps.add(name);
+    const deps = map.get(name);
+    if (!deps) {
+        visitingDeps.delete(name);
+        return [];
+    }
+    const ret = [];
+    deps.forEach((dep) => {
+        ret.push(...resolveDependency(dep, map));
+        ret.push(dep);
+    });
+    visitingDeps.delete(name);
+    return ret;
+};
+
 // Add CLI argument handling for 'deps'
 if (args[0] === 'deps' && args[1]) {
 
     const pkg = args[1];
-    
-    const resolveDependency = (name, map) => {
-        const deps = map.get(name);
-        if (!deps) return [];
-        const ret = [];
-        deps.forEach((dep) => {
-            ret.push(...resolveDependency(dep, map));
-            ret.push(dep);
-        });
-        return ret;
-    }
 
     let deps = resolveDependency(pkg, dependant);
     // Remove duplicates
@@ -132,16 +148,6 @@ if (args[0] === 'deps' && args[1]) {
 
 if (args[0] === 'deps-list' && args[1]) {
     const pkg = args[1];
-    const resolveDependency = (name, map) => {
-        const deps = map.get(name);
-        if (!deps) return [];
-        const ret = [];
-        deps.forEach((dep) => {
-            ret.push(...resolveDependency(dep, map));
-            ret.push(dep);
-        });
-        return ret;
-    }
     let deps = resolveDependency(pkg, dependant);
     deps = [...new Set(deps)];
     if (deps.includes('openssl') && deps.includes('openssl-1.1.1')) {
