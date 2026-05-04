@@ -1,9 +1,9 @@
 pkgname=minizip
-pkgver=4.1.0
+pkgver=4.2.1
 pkgrel=1
 url="https://github.com/zlib-ng/minizip-ng"
 source=("https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip")
-sha256sums=('ea483403b8cdd2c74b45940cbb577f2de76038bd74d666a8d4d206ab99ae4e82')
+sha256sums=('4d874d0e5a346e255b4af8f1d10569cb7d72337d58bd24f29118d113b121703c')
 depends=('bzip2' 'openssl' 'zlib' 'zstd' 'xz')
 
 build() {
