@@ -1,9 +1,9 @@
 pkgname=libexif
-pkgver=0.6.25
+pkgver=0.6.26
 pkgrel=1
 url="https://libexif.github.io/"
 source=("https://github.com/libexif/libexif/releases/download/v${pkgver}/libexif-${pkgver}.tar.xz")
-sha256sums=('62f74cf3bf673a6e24d2de68f6741643718541f83aca5947e76e3978c25dce83')
+sha256sums=('4a055ed6575e61ca46c3172be3c753cc16c9becd0f99ec71d58dd0e471476c0c')
 
 build() {
   cd libexif-$pkgver
