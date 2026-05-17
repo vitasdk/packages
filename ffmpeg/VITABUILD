@@ -1,9 +1,9 @@
 pkgname=ffmpeg
-pkgver=8.0.1
+pkgver=8.1.1
 pkgrel=1
 url="https://ffmpeg.org/"
 source=("https://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz")
-sha256sums=('05ee0b03119b45c0bdb4df654b96802e909e0a752f72e4fe3794f487229e5a41')
+sha256sums=('b6863adde98898f42602017462871b5f6333e65aec803fdd7a6308639c52edf3')
 depends=('lame' 'libvorbis' 'flac' 'opus')
 
 build() {
