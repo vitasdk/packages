@@ -20,7 +20,10 @@ prepare() {
 
 build() {
   cd "SDL_mixer-${pkgver}"
-  PATH="$VITASDK/arm-vita-eabi/bin:$PATH" LIBS="-lvorbis -logg -lm" ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic --disable-music-cmd
+  PATH="$VITASDK/arm-vita-eabi/bin:$PATH" \
+  CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types" \
+  CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types" \
+  LIBS="-lvorbis -logg -lm" ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic --disable-music-cmd
   make -j$(nproc)
 }
 

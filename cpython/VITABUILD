@@ -12,9 +12,16 @@ build() {
 
 package () {
   cd cpython-vita
-  sh build_vita.sh $pkgdir
-  sh install_extra_modules.sh $pkgdir
-  sh compile_modules_vita.sh $pkgdir
+  sed -i 's/CFLAGS="/CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types /' build_vita.sh
+  sed -i 's/CXXFLAGS="/CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types /' build_vita.sh
+  sed -i 's/LDFLAGS="/LDFLAGS="-lpthread /' build_vita.sh
+
+  bash build_vita.sh $pkgdir
+  export TOKEN=${GITHUB_TOKEN}
+  bash install_extra_modules.sh $pkgdir
+
+  sed -i 's/7z a -l/7z a/' compile_modules_vita.sh
+  bash compile_modules_vita.sh $pkgdir
   rm -rf $pkgdir/$prefix/bin
   rm -rf $pkgdir/$prefix/share
 }

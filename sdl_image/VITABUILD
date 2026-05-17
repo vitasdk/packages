@@ -18,6 +18,8 @@ prepare() {
 
 build() {
   cd "SDL_image-${pkgver}"
+  CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types" \
+  CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types" \
   ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --without-pic
   make #-j$(nproc)
 }

@@ -7,9 +7,8 @@ sha256sums=('SKIP')
 
 build() {
   cd lame
-  export CFLAGS="-Wl,-q -O2 -ftree-vectorize -mfpu=neon -fomit-frame-pointer -ffast-math"
-  export CXXFLAGS=$CFLAGS
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-frontend --disable-gtktest
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-frontend --disable-gtktest \
+    CFLAGS="-std=gnu11 -Wl,-q -O2 -ftree-vectorize -mfpu=neon -fomit-frame-pointer -ffast-math -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   make -j$(nproc)
 }
 

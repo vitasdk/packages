@@ -13,7 +13,7 @@ prepare() {
 
 build() {
   cd ${pkgname}-${pkgver}
-  make -j$(nproc) CC=arm-vita-eabi-gcc AR=arm-vita-eabi-ar RANLIB=arm-vita-eabi-ranlib libbz2.a
+  make -j$(nproc) CC="arm-vita-eabi-gcc -std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion" AR=arm-vita-eabi-ar RANLIB=arm-vita-eabi-ranlib libbz2.a
 }
 
 package () {

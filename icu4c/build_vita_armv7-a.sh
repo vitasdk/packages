@@ -12,8 +12,10 @@ export CFLAGS="-I$STANDALONE_TOOLCHAIN_ROOT/include/ \
 -DU_HAVE_NL_LANGINFO_CODESET=0 -DU_TIMEZONE=0 \
 -DUCONFIG_NO_BREAK_ITERATION=1 \
 -DUCONFIG_NO_COLLATION=0 -DUCONFIG_NO_FORMATTING=0 -DUCONFIG_NO_TRANSLITERATION=0 \
--DUCONFIG_NO_REGULAR_EXPRESSIONS=1 -D_GNU_SOURCE -march=armv7-a -mfpu=neon"
-export CPPFLAGS=$CFLAGS
+-DUCONFIG_NO_REGULAR_EXPRESSIONS=1 -D_GNU_SOURCE -march=armv7-a -mfpu=neon \
+-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types"
+export CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types"
+export CPPFLAGS="$CFLAGS $CXXFLAGS"
 export LDFLAGS="-lc -lstdc++ -march=armv7-a -Wl,--fix-cortex-a8 -Wl,-rpath-link=$STANDALONE_TOOLCHAIN_ROOT/lib/"
 
 export PATH=$PATH:$STANDALONE_TOOLCHAIN_ROOT/bin

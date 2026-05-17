@@ -1,0 +1,11 @@
+--- libvita2d_ext/source/vita2d_ext.c.orig	2024-04-26 12:48:43.000000000 +0200
++++ libvita2d_ext/source/vita2d_ext.c	2024-04-26 12:52:00.000000000 +0200
+@@ -31,7 +31,7 @@
+ 	return 1;
+ }
+ 
+-int vita2d_ext_fini(SceGxmShaderPatcher *shaderPatcher)
++int vita2d_ext_fini()
+ {
+ 	_vita2d_ext_context = NULL;
+ 	_vita2d_ext_shader_patcher = NULL;

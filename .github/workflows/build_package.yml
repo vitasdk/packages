@@ -1,0 +1,123 @@
+name: Build Package
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+      image_tag:
+        required: true
+        type: string
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    container:
+      image: ghcr.io/${{ github.repository }}/vitasdk:${{ inputs.image_tag }}
+    if: inputs.package != '__dummy__'
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Get recursive dependencies
+        id: deps
+        shell: bash
+        run: |
+          get_all_deps() {
+            local pkg=$1
+            [ -f "$pkg/VITABUILD" ] || return 0
+            local deps=$(bash -c "source $pkg/VITABUILD && echo \${depends[@]}" 2>/dev/null || echo "")
+            for d in $deps; do
+              echo "$d"
+              get_all_deps "$d"
+            done
+          }
+          ALL_DEPS=$(get_all_deps "${{ inputs.package }}" | sort -u)
+          if [ -n "$ALL_DEPS" ]; then
+            DEPS_COMMA=$(echo "$ALL_DEPS" | paste -sd, -)
+            if [[ "$DEPS_COMMA" == *","* ]]; then
+              PATTERN="{$DEPS_COMMA}"
+            else
+              PATTERN="$DEPS_COMMA"
+            fi
+            echo "pattern=$PATTERN" >> $GITHUB_OUTPUT
+            echo "has_deps=true" >> $GITHUB_OUTPUT
+          else
+            echo "pattern=" >> $GITHUB_OUTPUT
+            echo "has_deps=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download dependency artifacts
+        if: steps.deps.outputs.has_deps == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          path: package
+          merge-multiple: true
+          pattern: ${{ steps.deps.outputs.pattern }}
+
+      - name: Install dependencies into sysroot
+        shell: bash
+        run: |
+          export VITASDK=/usr/local/vitasdk
+          mkdir -p $VITASDK/arm-vita-eabi
+          
+          # Function to get all recursive dependencies
+          get_deps() {
+            local pkg=$1
+            [ -f "$pkg/VITABUILD" ] || return 0
+            local deps=$(bash -c "source $pkg/VITABUILD && echo \${depends[@]}")
+            for d in $deps; do
+              echo $d
+              get_deps $d
+            done
+          }
+          
+          if [ -d "package" ]; then
+            
+            # Explicitly choose OpenSSL version for Python builds
+            SKIP_OPENSSL="no"
+            SKIP_OPENSSL_111="no"
+            
+            if [ "${{ inputs.package }}" = "cpython3" ]; then
+                SKIP_OPENSSL="yes"
+            elif [ "${{ inputs.package }}" = "cpython" ]; then
+                SKIP_OPENSSL_111="yes"
+            fi
+
+            for file in package/*.tar.xz; do
+              if [ -f "$file" ]; then
+                pkgname=$(basename "$file" .tar.xz)
+                
+                # Handle OpenSSL conflicts
+                if [ "$pkgname" = "openssl" ] && [ "$SKIP_OPENSSL" = "yes" ]; then
+                    echo "Skipping $pkgname for ${{ inputs.package }}"
+                    continue
+                fi
+                if [ "$pkgname" = "openssl-1.1.1" ] && [ "$SKIP_OPENSSL_111" = "yes" ]; then
+                    echo "Skipping $pkgname for ${{ inputs.package }}"
+                    continue
+                fi
+                
+                tar -C $VITASDK/arm-vita-eabi/ -xvf "$file"
+              fi
+            done
+          fi
+
+      - name: Build package
+        run: |
+          export VITASDK=/usr/local/vitasdk
+          export PATH=$VITASDK/bin:$PATH
+          bash ./build.sh ${{ inputs.package }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Rename package
+        run: |
+          export FILE=`echo ${{ inputs.package }}/*-arm.tar.xz`
+          mv $FILE ${{ inputs.package }}/${{ inputs.package }}.tar.xz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.package }}
+          path: ${{ inputs.package }}/${{ inputs.package }}.tar.xz
+          if-no-files-found: error

@@ -8,7 +8,8 @@ depends=('libogg')
 
 build() {
   cd $pkgname-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-spec --disable-examples
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-spec --disable-examples \
+    CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   make -j$(nproc)
 }
 

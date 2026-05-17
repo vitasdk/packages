@@ -2,14 +2,16 @@ pkgname=pib
 pkgver=2.0
 pkgrel=1
 url="https://github.com/SonicMastr/Pigs-In-A-Blanket"
-source=("git+https://github.com/SonicMastr/Pigs-In-A-Blanket.git")
-sha256sums=('SKIP')
+source=("git+https://github.com/SonicMastr/Pigs-In-A-Blanket.git" "std.patch")
+sha256sums=('SKIP' 'SKIP')
 depends=('taihen')
 
 build() {
   cd "Pigs-In-A-Blanket"
+  patch -Np0 -i ../std.patch
   make -j$(nproc) USE_VITASDK=1
 }
+
 
 package () {
   cd "Pigs-In-A-Blanket"

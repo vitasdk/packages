@@ -7,7 +7,8 @@ sha256sums=('SKIP')
 
 build() {
   cd $pkgname
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-sdl
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-sdl \
+    CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   make -j$(nproc)
 }
 

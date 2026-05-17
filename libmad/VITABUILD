@@ -8,7 +8,7 @@ sha256sums=('SKIP')
 build() {
   cd libmad-psp2
   make -j$(nproc) clean
-  make -j$(nproc)
+  make -j$(nproc) CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
 }
 
 package () {
