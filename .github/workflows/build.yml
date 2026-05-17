@@ -196,7 +196,7 @@ jobs:
   upload-releases:
     needs: [prepare_jobs, build_tier0_main, build_tier0_slow, build_tier1_main, build_tier1_slow, build_tier2_main, build_tier2_slow, build_tier3_main, build_tier3_slow, build_tier4_main, build_tier4_slow]
     runs-on: ubuntu-latest
-    if: contains(github.ref,'refs/heads/master')
+    if: contains(github.ref, 'refs/heads/master') && !cancelled()
     steps:
       - uses: actions/checkout@v6
       - uses: actions/download-artifact@v4
