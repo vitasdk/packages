@@ -20,10 +20,37 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v4
+
+      - name: Get recursive dependencies
+        id: deps
+        shell: bash
+        run: |
+          get_all_deps() {
+            local pkg=$1
+            [ -f "$pkg/VITABUILD" ] || return 0
+            local deps=$(bash -c "source $pkg/VITABUILD && echo \${depends[@]}" 2>/dev/null || echo "")
+            for d in $deps; do
+              echo "$d"
+              get_all_deps "$d"
+            done
+          }
+          ALL_DEPS=$(get_all_deps "${{ inputs.package }}" | sort -u)
+          if [ -n "$ALL_DEPS" ]; then
+            PATTERN=$(echo "$ALL_DEPS" | tr '\n' '|')
+            echo "pattern=$PATTERN" >> $GITHUB_OUTPUT
+            echo "has_deps=true" >> $GITHUB_OUTPUT
+          else
+            echo "pattern=" >> $GITHUB_OUTPUT
+            echo "has_deps=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download dependency artifacts
+        if: steps.deps.outputs.has_deps == 'true'
+        uses: actions/download-artifact@v4
         with:
           path: package
           merge-multiple: true
+          pattern: ${{ steps.deps.outputs.pattern }}
 
       - name: Install dependencies into sysroot
         shell: bash
