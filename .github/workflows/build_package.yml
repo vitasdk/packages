@@ -36,9 +36,13 @@ jobs:
           }
           ALL_DEPS=$(get_all_deps "${{ inputs.package }}" | sort -u)
           if [ -n "$ALL_DEPS" ]; then
-            echo "pattern<<EOF" >> $GITHUB_OUTPUT
-            echo "$ALL_DEPS" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
+            DEPS_COMMA=$(echo "$ALL_DEPS" | paste -sd, -)
+            if [[ "$DEPS_COMMA" == *","* ]]; then
+              PATTERN="{$DEPS_COMMA}"
+            else
+              PATTERN="$DEPS_COMMA"
+            fi
+            echo "pattern=$PATTERN" >> $GITHUB_OUTPUT
             echo "has_deps=true" >> $GITHUB_OUTPUT
           else
             echo "pattern=" >> $GITHUB_OUTPUT
