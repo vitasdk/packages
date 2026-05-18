@@ -1,9 +1,9 @@
 pkgname=libarchive
-pkgver=3.8.6
+pkgver=3.8.7
 pkgrel=1
 url="https://www.libarchive.org/"
 source=("https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz" "libarchive.patch")
-sha256sums=('7d761de5d79e73eb3c573168f8c92400918f842528ffd8105f7033054017686f' '8d1de755127cee27b91f0cc2b820e6a84d4dec6d6ef413a73d059bdf1fc2105e')
+sha256sums=('bc942030fe7cb30e04eed31bd5f63c38cdfd712315b303e91b64e58f05db2346' '8d1de755127cee27b91f0cc2b820e6a84d4dec6d6ef413a73d059bdf1fc2105e')
 depends=('bzip2' 'zlib' 'zstd')
 
 prepare() {
