@@ -22,17 +22,13 @@ build() {
     -DQJS_BUILD_CLI_STATIC=OFF \
     -DQJS_BUILD_CLI_WITH_MIMALLOC=OFF \
     -DQJS_BUILD_CLI_WITH_STATIC_MIMALLOC=OFF \
-    -DQJS_ENABLE_INSTALL=OFF
+    -DQJS_ENABLE_INSTALL=ON
 
   make -j$(nproc) qjs
 }
 
 package() {
   cd quickjs-$pkgver/build
-
-  install -Dm644 libqjs.a \
-    "$pkgdir$VITASDK/arm-vita-eabi/lib/libquickjs.a"
-
-  install -Dm644 ../quickjs.h \
-    "$pkgdir$VITASDK/arm-vita-eabi/include/quickjs.h"
+  touch qjs qjsc  # fake binaries, Vita will never use them.
+  cmake --install . --prefix="$pkgdir$VITASDK/arm-vita-eabi"
 }
