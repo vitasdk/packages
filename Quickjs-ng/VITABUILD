@@ -3,13 +3,16 @@ pkgver=0.14.0
 pkgrel=1
 url="https://github.com/quickjs-ng/quickjs"
 
-source=("https://github.com/quickjs-ng/quickjs/archive/refs/tags/v$pkgver.zip")
+source=("https://github.com/quickjs-ng/quickjs/archive/refs/tags/v$pkgver.zip" "quickjs-ng.patch")
 
-sha256sums=('e636bfa5ce3e871f41578afa0ef02d0d990799c4f48ed3115950de93151ceb06')
+sha256sums=(
+  'e636bfa5ce3e871f41578afa0ef02d0d990799c4f48ed3115950de93151ceb06'
+  '7f11251abede2ccba95c7a3cdd87a3d63cc7900ebaaf4b04ceea0638f0408330'
+)
 
 build() {
   cd quickjs-$pkgver
-
+  patch ./CMakeLists.txt "${srcdir}/quickjs-ng.patch"
   mkdir -p build
   cd build
 
@@ -29,6 +32,5 @@ build() {
 
 package() {
   cd quickjs-$pkgver/build
-  touch qjs qjsc  # fake binaries, Vita will never use them.
   cmake --install . --prefix="$pkgdir$VITASDK/arm-vita-eabi"
 }
