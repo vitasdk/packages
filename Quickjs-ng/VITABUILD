@@ -7,7 +7,7 @@ source=("https://github.com/quickjs-ng/quickjs/archive/refs/tags/v$pkgver.zip" "
 
 sha256sums=(
   'e636bfa5ce3e871f41578afa0ef02d0d990799c4f48ed3115950de93151ceb06'
-  '7f11251abede2ccba95c7a3cdd87a3d63cc7900ebaaf4b04ceea0638f0408330'
+  'deae501764c23a8182c02cb69c8fb0198a76f53d90d520c183438414d46aafaf'
 )
 
 build() {
