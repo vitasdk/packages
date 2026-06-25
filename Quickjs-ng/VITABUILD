@@ -1,0 +1,36 @@
+pkgname=quickjs-ng
+pkgver=0.14.0
+pkgrel=1
+url="https://github.com/quickjs-ng/quickjs"
+
+source=("https://github.com/quickjs-ng/quickjs/archive/refs/tags/v$pkgver.zip" "quickjs-ng.patch")
+
+sha256sums=(
+  'e636bfa5ce3e871f41578afa0ef02d0d990799c4f48ed3115950de93151ceb06'
+  'deae501764c23a8182c02cb69c8fb0198a76f53d90d520c183438414d46aafaf'
+)
+
+build() {
+  cd quickjs-$pkgver
+  patch ./CMakeLists.txt "${srcdir}/quickjs-ng.patch"
+  mkdir -p build
+  cd build
+
+  cmake .. \
+    -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DQJS_BUILD_LIBC=OFF \
+    -DQJS_BUILD_EXAMPLES=OFF \
+    -DQJS_BUILD_CLI_STATIC=OFF \
+    -DQJS_BUILD_CLI_WITH_MIMALLOC=OFF \
+    -DQJS_BUILD_CLI_WITH_STATIC_MIMALLOC=OFF \
+    -DQJS_ENABLE_INSTALL=ON
+
+  make -j$(nproc) qjs
+}
+
+package() {
+  cd quickjs-$pkgver/build
+  cmake --install . --prefix="$pkgdir$VITASDK/arm-vita-eabi"
+}

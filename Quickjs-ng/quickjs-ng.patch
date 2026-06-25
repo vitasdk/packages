@@ -1,0 +1,16 @@
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -549,12 +549,8 @@
+     if(QJS_BUILD_LIBC)
+         install(FILES quickjs-libc.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+     endif()
+-    if(NOT IOS AND NOT TVOS AND NOT WATCHOS)
+-        install(TARGETS qjs_exe RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+-        install(TARGETS qjsc RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+-    endif()
++    set_target_properties(qjs PROPERTIES OUTPUT_NAME quickjs)
+     install(TARGETS qjs EXPORT qjsConfig
+-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+     install(EXPORT qjsConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/quickjs)
