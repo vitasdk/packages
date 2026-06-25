@@ -1,5 +1,5 @@
 pkgname=fmt
-pkgver=12.1.0
+pkgver=12.2.0
 pkgrel=1
 url="https://fmt.dev/"
 source=("https://github.com/fmtlib/fmt/releases/download/$pkgver/$pkgname-$pkgver.zip")
@@ -7,6 +7,7 @@ sha256sums=('695fd197fa5aff8fc67b5f2bbc110490a875cdf7a41686ac8512fb480fa8ada7')
 
 build() {
   cd $pkgname-$pkgver
+  echo "target_compile_definitions(fmt PRIVATE FMT_USE_FLOCKFILE=0)" >> CMakeLists.txt
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DFMT_DOC=OFF -DFMT_TEST=OFF
   make -j$(nproc)
