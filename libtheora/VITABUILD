@@ -1,14 +1,14 @@
 pkgname=libtheora
-pkgver=1.1.1
+pkgver=1.2.0
 pkgrel=1
 url="https://www.theora.org/"
-source=("http://downloads.xiph.org/releases/theora/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('b6ae1ee2fa3d42ac489287d3ec34c5885730b1296f0801ae577a35193d3affbc')
+source=("http://downloads.xiph.org/releases/theora/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('279327339903b544c28a92aeada7d0dcfd0397b59c2f368cc698ac56f515906e')
 depends=('libogg')
 
 build() {
   cd $pkgname-$pkgver
-  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-spec --disable-examples \
+  ./configure --host=arm-vita-eabi --prefix=$prefix --disable-shared --enable-static --disable-doc --disable-spec --disable-examples --disable-asm \
     CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   make -j$(nproc)
 }

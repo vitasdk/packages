@@ -1,15 +1,10 @@
 pkgname=sdl2_net
-pkgver=2.2.0
+pkgver=2.4.0
 pkgrel=1
 url="https://github.com/libsdl-org/SDL_net/"
-source=("https://github.com/libsdl-org/SDL_net/releases/download/release-${pkgver}/SDL2_net-${pkgver}.tar.gz" "vita.patch")
-sha256sums=('4e4a891988316271974ff4e9585ed1ef729a123d22c08bd473129179dc857feb' '7c8b9e816922e53d43a680b69048f4aa2e5d7f92dcc643d3d9433505889813ea')
+source=("https://github.com/libsdl-org/SDL_net/releases/download/release-${pkgver}/SDL2_net-${pkgver}.tar.gz")
+sha256sums=('9cbca2527feb3f1a622d48ba65cc7dee9b1e3f2c55ceafb7d7720bb058aafb30')
 depends=('sdl2')
-
-prepare() {
-  cd SDL2_net-${pkgver}
-  patch -Np1 -i "${srcdir}/vita.patch"
-}
 
 build() {
   cd SDL2_net-${pkgver}
