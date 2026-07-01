@@ -19,7 +19,7 @@ jobs:
     if: inputs.package != '__dummy__'
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Get recursive dependencies
         id: deps
@@ -51,7 +51,7 @@ jobs:
 
       - name: Download dependency artifacts
         if: steps.deps.outputs.has_deps == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: package
           merge-multiple: true
@@ -116,7 +116,7 @@ jobs:
         run: |
           export FILE=`echo ${{ inputs.package }}/*-arm.tar.xz`
           mv $FILE ${{ inputs.package }}/${{ inputs.package }}.tar.xz
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ inputs.package }}
           path: ${{ inputs.package }}/${{ inputs.package }}.tar.xz

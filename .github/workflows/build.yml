@@ -12,7 +12,7 @@ jobs:
   prepare_jobs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install dependencies
         id: set-matrix
         run: |
@@ -43,7 +43,7 @@ jobs:
           echo "Esta PR proviene de un fork externo."
           echo "Se omite la construcción/subida de Docker para evitar errores de permisos."
           echo "Los trabajos de compilación usarán la imagen estable de 'master'."
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         if: github.event.pull_request.head.repo.fork != true
       - name: Set up Docker Buildx
         if: github.event.pull_request.head.repo.fork != true
@@ -212,8 +212,8 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.ref, 'refs/heads/master') && !cancelled()
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           path: package
           pattern: "!*.dockerbuild"
