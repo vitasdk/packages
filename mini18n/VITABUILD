@@ -1,7 +1,7 @@
 pkgname=mini18n
 pkgver=0.2.1
 pkgrel=1
-gitrev=1850682c1e56e93d04b0f352946c01dab475f88a
+gitrev=0717bb70ad453f0678b80325077ebc764481b927
 url="https://github.com/bucanero/mini18n/"
 source=("git+https://github.com/bucanero/${pkgname}#commit=${gitrev}")
 sha256sums=('SKIP')
