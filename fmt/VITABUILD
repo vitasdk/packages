@@ -7,6 +7,7 @@ sha256sums=('a2f4a8d51178f954e4c339007f77edd76ba0cb2e36f87a48e5a5403d9be5878f')
 
 build() {
   cd $pkgname-$pkgver
+  echo "target_compile_definitions(fmt PRIVATE FMT_USE_FLOCKFILE=0)" >> CMakeLists.txt
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS='-DFMT_USE_FLOCKFILE=0' -DFMT_DOC=OFF -DFMT_TEST=OFF
   make -j$(nproc)
