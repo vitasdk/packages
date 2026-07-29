@@ -1,9 +1,9 @@
 pkgname=ffmpeg
-pkgver=8.1.1
+pkgver=8.1.2
 pkgrel=1
 url="https://ffmpeg.org/"
 source=("https://ffmpeg.org/releases/ffmpeg-$pkgver.tar.xz")
-sha256sums=('b6863adde98898f42602017462871b5f6333e65aec803fdd7a6308639c52edf3')
+sha256sums=('464beb5e7bf0c311e68b45ae2f04e9cc2af88851abb4082231742a74d97b524c')
 depends=('lame' 'libvorbis' 'flac' 'opus')
 
 build() {
@@ -35,6 +35,7 @@ build() {
 		--extra-cflags=" -std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types -Wl,-q -O2 -ftree-vectorize -fomit-frame-pointer -ffast-math -D_BSD_SOURCE" \
 		--extra-cxxflags=" -Wl,-q -O2 -ftree-vectorize -fomit-frame-pointer -ffast-math -fno-rtti -fno-exceptions -std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types -D_BSD_SOURCE" \
 		--extra-ldflags=" -L$VITASDK/lib " \
+		--extra-libs=-lmpg123 \
 		--disable-bzlib \
 		--disable-iconv \
 		--disable-lzma \
