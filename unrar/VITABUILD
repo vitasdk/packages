@@ -1,13 +1,13 @@
 pkgname=unrar
-pkgver=6.1.6
-pkgrel=2
+pkgver=7.2.7
+pkgrel=1
 url="https://www.rarlab.com/"
-source=("https://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz" "0001-vita.patch")
-sha256sums=('67f4ab891c062218c2badfaac9c8cab5c8bfd5e96dabfca56c8faa3d209a801d' '0870cbf7aca8ba3a6b8e6e0f239fc1b321cb11fb67229ad5c8dc56ceabcd810e')
+source=("https://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz" "unrar.patch")
+sha256sums=('01d903a7dcf413cb2925696d7796e48e38d471f79bfe7ef3ad2aebf6c12dbefd' 'cd5bfb86d67940e2bc144024911d9bab07cb5f3919d5c40cace44d32bc295c59')
 
 prepare() {
   cd ${pkgname}
-  patch -Np1 -i "${srcdir}/0001-vita.patch"
+  patch -Np1 -i "${srcdir}/unrar.patch"
 }
 
 build() {
@@ -15,7 +15,7 @@ build() {
   make -j$(nproc) -f Makefile.vita
 }
 
-package () {
+package() {
   cd ${pkgname}
   mkdir -p ${pkgdir}/$VITASDK/arm-vita-eabi/lib
   mkdir -p ${pkgdir}/$VITASDK/arm-vita-eabi/include
