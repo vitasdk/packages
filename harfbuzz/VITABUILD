@@ -1,10 +1,10 @@
 pkgname=harfbuzz
-pkgver=14.2.1
+pkgver=14.3.0
 pkgrel=1
 url="https://harfbuzz.github.io/"
 license=('MIT')
 source=("https://github.com/harfbuzz/harfbuzz/releases/download/${pkgver}/harfbuzz-${pkgver}.tar.xz")
-sha256sums=('a54a5d8e9380a41fbb762ce367bcbf7704792dfca0d93f1bbca86c5a57902e0e')
+sha256sums=('16070d77cfc4ba1f1e7327e83bf9b3f55898081cabdb94e56a33e04fc8874eae')
 depends=('freetype')
 
 build() {

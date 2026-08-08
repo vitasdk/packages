@@ -31,10 +31,10 @@ index 0000000..9f9eb98
 +	@rm -rf $(TARGET) $(OBJS)
 +	@echo "Cleaned up!"
 diff --git a/arcread.cpp b/arcread.cpp
-index 1a401f4..4f230a1 100644
+index 7cfa30b..a90884d 100644
 --- a/arcread.cpp
 +++ b/arcread.cpp
-@@ -1319,6 +1319,7 @@ void Archive::ConvertAttributes()
+@@ -1366,6 +1366,7 @@ void Archive::ConvertAttributes()
    // We restore native Unix attributes as is, because it can be backup.
    static mode_t mask = (mode_t) -1;
  
@@ -42,7 +42,7 @@ index 1a401f4..4f230a1 100644
    if (mask == (mode_t) -1)
    {
      // umask call returns the current umask value. Argument (022) is not
-@@ -1328,6 +1329,9 @@ void Archive::ConvertAttributes()
+@@ -1375,6 +1376,9 @@ void Archive::ConvertAttributes()
      // Restore the original umask value, which was changed to 022 above.
      umask(mask);
    }
@@ -53,7 +53,7 @@ index 1a401f4..4f230a1 100644
    switch(FileHead.HSType)
    {
 diff --git a/extinfo.cpp b/extinfo.cpp
-index 5cb90a4..cd3c577 100644
+index 614ca89..1c41acd 100644
 --- a/extinfo.cpp
 +++ b/extinfo.cpp
 @@ -9,7 +9,9 @@
@@ -66,35 +66,21 @@ index 5cb90a4..cd3c577 100644
  #ifdef SAVE_LINKS
  #include "ulinks.cpp"
  #endif
-@@ -26,11 +28,13 @@ void SetExtraInfo20(CommandData *Cmd,Archive &Arc,wchar *Name)
-   switch(Arc.SubBlockHead.SubType)
-   {
- #ifdef _UNIX
-+#ifndef __vita__
-     case UO_HEAD:
-       if (Cmd->ProcessOwners)
-         ExtractUnixOwner20(Arc,Name);
-       break;
- #endif
-+#endif
- #ifdef _WIN_ALL
-     case NTACL_HEAD:
-       if (Cmd->ProcessOwners)
-@@ -49,10 +53,12 @@ void SetExtraInfo20(CommandData *Cmd,Archive &Arc,wchar *Name)
- void SetExtraInfo(CommandData *Cmd,Archive &Arc,wchar *Name)
+@@ -43,10 +45,12 @@ void SetExtraInfo20(CommandData *Cmd,Archive &Arc,const std::wstring &Name)
+ void SetExtraInfo(CommandData *Cmd,Archive &Arc,const std::wstring &Name)
  {
  #ifdef _UNIX
 +#ifndef __vita__
    if (!Cmd->Test && Cmd->ProcessOwners && Arc.Format==RARFMT15 &&
        Arc.SubHead.CmpName(SUBHEAD_TYPE_UOWNER))
-     ExtractUnixOwner30(Arc,Name);
+     ExtractUnixOwner30(Arc,Name.c_str());
  #endif
 +#endif
  #ifdef _WIN_ALL
    if (!Cmd->Test && Cmd->ProcessOwners && Arc.SubHead.CmpName(SUBHEAD_TYPE_ACL))
      ExtractACL(Arc,Name);
-@@ -66,9 +72,11 @@ void SetExtraInfo(CommandData *Cmd,Archive &Arc,wchar *Name)
- void SetFileHeaderExtra(CommandData *Cmd,Archive &Arc,wchar *Name)
+@@ -60,9 +64,11 @@ void SetExtraInfo(CommandData *Cmd,Archive &Arc,const std::wstring &Name)
+ void SetFileHeaderExtra(CommandData *Cmd,Archive &Arc,const std::wstring &Name)
  {
  #ifdef _UNIX
 +#ifndef __vita__
@@ -106,35 +92,34 @@ index 5cb90a4..cd3c577 100644
  
  
 diff --git a/file.cpp b/file.cpp
-index e7b584d..127541f 100644
+index c6fab17..ee14746 100644
 --- a/file.cpp
 +++ b/file.cpp
-@@ -116,6 +116,7 @@ bool File::Open(const wchar *Name,uint Mode)
-   WideToChar(Name,NameA,ASIZE(NameA));
+@@ -121,6 +121,7 @@ bool File::Open(const std::wstring &Name,uint Mode)
+   WideToChar(Name,NameA);
  
-   int handle=open(NameA,flags);
-+#if !defined(__vita__)
+   int handle=open(NameA.c_str(),flags);
++#ifndef __vita__
  #ifdef LOCK_EX
  
  #ifdef _OSF_SOURCE
-@@ -128,6 +129,8 @@ bool File::Open(const wchar *Name,uint Mode)
+@@ -132,6 +133,7 @@ bool File::Open(const std::wstring &Name,uint Mode)
+     return false;
    }
  
- #endif
 +#endif
-+
+ #endif
    if (handle==-1)
      hNewFile=FILE_BAD_HANDLE;
-   else
-@@ -700,6 +703,7 @@ void File::SetCloseFileTime(RarTime *ftm,RarTime *fta)
+@@ -714,6 +716,7 @@ void File::SetCloseFileTime(RarTime *ftm,RarTime *fta)
  
- void File::SetCloseFileTimeByName(const wchar *Name,RarTime *ftm,RarTime *fta)
+ void File::SetCloseFileTimeByName(const std::wstring &Name,RarTime *ftm,RarTime *fta)
  {
 +#ifndef __vita__
  #ifdef _UNIX
    bool setm=ftm!=NULL && ftm->IsSet();
    bool seta=fta!=NULL && fta->IsSet();
-@@ -729,6 +733,7 @@ void File::SetCloseFileTimeByName(const wchar *Name,RarTime *ftm,RarTime *fta)
+@@ -743,6 +746,7 @@ void File::SetCloseFileTimeByName(const std::wstring &Name,RarTime *ftm,RarTime
  #endif
    }
  #endif
@@ -143,42 +128,45 @@ index e7b584d..127541f 100644
  
  
 diff --git a/filefn.cpp b/filefn.cpp
-index 883c26e..5e53f5d 100644
+index 1f34d26..fbe9b52 100644
 --- a/filefn.cpp
 +++ b/filefn.cpp
-@@ -154,6 +154,7 @@ int64 GetFreeDisk(const wchar *Name)
+@@ -157,6 +157,7 @@ int64 GetFreeDisk(const std::wstring &Name)
        uiUserFree.u.HighPart<=uiTotalFree.u.HighPart)
      return INT32TO64(uiUserFree.u.HighPart,uiUserFree.u.LowPart);
    return 0;
 +#elif defined(__vita__)
  #elif defined(_UNIX)
-   wchar Root[NM];
-   GetFilePath(Name,Root,ASIZE(Root));
+   std::wstring Root;
+   GetPathWithSep(Name,Root);
 diff --git a/os.hpp b/os.hpp
-index 7df3c6c..69c17c4 100644
+index f94b5b3..6780151 100644
 --- a/os.hpp
 +++ b/os.hpp
-@@ -147,7 +147,7 @@
- #if defined(RAR_SMP) && defined(__APPLE__)
+@@ -131,8 +131,10 @@
    #include <sys/sysctl.h>
  #endif
--#ifndef SFX_MODULE
-+#if !defined(SFX_MODULE) && !defined(__vita__)
+ #ifndef SFX_MODULE
++#ifndef __vita__
      #include <sys/statvfs.h>
  #endif
++#endif
  #include <pwd.h>
-@@ -169,8 +169,10 @@
+ #include <grp.h>
+ #include <wchar.h>
+@@ -174,9 +176,11 @@
+ #endif
+ #endif
  
- 
++#ifndef __vita__
  #ifdef  S_IFLNK
-+#if !defined(__vita__)
  #define SAVE_LINKS
  #endif
 +#endif
  
  #if defined(__linux) || defined(__FreeBSD__)
  #include <sys/time.h>
-@@ -215,7 +217,7 @@
+@@ -225,7 +229,7 @@
  #endif
  
  // Unlike Apple x64, utimensat shall be available in all Apple M1 systems.
@@ -188,22 +176,20 @@ index 7df3c6c..69c17c4 100644
  #endif
  
 diff --git a/ulinks.cpp b/ulinks.cpp
-index d198f2e..9db4fbb 100644
+index 027991f..f5f75e6 100644
 --- a/ulinks.cpp
 +++ b/ulinks.cpp
-@@ -22,7 +22,8 @@ static bool UnixSymlink(CommandData *Cmd,const char *Target,const wchar *LinkNam
+@@ -22,6 +22,7 @@ static bool UnixSymlink(CommandData *Cmd,const std::string &Target,const wchar *
      }
      return false;
    }
--#ifdef USE_LUTIMES
 +#ifndef __vita__
-+#if USE_LUTIMES
+ #ifdef USE_LUTIMES
  #ifdef UNIX_TIME_NS
    timespec times[2];
-   times[0].tv_sec=fta->GetUnix();
-@@ -38,6 +39,7 @@ static bool UnixSymlink(CommandData *Cmd,const char *Target,const wchar *LinkNam
+@@ -38,6 +39,7 @@ static bool UnixSymlink(CommandData *Cmd,const std::string &Target,const wchar *
    tv[1].tv_usec=long(ftm->GetUnixNS()%1000000000/1000);
-   lutimes(LinkNameA,tv);
+   lutimes(LinkNameA.c_str(),tv);
  #endif
 +#endif
  #endif
