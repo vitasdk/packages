@@ -1,8 +1,8 @@
 pkgname=kubridge
-pkgver=0.0.0.r18.ga4ef20f
-pkgrel=2
+pkgver=0.0.0.r19.g417ddde
+pkgrel=1
 url="https://github.com/bythos14/kubridge"
-source=("git+https://github.com/bythos14/kubridge.git#commit=a4ef20fc3ab07b493f9d7d67703272831e445e21"
+source=("git+https://github.com/bythos14/kubridge.git#commit=417ddde9a744eba98d769382c1c1372b8e119139"
         "vita-headers-886.diff")
 sha256sums=('SKIP'
             '6214bb444a460f3a7b236f689d354a9515cab2597ccd2bd8df92d9d447949517')
