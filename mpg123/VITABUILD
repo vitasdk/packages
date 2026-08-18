@@ -1,9 +1,9 @@
 pkgname=mpg123
-pkgver=1.33.5
+pkgver=1.33.7
 pkgrel=1
 url="https://www.mpg123.de"
 source=("https://www.mpg123.de/download/mpg123-${pkgver}.tar.bz2" "mpg123.patch")
-sha256sums=('0d7ebc8da0aff3ca383c8c6b5a6adbe402ee5bb256685b8c5499f3a739f9d6dd' 'aca128a70e2e665d41d8c146b300207c8842244457bf44bd01a643b4db128a9f')
+sha256sums=('31d0e35a4ca567ec9b5ebda6c3062bb4435d6d3eacd6ef0d95cadd7854dc03ee' 'aca128a70e2e665d41d8c146b300207c8842244457bf44bd01a643b4db128a9f')
 
 prepare() {
   cd $pkgname-$pkgver
