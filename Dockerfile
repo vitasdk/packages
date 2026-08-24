@@ -77,7 +77,7 @@ RUN wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz \
 # Clone and install VitaSDK using exact core snapshot or development bootstrap
 ARG VITASDK_CACHE_BUST
 ARG CORE_SNAPSHOT
-ARG VDPM_REF=master
+ARG VDPM_REF=v0.1.3
 RUN echo "VitaSDK Cache Bust: $VITASDK_CACHE_BUST" && \
     if [ -n "$CORE_SNAPSHOT" ]; then \
         echo "Installing VitaSDK from exact core snapshot: $CORE_SNAPSHOT" && \
