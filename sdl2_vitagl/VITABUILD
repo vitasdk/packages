@@ -1,0 +1,34 @@
+pkgname=sdl2_vitagl
+pkgver=2.32.8
+pkgrel=1
+pkgdesc="SDL2 with the vitaGL video backend, for projects that need OpenGL"
+url='https://www.libsdl.org'
+license=('Zlib')
+depends=('vitaGL' 'vitaShaRK' 'SceShaccCgExt' 'libmathneon' 'taihen')
+provides=("sdl2=$pkgver")
+conflicts=('sdl2')
+source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz"
+        "vitagl-backend.patch")
+sha256sums=('0ca83e9c9b31e18288c7ec811108e58bac1f1bb5ec6577ad386830eac51c787e'
+            'dd120e63ae595ab184598adb54d6c6cd7f8fa2f9b8f5178356218d4b77d39de4')
+
+prepare() {
+  cd "SDL2-${pkgver}"
+  patch -p1 < ../vitagl-backend.patch
+}
+
+build() {
+  cd "SDL2-${pkgver}"
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DSDL_TEST=OFF \
+   -DVIDEO_VITA_VGL=ON \
+   -DCMAKE_C_FLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types" \
+   -DCMAKE_CXX_FLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types"
+  make -j$(nproc)
+}
+
+package () {
+  cd "SDL2-${pkgver}"
+  cd build
+  make DESTDIR=$pkgdir install
+}

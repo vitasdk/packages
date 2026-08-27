@@ -1,0 +1,837 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d65157f56..6f42ffd78 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -523,6 +523,7 @@ endif()
+ if(VITA)
+   set_option(VIDEO_VITA_PIB  "Build with PSVita piglet gles2 support" OFF)
+   set_option(VIDEO_VITA_PVR  "Build with PSVita PVR gles/gles2 support" OFF)
++  set_option(VIDEO_VITA_VGL  "Build with PSVita vitaGL support" OFF)
+ endif()
+ 
+ # General source files
+@@ -2588,6 +2589,33 @@ elseif(VITA)
+       endif()
+     endif()
+ 
++    if(VIDEO_VITA_VGL)
++      check_include_file(vitaGL.h HAVE_VITAGL_H)
++
++      if(HAVE_VITAGL_H)
++        set(HAVE_OPENGLES TRUE)
++        set(SDL_VIDEO_OPENGL_ES 1)
++        set(SDL_VIDEO_RENDER_OGL_ES 1)
++        set(SDL_VIDEO_OPENGL_ES2 1)
++        set(SDL_VIDEO_RENDER_OGL_ES2 1)
++
++        set(HAVE_OPENGL TRUE)
++        set(SDL_VIDEO_OPENGL 1)
++
++        list(APPEND EXTRA_LIBS
++          vitaGL
++          vitashark
++          mathneon
++          SceShaccCg_stub
++          SceKernelDmacMgr_stub
++        )
++        set(HAVE_VIDEO_VITA_VGL ON)
++        set(SDL_VIDEO_VITA_VGL 1)
++      else()
++        set(HAVE_VIDEO_VITA_VGL OFF)
++      endif()
++    endif()
++
+     if(VIDEO_VITA_PVR)
+       check_include_file(gpu_es4/psp2_pvr_hint.h HAVE_PVR_H)
+       if(HAVE_PVR_H)
+@@ -2627,6 +2655,7 @@ elseif(VITA)
+     set(SDL_VIDEO_RENDER_VITA_GXM 1)
+ 
+     list(APPEND EXTRA_LIBS
++      SceIme_stub
+       SceGxm_stub
+       SceDisplay_stub
+       SceCtrl_stub
+diff --git a/include/SDL_config.h.cmake b/include/SDL_config.h.cmake
+index ef014e7dd..cf0cf6546 100644
+--- a/include/SDL_config.h.cmake
++++ b/include/SDL_config.h.cmake
+@@ -542,6 +542,7 @@
+ #cmakedefine SDL_VIDEO_VITA_PIB @SDL_VIDEO_VITA_PIB@
+ #cmakedefine SDL_VIDEO_VITA_PVR @SDL_VIDEO_VITA_PVR@
+ #cmakedefine SDL_VIDEO_VITA_PVR_OGL @SDL_VIDEO_VITA_PVR_OGL@
++#cmakedefine SDL_VIDEO_VITA_VGL @SDL_VIDEO_VITA_VGL@
+ 
+ #cmakedefine SDL_HAVE_LIBDECOR_GET_MIN_MAX @SDL_HAVE_LIBDECOR_GET_MIN_MAX@
+ 
+diff --git a/include/SDL_opengles.h b/include/SDL_opengles.h
+index adf6ef782..1a2fb11ae 100644
+--- a/include/SDL_opengles.h
++++ b/include/SDL_opengles.h
+@@ -28,6 +28,19 @@
+ #ifdef __IPHONEOS__
+ #include <OpenGLES/ES1/gl.h>
+ #include <OpenGLES/ES1/glext.h>
++#elif defined(SDL_VIDEO_VITA_VGL)
++#include <vitaGL.h>
++
++#define GL_FUNC_ADD_OES                                         0x8006
++#define GL_FUNC_SUBTRACT_OES                                    0x800A
++#define GL_FUNC_REVERSE_SUBTRACT_OES                            0x800B
++#define GL_MIN_EXT                                              0x8007
++#define GL_MAX_EXT                                              0x8008
++#define GL_UNPACK_ALIGNMENT                                     0x0CF5
++#define GL_FRAMEBUFFER_OES                                      0x8D40
++#define GL_COLOR_ATTACHMENT0_OES                                0x8CE0
++#define GL_FRAMEBUFFER_COMPLETE_OES                             0x8CD5
++#define GL_FRAMEBUFFER_BINDING_OES                              0x8CA6
+ #else
+ #include <GLES/gl.h>
+ #include <GLES/glext.h>
+diff --git a/src/render/opengles2/SDL_render_gles2.c b/src/render/opengles2/SDL_render_gles2.c
+index be182a850..17782b3fc 100644
+--- a/src/render/opengles2/SDL_render_gles2.c
++++ b/src/render/opengles2/SDL_render_gles2.c
+@@ -29,6 +29,11 @@
+ #include "../../video/SDL_blit.h"
+ #include "SDL_shaders_gles2.h"
+ 
++#if defined(SDL_VIDEO_VITA_VGL)
++#define GL_CG_VERTEX_SHADER_EXT 0x890E
++#define GL_CG_FRAGMENT_SHADER_EXT 0x890F
++#endif
++
+ /* WebGL doesn't offer client-side arrays, so use Vertex Buffer Objects
+    on Emscripten, which converts GLES2 into WebGL calls.
+    In all other cases, attempt to use client-side arrays, as they tend to
+@@ -544,6 +549,13 @@ static GLuint GLES2_CacheShader(GLES2_RenderData *data, GLES2_ShaderType type, G
+ #endif
+ 
+         /* Compile */
++#ifdef SDL_VIDEO_VITA_VGL
++        if (shader_type == GL_VERTEX_SHADER) {
++            shader_type = GL_CG_VERTEX_SHADER_EXT;
++        } else {
++            shader_type = GL_CG_FRAGMENT_SHADER_EXT;
++        }
++#endif
+         id = data->glCreateShader(shader_type);
+         data->glShaderSource(id, num_src, shader_src_list, NULL);
+         data->glCompileShader(id);
+diff --git a/src/render/opengles2/SDL_shaders_gles2.c b/src/render/opengles2/SDL_shaders_gles2.c
+index ff455227c..daab397de 100644
+--- a/src/render/opengles2/SDL_shaders_gles2.c
++++ b/src/render/opengles2/SDL_shaders_gles2.c
+@@ -20,7 +20,7 @@
+ */
+ #include "../../SDL_internal.h"
+ 
+-#if SDL_VIDEO_RENDER_OGL_ES2
++#if SDL_VIDEO_RENDER_OGL_ES2 && !SDL_RENDER_DISABLED && !SDL_VIDEO_VITA_VGL && !SDL_VIDEO_VITA_PIB
+ 
+ #include "SDL_hints.h"
+ #include "SDL_video.h"
+diff --git a/src/render/opengles2/SDL_shaders_gles2_cg.c b/src/render/opengles2/SDL_shaders_gles2_cg.c
+new file mode 100644
+index 000000000..e030b8ea2
+--- /dev/null
++++ b/src/render/opengles2/SDL_shaders_gles2_cg.c
+@@ -0,0 +1,356 @@
++/*
++  Simple DirectMedia Layer
++  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
++
++  This software is provided 'as-is', without any express or implied
++  warranty.  In no event will the authors be held liable for any damages
++  arising from the use of this software.
++
++  Permission is granted to anyone to use this software for any purpose,
++  including commercial applications, and to alter it and redistribute it
++  freely, subject to the following restrictions:
++
++  1. The origin of this software must not be misrepresented; you must not
++     claim that you wrote the original software. If you use this software
++     in a product, an acknowledgment in the product documentation would be
++     appreciated but is not required.
++  2. Altered source versions must be plainly marked as such, and must not be
++     misrepresented as being the original software.
++  3. This notice may not be removed or altered from any source distribution.
++*/
++#include "../../SDL_internal.h"
++
++#if SDL_VIDEO_RENDER_OGL_ES2 && !SDL_RENDER_DISABLED && (SDL_VIDEO_VITA_VGL || SDL_VIDEO_VITA_PIB)
++
++#include "SDL_video.h"
++#include "SDL_opengles2.h"
++#include "SDL_shaders_gles2.h"
++#include "SDL_stdinc.h"
++
++/*************************************************************************************************
++ * Vertex/fragment shader source                                                                 *
++ *************************************************************************************************/
++static const char GLES2_Vertex_Default[] = " \
++    struct _Output { \
++      float2 v_texCoord : TEXCOORD0; \
++      float4 v_color : COLOR; \
++      float4 position : POSITION; \
++      float pointsize    : PSIZE; \
++    }; \
++\
++    _Output main( \
++        uniform float4x4 u_projection, \
++        float2 a_position, \
++        float4 a_color, \
++        float2 a_texCoord \
++    ) \
++    { \
++        _Output OUT; \
++\
++        OUT.v_texCoord = a_texCoord; \
++        OUT.v_color = a_color; \
++        OUT.position =  mul(float4(a_position, 0.0, 1.0), u_projection); \
++        OUT.pointsize = 1.0; \
++        return OUT; \
++    } \
++";
++
++static const char GLES2_Fragment_Solid[] = " \
++    float4 main(float4 v_color : COLOR) : COLOR \
++    { \
++        return v_color; \
++    } \
++";
++
++static const char GLES2_Fragment_TextureABGR[] = " \
++    float4 main(uniform sampler2D u_texture, float4 v_color : COLOR, float2 v_texCoord : TEXCOORD0 ) : COLOR \
++    { \
++        float4 color = tex2D(u_texture, v_texCoord); \
++        return color * v_color; \
++    } \
++";
++
++/* ARGB to ABGR conversion */
++static const char GLES2_Fragment_TextureARGB[] = " \
++    float4 main(uniform sampler2D u_texture, float4 v_color : COLOR, float2 v_texCoord : TEXCOORD0 ) : COLOR \
++    { \
++        float4 abgr = tex2D(u_texture, v_texCoord); \
++        float4 color = abgr; \
++        color.r = abgr.b; \
++        color.b = abgr.r; \
++        return color * v_color; \
++    } \
++";
++
++/* RGB to ABGR conversion */
++static const char GLES2_Fragment_TextureRGB[] = " \
++    float4 main(uniform sampler2D u_texture, float4 v_color : COLOR, float2 v_texCoord : TEXCOORD0 ) : COLOR \
++    { \
++        float4 abgr = tex2D(u_texture, v_texCoord); \
++        float4 color = abgr; \
++        color.r = abgr.b; \
++        color.b = abgr.r; \
++        color.a = 1.0; \
++        return color * v_color; \
++    } \
++";
++
++/* BGR to ABGR conversion */
++static const char GLES2_Fragment_TextureBGR[] = " \
++    float4 main(uniform sampler2D u_texture, float4 v_color : COLOR, float2 v_texCoord : TEXCOORD0 ) : COLOR \
++    { \
++        float4 abgr = tex2D(u_texture, v_texCoord); \
++        float4 color = abgr; \
++        color.a = 1.0; \
++        return color * v_color; \
++    } \
++";
++
++#if SDL_HAVE_YUV
++
++#define JPEG_SHADER_CONSTANTS                                        \
++"    // YUV offset \n"                                               \
++"    const float3 offset = float3(0, -0.501960814, -0.501960814);\n" \
++"\n"                                                                 \
++"    // RGB coefficients \n"                                         \
++"    const float3x3 matrix = float3x3( 1,       1,        1,\n"      \
++"                                  0,      -0.3441,   1.772,\n"      \
++"                                  1.402,  -0.7141,   0);\n"         \
++
++#define BT601_SHADER_CONSTANTS                                       \
++"    // YUV offset \n"                                               \
++"    const float3 offset = vec3(-0.0627451017, -0.501960814, -0.501960814);\n" \
++"\n"                                                                 \
++"    // RGB coefficients \n"                                         \
++"    const float3x3 matrix = float3x3( 1.1644,  1.1644,   1.1644,\n" \
++"                                      0,      -0.3918,   2.0172,\n" \
++"                                      1.596,  -0.813,    0);\n"     \
++
++#define BT709_SHADER_CONSTANTS                                       \
++"    // YUV offset \n"                                               \
++"    const float3 offset = float3(-0.0627451017, -0.501960814, -0.501960814);\n" \
++"\n"                                                                 \
++"    // RGB coefficients \n"                                         \
++"    const float3x3 matrix = float3x3( 1.1644,  1.1644,   1.1644,\n" \
++"                                      0,      -0.2132,   2.1124,\n" \
++"                                      1.7927, -0.5329,   0);\n"     \
++
++
++#define YUV_SHADER_PROLOGUE                                     \
++"float4 main(\n"                                                \
++"    float2 v_texCoord : TEXCOORD0,\n"                          \
++"    uniform sampler2D u_texture,\n"                            \
++"    uniform sampler2D u_texture_u,\n"                          \
++"    uniform sampler2D u_texture_v,\n"                          \
++"    uniform vec4 u_modulation,\n"                              \
++") : COLOR {\n"                                                 \
++
++#define YUV_SHADER_BODY                                         \
++"    float3 yuv;\n"                                             \
++"    half3 rgb;\n"                                              \
++"\n"                                                            \
++"    // Get the YUV values \n"                                  \
++"    yuv.x = tex2D(u_texture,   v_texCoord).r;\n"               \
++"    yuv.y = tex2D(u_texture_u, v_texCoord).r;\n"               \
++"    yuv.z = tex2D(u_texture_v, v_texCoord).r;\n"               \
++"\n"                                                            \
++"    // Do the color transform \n"                              \
++"    yuv += offset;\n"                                          \
++"    rgb = mul(yuv, matrix);\n"                                 \
++"\n"                                                            \
++"    // That was easy. :) \n"                                   \
++"    return float4(rgb, 1.0) * u_modulation;\n"                 \
++"}"                                                             \
++
++#define NV12_RA_SHADER_BODY                                     \
++"    float3 yuv;\n"                                             \
++"    half3 rgb;\n"                                              \
++"\n"                                                            \
++"    // Get the YUV values \n"                                  \
++"    yuv.x = tex2D(u_texture,   v_texCoord).r;\n"               \
++"    yuv.yz = tex2D(u_texture_u, v_texCoord).ra;\n"             \
++"\n"                                                            \
++"    // Do the color transform \n"                              \
++"    yuv += offset;\n"                                          \
++"    rgb = mul(yuv, matrix);\n"                                 \
++"\n"                                                            \
++"    // That was easy. :) \n"                                   \
++"    return float4(rgb, 1.0) * u_modulation;\n"                 \
++"}"                                                                 \
++
++#define NV12_RG_SHADER_BODY                                     \
++"    float3 yuv;\n"                                             \
++"    half3 rgb;\n"                                              \
++"\n"                                                            \
++"    // Get the YUV values \n"                                  \
++"    yuv.x = tex2D(u_texture,   v_texCoord).r;\n"               \
++"    yuv.yz = tex2D(u_texture_u, v_texCoord).ra;\n"             \
++"\n"                                                            \
++"    // Do the color transform \n"                              \
++"    yuv += offset;\n"                                          \
++"    rgb = mul(yuv, matrix);\n"                                 \
++"\n"                                                            \
++"    // That was easy. :) \n"                                   \
++"    return float4(rgb, 1.0) * u_modulation;\n"                 \
++"}"                                                             \
++
++#define NV21_SHADER_BODY                                        \
++"    float3 yuv;\n"                                             \
++"    half3 rgb;\n"                                              \
++"\n"                                                            \
++"    // Get the YUV values \n"                                  \
++"    yuv.x = tex2D(u_texture,   v_texCoord).r;\n"               \
++"    yuv.yz = tex2D(u_texture_u, v_texCoord).ar;\n"             \
++"\n"                                                            \
++"    // Do the color transform \n"                              \
++"    yuv += offset;\n"                                          \
++"    rgb = mul(yuv, matrix);\n"                                 \
++"\n"                                                            \
++"    // That was easy. :) \n"                                   \
++"    return float4(rgb, 1.0) * u_modulation;\n"                 \
++"}"                                                             \
++
++/* YUV to ABGR conversion */
++static const char GLES2_Fragment_TextureYUVJPEG[] = \
++        YUV_SHADER_PROLOGUE \
++        JPEG_SHADER_CONSTANTS \
++        YUV_SHADER_BODY \
++;
++static const char GLES2_Fragment_TextureYUVBT601[] = \
++        YUV_SHADER_PROLOGUE \
++        BT601_SHADER_CONSTANTS \
++        YUV_SHADER_BODY \
++;
++static const char GLES2_Fragment_TextureYUVBT709[] = \
++        YUV_SHADER_PROLOGUE \
++        BT709_SHADER_CONSTANTS \
++        YUV_SHADER_BODY \
++;
++
++/* NV12 to ABGR conversion */
++static const char GLES2_Fragment_TextureNV12JPEG[] = \
++        YUV_SHADER_PROLOGUE \
++        JPEG_SHADER_CONSTANTS \
++        NV12_RA_SHADER_BODY \
++;
++static const char GLES2_Fragment_TextureNV12BT601_RA[] = \
++        YUV_SHADER_PROLOGUE \
++        BT601_SHADER_CONSTANTS \
++        NV12_RA_SHADER_BODY \
++;
++static const char GLES2_Fragment_TextureNV12BT601_RG[] = \
++        YUV_SHADER_PROLOGUE \
++        BT601_SHADER_CONSTANTS \
++        NV12_RG_SHADER_BODY \
++;
++static const char GLES2_Fragment_TextureNV12BT709_RA[] = \
++        YUV_SHADER_PROLOGUE \
++        BT709_SHADER_CONSTANTS \
++        NV12_RA_SHADER_BODY \
++;
++static const char GLES2_Fragment_TextureNV12BT709_RG[] = \
++        YUV_SHADER_PROLOGUE \
++        BT709_SHADER_CONSTANTS \
++        NV12_RG_SHADER_BODY \
++;
++
++/* NV21 to ABGR conversion */
++static const char GLES2_Fragment_TextureNV21JPEG[] = \
++        YUV_SHADER_PROLOGUE \
++        JPEG_SHADER_CONSTANTS \
++        NV21_SHADER_BODY \
++;
++static const char GLES2_Fragment_TextureNV21BT601[] = \
++        YUV_SHADER_PROLOGUE \
++        BT601_SHADER_CONSTANTS \
++        NV21_SHADER_BODY \
++;
++static const char GLES2_Fragment_TextureNV21BT709[] = \
++        YUV_SHADER_PROLOGUE \
++        BT709_SHADER_CONSTANTS \
++        NV21_SHADER_BODY \
++;
++#endif
++
++/* Custom Android video format texture */
++static const char GLES2_Fragment_TextureExternalOES[] = " \
++    float4 main( \
++        float2 v_texCoord : TEXCOORD0, \
++        uniform sampler2D u_texture, \
++        uniform float4 u_modulation \
++    ) { \
++        return tex2D(u_texture, v_texCoord) * u_modulation; \
++    } \
++";
++
++
++/*************************************************************************************************
++ * Shader selector                                                                               *
++ *************************************************************************************************/
++
++/* The Cg sources are complete on their own: no GLSL version prologue and no
++   precision qualifier include, which is what these two supply for GLSL. */
++const char *GLES2_GetShaderPrologue(GLES2_ShaderType type)
++{
++    return "";
++}
++
++const char *GLES2_GetShaderInclude(GLES2_ShaderIncludeType type)
++{
++    return "";
++}
++
++GLES2_ShaderIncludeType GLES2_GetTexCoordPrecisionEnumFromHint(void)
++{
++    return GLES2_SHADER_FRAGMENT_INCLUDE_UNDEF_PRECISION;
++}
++
++const char *GLES2_GetShader(GLES2_ShaderType type)
++{
++    switch (type) {
++    case GLES2_SHADER_VERTEX_DEFAULT:
++        return GLES2_Vertex_Default;
++    case GLES2_SHADER_FRAGMENT_SOLID:
++        return GLES2_Fragment_Solid;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_ABGR:
++        return GLES2_Fragment_TextureABGR;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_ARGB:
++        return GLES2_Fragment_TextureARGB;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_RGB:
++        return GLES2_Fragment_TextureRGB;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_BGR:
++        return GLES2_Fragment_TextureBGR;
++#if SDL_HAVE_YUV
++    case GLES2_SHADER_FRAGMENT_TEXTURE_YUV_JPEG:
++        return GLES2_Fragment_TextureYUVJPEG;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_YUV_BT601:
++        return GLES2_Fragment_TextureYUVBT601;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_YUV_BT709:
++        return GLES2_Fragment_TextureYUVBT709;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_NV12_JPEG:
++        return GLES2_Fragment_TextureNV12JPEG;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_NV12_RA_BT601:
++        return GLES2_Fragment_TextureNV12BT601_RA;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_NV12_RG_BT601:
++        return GLES2_Fragment_TextureNV12BT601_RG;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_NV12_RA_BT709:
++        return GLES2_Fragment_TextureNV12BT709_RA;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_NV12_RG_BT709:
++        return GLES2_Fragment_TextureNV12BT709_RG;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_NV21_JPEG:
++        return GLES2_Fragment_TextureNV21JPEG;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_NV21_BT601:
++        return GLES2_Fragment_TextureNV21BT601;
++    case GLES2_SHADER_FRAGMENT_TEXTURE_NV21_BT709:
++        return GLES2_Fragment_TextureNV21BT709;
++#endif
++    case GLES2_SHADER_FRAGMENT_TEXTURE_EXTERNAL_OES:
++        return GLES2_Fragment_TextureExternalOES;
++    default:
++        return NULL;
++    }
++}
++
++#endif /* SDL_VIDEO_RENDER_OGL_ES2 && !SDL_RENDER_DISABLED */
++
++/* vi: set ts=4 sw=4 expandtab: */
+diff --git a/src/video/vita/SDL_vitagles_vgl.c b/src/video/vita/SDL_vitagles_vgl.c
+new file mode 100644
+index 000000000..c554d6916
+--- /dev/null
++++ b/src/video/vita/SDL_vitagles_vgl.c
+@@ -0,0 +1,186 @@
++/*
++  Simple DirectMedia Layer
++  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
++
++  This software is provided 'as-is', without any express or implied
++  warranty.  In no event will the authors be held liable for any damages
++  arising from the use of this software.
++
++  Permission is granted to anyone to use this software for any purpose,
++  including commercial applications, and to alter it and redistribute it
++  freely, subject to the following restrictions:
++
++  1. The origin of this software must not be misrepresented; you must not
++     claim that you wrote the original software. If you use this software
++     in a product, an acknowledgment in the product documentation would be
++     appreciated but is not required.
++  2. Altered source versions must be plainly marked as such, and must not be
++     misrepresented as being the original software.
++  3. This notice may not be removed or altered from any source distribution.
++*/
++#include "../../SDL_internal.h"
++
++#if SDL_VIDEO_DRIVER_VITA && SDL_VIDEO_VITA_VGL
++
++#include <stdlib.h>
++#include <string.h>
++
++#include "SDL_error.h"
++#include "SDL_vitavideo.h"
++#include "SDL_vitagles_vgl.h"
++#include "SDL_hints.h"
++
++#define MEMORY_VITAGL_THRESHOLD 12 * 1024 * 1024
++
++// only one instance of vitaGL can run at the same time
++static int vgl_initialized = 0;
++
++int
++VITA_GLES_LoadLibrary(_THIS, const char *path)
++{
++    if (!vgl_initialized) {
++        // init vitaGL once and never deinit it again until the driver dies
++        enum SceGxmMultisampleMode gxm_ms;
++
++        switch (_this->gl_config.multisamplesamples) { 
++            case 2:  gxm_ms = SCE_GXM_MULTISAMPLE_2X; break;
++            case 4:
++            case 8:
++            case 16: gxm_ms = SCE_GXM_MULTISAMPLE_4X; break;
++            default: gxm_ms = SCE_GXM_MULTISAMPLE_NONE; break;
++        }
++
++        sceSysmoduleLoadModule(SCE_SYSMODULE_IME);
++        vglInitExtended(0, 960, 544, MEMORY_VITAGL_THRESHOLD, gxm_ms);
++        vgl_initialized = 1;
++    }
++
++    _this->gl_config.driver_loaded = 1;
++    return 0;
++}
++
++void
++VITA_GLES_UnloadLibrary(_THIS)
++{
++    if (vgl_initialized)
++    {
++        vgl_initialized = 0;
++    }
++    _this->gl_config.driver_loaded = 0;
++}
++
++void *
++VITA_GLES_GetProcAddress(_THIS, const char *proc)
++{
++    if (!proc || !*proc)
++    {
++        return NULL;
++    }
++
++    return vglGetProcAddress(proc);
++}
++
++SDL_GLContext
++VITA_GLES_CreateContext(_THIS, SDL_Window * window)
++{
++    SDL_WindowData *wdata = (SDL_WindowData *) window->driverdata;
++
++    _this->gl_config.red_size = 8;
++    _this->gl_config.green_size = 8;
++    _this->gl_config.blue_size = 8;
++    _this->gl_config.alpha_size = 8;
++    _this->gl_config.depth_size = 32;
++    _this->gl_config.stencil_size = 8;
++
++    // force context version to what we actually support
++    _this->gl_config.major_version = 2;
++    _this->gl_config.minor_version = 0;
++    _this->gl_config.profile_mask = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY;
++    _this->gl_config.accelerated = 1;
++
++    wdata->uses_gles = SDL_TRUE;
++    window->flags |= SDL_WINDOW_FULLSCREEN;
++
++    // return a dummy pointer and pretend that it's a GL context
++    return &vgl_initialized;
++}
++
++int
++VITA_GLES_MakeCurrent(_THIS, SDL_Window * window, SDL_GLContext context)
++{
++    if (!vgl_initialized) {
++        SDL_SetError("vitaGL is not initialized");
++        return -1;
++    }
++
++    glFinish();
++    glClearColor(0.f, 0.f, 0.f, 0.f);
++    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
++    glFinish();
++
++    return 0;
++}
++
++int
++VITA_GLES_SetSwapInterval(_THIS, int interval)
++{
++    if (!vgl_initialized) {
++        SDL_SetError("vitaGL is not initialized");
++        return -1;
++    }
++    _this->gl_data->swapinterval = interval;
++    eglSwapInterval(0, interval);
++    return 0;
++}
++
++int
++VITA_GLES_GetSwapInterval(_THIS)
++{
++    if (!vgl_initialized) {
++        SDL_SetError("vitaGL is not initialized");
++        return -1;
++    }
++    return _this->gl_data->swapinterval;
++}
++
++int
++VITA_GLES_SwapWindow(_THIS, SDL_Window * window)
++{
++    SDL_VideoData *videodata = (SDL_VideoData *)_this->driverdata;
++
++    if (!vgl_initialized) {
++        SDL_SetError("vitaGL is not initialized");
++        return -1;
++    }
++
++    if (videodata->ime_active) {
++        sceImeUpdate();
++    }
++
++    vglSwapBuffers(GL_TRUE);
++
++    return 0;
++}
++
++void
++VITA_GLES_DeleteContext(_THIS, SDL_GLContext context)
++{
++    if (!vgl_initialized) {
++        SDL_SetError("vitaGL is not initialized");
++        return;
++    }
++
++    glFinish();
++}
++
++void 
++VITA_GLES_DefaultProfileConfig(_THIS, int *mask, int *major, int *minor)
++{
++    *mask = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY;
++    *major = 2;
++    *minor = 0;
++}
++
++#endif /* SDL_VIDEO_DRIVER_VITA && SDL_VIDEO_VITA_VGL */
++
++/* vi: set ts=4 sw=4 expandtab: */
+diff --git a/src/video/vita/SDL_vitagles_vgl.h b/src/video/vita/SDL_vitagles_vgl.h
+new file mode 100644
+index 000000000..1bddf7e61
+--- /dev/null
++++ b/src/video/vita/SDL_vitagles_vgl.h
+@@ -0,0 +1,49 @@
++/*
++  Simple DirectMedia Layer
++  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
++
++  This software is provided 'as-is', without any express or implied
++  warranty.  In no event will the authors be held liable for any damages
++  arising from the use of this software.
++
++  Permission is granted to anyone to use this software for any purpose,
++  including commercial applications, and to alter it and redistribute it
++  freely, subject to the following restrictions:
++
++  1. The origin of this software must not be misrepresented; you must not
++     claim that you wrote the original software. If you use this software
++     in a product, an acknowledgment in the product documentation would be
++     appreciated but is not required.
++  2. Altered source versions must be plainly marked as such, and must not be
++     misrepresented as being the original software.
++  3. This notice may not be removed or altered from any source distribution.
++*/
++#include "../../SDL_internal.h"
++
++#ifndef _SDL_vitagles_vgl_h
++#define _SDL_vitagles_vgl_h
++
++#if SDL_VIDEO_DRIVER_VITA && SDL_VIDEO_VITA_VGL
++
++#include <vitaGL.h>
++#include "SDL_vitavideo.h"
++
++typedef struct SDL_GLDriverData
++{
++    uint32_t swapinterval;
++} SDL_GLDriverData;
++
++extern void * VITA_GLES_GetProcAddress(_THIS, const char *proc);
++extern int VITA_GLES_MakeCurrent(_THIS,SDL_Window * window, SDL_GLContext context);
++extern void VITA_GLES_SwapBuffers(_THIS);
++extern int VITA_GLES_SwapWindow(_THIS, SDL_Window * window);
++extern SDL_GLContext VITA_GLES_CreateContext(_THIS, SDL_Window * window);
++extern int VITA_GLES_LoadLibrary(_THIS, const char *path);
++extern void VITA_GLES_UnloadLibrary(_THIS);
++extern int VITA_GLES_SetSwapInterval(_THIS, int interval);
++extern int VITA_GLES_GetSwapInterval(_THIS);
++extern void VITA_GLES_DefaultProfileConfig(_THIS, int *mask, int *major, int *minor);
++
++#endif /* SDL_VIDEO_DRIVER_VITA && SDL_VIDEO_VITA_VGL */
++
++#endif /* _SDL_vitagles_vgl_h */
+diff --git a/src/video/vita/SDL_vitamessagebox.c b/src/video/vita/SDL_vitamessagebox.c
+index f78c9700b..f4ea9c7b6 100644
+--- a/src/video/vita/SDL_vitamessagebox.c
++++ b/src/video/vita/SDL_vitamessagebox.c
+@@ -26,6 +26,10 @@
+ #include "SDL_vitamessagebox.h"
+ #include <psp2/message_dialog.h>
+ 
++#ifdef SDL_VIDEO_VITA_VGL
++#include <vitaGL.h>
++#endif
++
+ #if SDL_VIDEO_RENDER_VITA_GXM
+ #include "../../render/vitagxm/SDL_render_vita_gxm_tools.h"
+ #endif /* SDL_VIDEO_RENDER_VITA_GXM */
+@@ -74,6 +78,7 @@ int VITA_ShowMessageBox(const SDL_MessageBoxData *messageboxdata, int *buttonid)
+ 
+     init_result = sceMsgDialogInit(&param);
+ 
++#ifndef SDL_VIDEO_VITA_VGL
+     // Setup display if it hasn't been initialized before
+     if (init_result == SCE_COMMON_DIALOG_ERROR_GXM_IS_UNINITIALIZED) {
+         gxm_minimal_init_for_common_dialog();
+@@ -82,10 +87,15 @@ int VITA_ShowMessageBox(const SDL_MessageBoxData *messageboxdata, int *buttonid)
+     }
+ 
+     gxm_init_for_common_dialog();
++#endif
+ 
+     if (init_result >= 0) {
+         while (sceMsgDialogGetStatus() == SCE_COMMON_DIALOG_STATUS_RUNNING) {
++#ifdef SDL_VIDEO_VITA_VGL
++            vglSwapBuffers(GL_TRUE);
++#else
+             gxm_swap_for_common_dialog();
++#endif
+         }
+         SDL_zero(dialog_result);
+         sceMsgDialogGetResult(&dialog_result);
+@@ -108,11 +118,13 @@ int VITA_ShowMessageBox(const SDL_MessageBoxData *messageboxdata, int *buttonid)
+         return -1;
+     }
+ 
++#ifndef SDL_VIDEO_VITA_VGL
+     gxm_term_for_common_dialog();
+ 
+     if (setup_minimal_gxm) {
+         gxm_minimal_term_for_common_dialog();
+     }
++#endif
+ 
+     return 0;
+ #else
+diff --git a/src/video/vita/SDL_vitavideo.c b/src/video/vita/SDL_vitavideo.c
+index afa9b54a6..d5321edb1 100644
+--- a/src/video/vita/SDL_vitavideo.c
++++ b/src/video/vita/SDL_vitavideo.c
+@@ -55,6 +55,10 @@
+   #define VITA_GLES_DeleteContext SDL_EGL_DeleteContext
+ #endif
+ 
++#if defined(SDL_VIDEO_VITA_VGL)
++  #include "SDL_vitagles_vgl.h"
++#endif
++
+ SDL_Window *Vita_Window;
+ 
+ static void VITA_Destroy(SDL_VideoDevice *device)
+@@ -72,7 +76,7 @@ static SDL_VideoDevice *VITA_Create()
+ {
+     SDL_VideoDevice *device;
+     SDL_VideoData *phdata;
+-#ifdef SDL_VIDEO_VITA_PIB
++#if defined(SDL_VIDEO_VITA_PIB) || defined(SDL_VIDEO_VITA_VGL)
+     SDL_GLDriverData *gldata;
+ #endif
+     /* Initialize SDL_VideoDevice structure */
+@@ -89,7 +93,7 @@ static SDL_VideoDevice *VITA_Create()
+         SDL_free(device);
+         return NULL;
+     }
+-#ifdef SDL_VIDEO_VITA_PIB
++#if defined(SDL_VIDEO_VITA_PIB) || defined(SDL_VIDEO_VITA_VGL)
+ 
+     gldata = (SDL_GLDriverData *)SDL_calloc(1, sizeof(SDL_GLDriverData));
+     if (!gldata) {
+@@ -140,7 +144,7 @@ static SDL_VideoDevice *VITA_Create()
+         device->DestroyWindowFramebuffer = VITA_DestroyWindowFramebuffer;
+     */
+ 
+-#if defined(SDL_VIDEO_VITA_PIB) || defined(SDL_VIDEO_VITA_PVR)
++#if defined(SDL_VIDEO_VITA_PIB) || defined(SDL_VIDEO_VITA_PVR) || defined(SDL_VIDEO_VITA_VGL)
+ #if defined(SDL_VIDEO_VITA_PVR_OGL)
+     if (SDL_getenv("VITA_PVR_OGL") != NULL) {
+         device->GL_LoadLibrary = VITA_GL_LoadLibrary;
