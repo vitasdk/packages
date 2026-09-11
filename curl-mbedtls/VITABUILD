@@ -1,9 +1,9 @@
 pkgname=curl-mbedtls
-pkgver=8.21.0
+pkgver=8.22.0
 pkgrel=1
 url="https://curl.se/"
-source=("https://github.com/curl/curl/releases/download/curl-8_21_0/curl-8.21.0.tar.xz")
-sha256sums=('aa1b66a70eace83dc624508745646c08ae561de512ab403adffb93ac87fc72e6')
+source=("https://github.com/curl/curl/releases/download/curl-8_22_0/curl-8.22.0.tar.xz")
+sha256sums=('f7ef3ae8a22e521f289803fe93543eb64c329b58aa73a9e224dfd915a2a5f4f7')
 depends=('mbedtls' 'zlib' 'zstd')
 provides=("curl=${pkgver}")
 conflicts=('curl')
