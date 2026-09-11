@@ -1,19 +1,23 @@
 pkgname=bullet
-pkgver=2.87.r8.gb75d5ba
+pkgver=3.25
 pkgrel=1
-url="https://github.com/DrakonPL/bullet-physics-vita"
-source=("git+https://github.com/DrakonPL/bullet-physics-vita.git#commit=b75d5ba1ccbbdf7dd12f65976a45f0ca618fa9ac")
-_follow=HEAD
-sha256sums=('SKIP')
+url="http://www.bulletphysics.com/Bullet/"
+source=("https://github.com/bulletphysics/bullet3/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('c45afb6399e3f68036ddb641c6bf6f552bf332d5ab6be62f7e6c54eda05ceb77')
+
+prepare() {
+  cd bullet3-${pkgver}
+  sed -i 's/Bullet3OpenCL//' src/CMakeLists.txt
+}
 
 build() {
-  cd bullet-physics-vita
+  cd bullet3-${pkgver}
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_BULLET2_DEMOS=OFF -DBUILD_CPU_DEMOS=OFF -DBUILD_EXTRAS=OFF -DBUILD_UNIT_TESTS=OFF
   make -j$(nproc)
 }
 
-package () {
-  cd bullet-physics-vita/build
+package() {
+  cd bullet3-${pkgver}/build
   make DESTDIR=$pkgdir install
 }
