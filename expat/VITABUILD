@@ -1,9 +1,9 @@
 pkgname=expat
-pkgver=2.8.3
+pkgver=2.8.4
 pkgrel=1
 url="https://libexpat.github.io/"
-source=("https://github.com/libexpat/libexpat/releases/download/R_2_8_3/$pkgname-$pkgver.tar.xz")
-sha256sums=('f6256df90c906773d344da084402b7d3e4f22ed41b1a59c989098a83d3ea0c85')
+source=("https://github.com/libexpat/libexpat/releases/download/R_2_8_4/$pkgname-$pkgver.tar.xz")
+sha256sums=('656ae1cc8da3b4ea513bb4e254f33e6243938084c0ec6239da873376b09985a7')
 
 build() {
   cd $pkgname-$pkgver
