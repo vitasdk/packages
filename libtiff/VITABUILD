@@ -1,15 +1,15 @@
 pkgname=libtiff
 pkgver=4.7.2
-pkgrel=1
+pkgrel=2
 url="https://gitlab.com/libtiff"
 source=("http://download.osgeo.org/${pkgname}/tiff-${pkgver}.tar.gz")
 sha256sums=('672bd7d10aee4606171afb864f3570b83340f6a33e2c186dc0512f7145ffdf6a')
-depends=('zlib' 'libjpeg-turbo' 'xz' 'zstd' 'libwebp')
+depends=('zlib' 'libjpeg-turbo' 'libwebp')
 
 build() {
   cd tiff-$pkgver
   cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF -Dtiff-contrib=OFF -Dtiff-docs=OFF -Dtiff-tests=OFF -Dtiff-tools=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_SHARED_LIBS=OFF -Dtiff-contrib=OFF -Dtiff-docs=OFF -Dtiff-tests=OFF -Dtiff-tools=OFF -Dlzma=OFF -Dzstd=OFF
   make -j$(nproc)
 }
 
