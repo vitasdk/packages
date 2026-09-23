@@ -8,7 +8,7 @@ index 0000000..9f9eb98
 +OBJS      = archive.o arcread.o blake2s.o cmddata.o consio.o crc.o crypt.o \
 +			dll.o encname.o errhnd.o extinfo.o extract.o filcreat.o file.o \
 +			filefn.o filestr.o find.o getbits.o global.o hash.o headers.o \
-+			match.o options.o pathfn.o qopen.o rar.o rarpch.o rarvm.o \
++			largepage.o match.o options.o pathfn.o qopen.o rar.o rarpch.o rarvm.o \
 +			rawread.o rdwrfn.o rijndael.o rs.o rs16.o scantree.o secpassword.o \
 +			sha1.o sha256.o smallfn.o strfn.o strlist.o system.o threadpool.o \
 +			timefn.o ui.o unicode.o unpack.o volume.o
