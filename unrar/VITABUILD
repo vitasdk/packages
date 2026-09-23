@@ -1,9 +1,9 @@
 pkgname=unrar
 pkgver=7.3.1
-pkgrel=1
+pkgrel=2
 url="https://www.rarlab.com/"
 source=("https://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz" "unrar.patch")
-sha256sums=('634900842a3737d9cc15bbcc71d4c74cc713437e0bca296a573424fe5f2660ab' 'cd5bfb86d67940e2bc144024911d9bab07cb5f3919d5c40cace44d32bc295c59')
+sha256sums=('634900842a3737d9cc15bbcc71d4c74cc713437e0bca296a573424fe5f2660ab' 'daebc98f2066598492fa39a4c94daa33aad51fd1de756e4c2a6cb73f3b5240f7')
 
 prepare() {
   cd ${pkgname}
