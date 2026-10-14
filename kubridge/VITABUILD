@@ -3,12 +3,14 @@ pkgver=0.0.0.r19.g417ddde
 pkgrel=1
 url="https://github.com/bythos14/kubridge"
 source=("git+https://github.com/bythos14/kubridge.git#commit=417ddde9a744eba98d769382c1c1372b8e119139"
-        "vita-headers-886.diff")
+        "vita-headers-889.diff"
+        "vita-headers-890.diff")
 sha256sums=('SKIP'
-            '6214bb444a460f3a7b236f689d354a9515cab2597ccd2bd8df92d9d447949517')
+            '94408400b59f8f287810391fbfc1e4cee8bfb697050e1b62b40283a95037edb3'
+            '4debac42661d3e20c3e5db3f18c14db41d4c3656ef2c34df45b4f193aafdc732')
 depends=('taihen')
 
-# Downstream while it is upstreamed: vita-headers PR #886 named the field at
+# Downstream while it is upstreamed: vita-headers PR #890 named the field at
 # offset 0xC of SceKernelAllocMemBlockKernelOpt vbase, which is what kubridge
 # writes there, and started declaring SceKernelObject, which kubridge also
 # declared. Nothing here dereferences that type, only points at it.
@@ -19,9 +21,13 @@ depends=('taihen')
 # with check_struct_has_member, which is how this leaves once it is merged.
 prepare() {
   cd $pkgname
-  if grep -Eq '[[:space:]]vbase;' \
+  if grep -Eq 'ksceKernelSysrootGetCurrentAddressSpaceCB[[:space:]]*[(]' \
+      "$VITASDK/arm-vita-eabi/include/psp2kern/kernel/sysroot.h"; then
+    patch -p1 < ../vita-headers-889.diff
+  fi
+  if grep -Eq '(^|[^[:alnum:]_])vbase[[:space:]]*;' \
       "$VITASDK/arm-vita-eabi/include/psp2kern/kernel/sysmem.h"; then
-    patch -p1 < ../vita-headers-886.diff
+    patch -p1 < ../vita-headers-890.diff
   fi
 }
 
