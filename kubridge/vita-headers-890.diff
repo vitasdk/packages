@@ -1,0 +1,26 @@
+diff --git a/src/exceptions.c b/src/exceptions.c
+index 4955fb5..001a1fb 100644
+--- a/src/exceptions.c
++++ b/src/exceptions.c
+@@ -122,7 +122,7 @@ KuKernelProcessContext *GetProcessContext(SceUID pid, bool init)
+         else
+         {
+             opt.attr = SCE_KERNEL_ALLOC_MEMBLOCK_ATTR_HAS_PID | 0x00000001; // (HAS_PID | HAS_VBASE)
+-            opt.field_C = (uintptr_t)exceptionBootstrapAddr;
++            opt.vbase = exceptionBootstrapAddr;
+         }
+         opt.pid = pid;
+         processContext->exceptionBootstrapMemBlock = ksceKernelAllocMemBlock("KuBridgeExcpHandlerBootstrap", SCE_KERNEL_MEMBLOCK_TYPE_USER_SHARED_MAIN_RX, 0x1000, &opt);
+diff --git a/src/mprotect.c b/src/mprotect.c
+index fc9b5a7..34f9803 100644
+--- a/src/mprotect.c
++++ b/src/mprotect.c
+@@ -695,7 +695,7 @@ SceUID kuKernelMemReserve(void **addr, SceSize size, SceKernelMemBlockType memBl
+     if (allocAddr != NULL)
+     {
+         opt.attr |= 0x1; // HAS_VBASE
+-        opt.field_C = (uintptr_t)allocAddr;
++        opt.vbase = allocAddr;
+     }
+ 
+     memBlock = ksceKernelAllocMemBlock("mem_reserve", memBlockType, size, &opt);
