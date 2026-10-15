@@ -1,6 +1,6 @@
 pkgname=openssl-1.1.1
 pkgver=1.1.1.r24282.g0a851f7
-pkgrel=1
+pkgrel=2
 url="https://github.com/SonicMastr/vita-openssl3"
 source=("git+https://github.com/SonicMastr/vita-openssl3.git#commit=0a851f7911a89ad82f0f3ada54939bb12acdd476")
 _follow=OpenSSL_1_1_1-vita
@@ -10,7 +10,7 @@ conflicts=('openssl')
 
 build() {
   cd vita-openssl3
-  ./Configure --prefix=$VITASDK/arm-vita-eabi/ no-asm no-pic no-unit-test no-shared vita-cross
+  ./Configure --prefix=$VITASDK/arm-vita-eabi/ no-asm no-pic no-unit-test no-shared no-ui-console vita-cross
   make -j$(nproc)
 }
 

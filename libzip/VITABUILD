@@ -1,15 +1,20 @@
 pkgname=libzip
 pkgver=1.11.4
-pkgrel=1
+pkgrel=2
 url="https://libzip.org/"
 source=("https://libzip.org/download/$pkgname-$pkgver.tar.xz")
 sha256sums=('8a247f57d1e3e6f6d11413b12a6f28a9d388de110adc0ec608d893180ed7097b')
-depends=('bzip2' 'openssl' 'xz' 'zlib' 'zstd')
+depends=('bzip2' 'openssl-1.1.1' 'xz' 'zlib' 'zstd')
+
+prepare() {
+  cd $pkgname-$pkgver
+  printf '\nRequires.private: openssl liblzma libzstd zlib\n' >> libzip.pc.in
+}
 
 build() {
   cd $pkgname-$pkgver
   mkdir build && cd build
-  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_TOOLS=OFF -DBUILD_REGRESS=OFF -DBUILD_OSSFUZZ=OFF -DBUILD_EXAMPLES=OFF -DBUILD_DOC=OFF -DBUILD_SHARED_LIBS=OFF -DHAVE_ARC4RANDOM=OFF
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DBUILD_TOOLS=OFF -DBUILD_REGRESS=OFF -DBUILD_OSSFUZZ=OFF -DBUILD_EXAMPLES=OFF -DBUILD_DOC=OFF -DBUILD_SHARED_LIBS=OFF -DHAVE_ARC4RANDOM=OFF -DOPENSSL_USE_STATIC_LIBS=ON
   make -j$(nproc)
 }
 
