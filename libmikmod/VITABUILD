@@ -1,8 +1,8 @@
 pkgname=libmikmod
-pkgver=3.3.14
+pkgver=3.3.15
 pkgrel=1
 url="https://mikmod.sourceforge.net/"
-source=("git+https://github.com/sezero/mikmod.git#commit=8de19eef766d9ba30a74c19e566edfcd61851dba")
+source=("git+https://github.com/sezero/mikmod.git#commit=6e658155f7e6b394a288dac796ba572634553fad")
 sha256sums=('SKIP')
 
 build() {
