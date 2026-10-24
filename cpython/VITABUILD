@@ -1,11 +1,11 @@
 pkgname=cpython
 pkgver=2.7.r81103.g4f6d059
-pkgrel=1
+pkgrel=2
 url="https://github.com/SonicMastr/cpython-vita"
-source=("git+https://github.com/SonicMastr/cpython-vita.git#commit=4f6d0590f16b7c55e0656b7c93a676fc10d1a1bc")
+source=("git+https://github.com/SonicMastr/cpython-vita.git#commit=4f6d0590f16b7c55e0656b7c93a676fc10d1a1bc" "link-with-pthread.diff")
 _follow=HEAD
-sha256sums=('SKIP')
-depends=('openssl' 'libzip' 'xz' 'zlib' 'bzip2')
+sha256sums=('SKIP' '2540d3ddb4c6a7a52b5be6cfce6b88ed0c1cda88466c9257d3ed21a1c603dce7')
+depends=('openssl-1.1.1' 'libzip' 'xz' 'zlib' 'bzip2')
 
 build() {
   echo ""
@@ -13,9 +13,9 @@ build() {
 
 package () {
   cd cpython-vita
+  patch -p1 < ../link-with-pthread.diff
   sed -i 's/CFLAGS="/CFLAGS="-std=gnu11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types /' build_vita.sh
   sed -i 's/CXXFLAGS="/CXXFLAGS="-std=gnu++11 -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=incompatible-pointer-types /' build_vita.sh
-  sed -i 's/LDFLAGS="/LDFLAGS="-lpthread /' build_vita.sh
 
   bash build_vita.sh $pkgdir
   export TOKEN=${GITHUB_TOKEN}

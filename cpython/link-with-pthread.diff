@@ -1,0 +1,48 @@
+diff --git a/Modules/Setup.dist b/Modules/Setup.dist
+index e363312dc4..cbe9946175 100644
+--- a/Modules/Setup.dist
++++ b/Modules/Setup.dist
+@@ -218,7 +218,7 @@ _socket socketmodule.c timemodule.c
+ #SSL=/usr/local/ssl
+ _ssl _ssl.c \
+ 	-DUSE_SSL -I$(prefix)/include -I$(prefix)/include/openssl \
+-	-L$(exec_prefix)/lib -lssl -lcrypto
++	-L$(exec_prefix)/lib -lssl -lcrypto -lpthread
+ 
+ # The crypt module is now disabled by default because it breaks builds
+ # on many systems (where -lcrypt is needed), e.g. Linux (I believe).
+diff --git a/build_vita.sh b/build_vita.sh
+index 11d728a60c..30eadcb4d7 100644
+--- a/build_vita.sh
++++ b/build_vita.sh
+@@ -7,6 +7,6 @@ if [ -z "$1" ]
+         export PREFIX=$1/$VITASDK/arm-vita-eabi
+ fi
+ 
+-./configure --build=armv7 --host=arm-vita-eabi --prefix="$PREFIX" --enable-optimizations --disable-shared --with-threads --disable-ipv6 --without-signal-module CONFIG_SITE="config.site" CFLAGS="-Wl,-q,-z,nocopyreloc" CPPFLAGS="-Wl,-q,-z,nocopyreloc" LDFLAGS="-Wl,--allow-multiple-definition"
++./configure --build=armv7 --host=arm-vita-eabi --prefix="$PREFIX" --enable-optimizations --disable-shared --with-threads --disable-ipv6 --without-signal-module CONFIG_SITE="config.site" CFLAGS="-Wl,-q,-z,nocopyreloc" CPPFLAGS="-Wl,-q,-z,nocopyreloc" LDFLAGS="-lpthread -Wl,--allow-multiple-definition"
+ make clean
+ make -j$(nproc) install
+\ No newline at end of file
+diff --git a/setup.py b/setup.py
+index f764223d06..83d7d1f74d 100644
+--- a/setup.py
++++ b/setup.py
+@@ -876,7 +876,7 @@ class PyBuildExt(build_ext):
+             exts.append( Extension('_ssl', ['_ssl.c'],
+                                    include_dirs = ssl_incs,
+                                    library_dirs = ssl_libs,
+-                                   libraries = ['ssl', 'crypto'],
++                                   libraries = ['ssl', 'crypto', 'pthread'],
+                                    depends = ['socketmodule.h']), )
+         else:
+             missing.append('_ssl')
+@@ -915,7 +915,7 @@ class PyBuildExt(build_ext):
+                 exts.append( Extension('_hashlib', ['_hashopenssl.c'],
+                                        include_dirs = ssl_incs,
+                                        library_dirs = ssl_libs,
+-                                       libraries = ['ssl', 'crypto']) )
++                                       libraries = ['ssl', 'crypto', 'pthread']) )
+             else:
+                 print ("warning: openssl 0x%08x is too old for _hashlib" %
+                        openssl_ver)
