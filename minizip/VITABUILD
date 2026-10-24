@@ -1,16 +1,40 @@
 pkgname=minizip
 pkgver=4.2.2
-pkgrel=1
+pkgrel=2
 url="https://github.com/zlib-ng/minizip-ng"
-source=("https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip")
-sha256sums=('095b6efc041608eaa19bcf41be9ac7bc3388d6a13851b5c1099ead75ebd86dbc')
-depends=('bzip2' 'openssl' 'zlib' 'zstd' 'xz')
+source=("https://github.com/zlib-ng/minizip-ng/archive/$pkgver.zip"
+        'link-test.c')
+sha256sums=('095b6efc041608eaa19bcf41be9ac7bc3388d6a13851b5c1099ead75ebd86dbc'
+            '61747b4efad6f2274bd66d57313c70bd354017c5a29b83945daddf848a4ba4a5')
+depends=('bzip2' 'openssl-1.1.1' 'zlib' 'zstd' 'xz')
 
 build() {
   cd minizip-ng-$pkgver
   mkdir build && cd build
   cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$prefix -DUNIX=ON
+  # libminizip.a calls into the libppmd.a installed beside it, which the
+  # generated metadata leaves out of a static link.
+  sed -e 's/^Libs\.private:.*/& -lppmd/' minizip.pc > minizip.pc.new
+  mv minizip.pc.new minizip.pc
   make -j$(nproc)
+}
+
+check() {
+  cd minizip-ng-$pkgver/build
+  local pc cflags libs
+  # Linked the way a consumer links it: installed, through its own
+  # pkg-config metadata, which the wrapper relocates to where it lies.
+  make DESTDIR="$PWD/check-root" install >/dev/null
+  pc="$PWD/check-root$prefix/lib/pkgconfig/minizip.pc"
+  cflags=$(arm-vita-eabi-pkg-config --cflags "$pc")
+  libs=$(arm-vita-eabi-pkg-config --static --libs "$pc")
+
+  # Static archive creation does not resolve references into OpenSSL; a
+  # minizip built against another OpenSSL ABI only fails when linked.
+  arm-vita-eabi-gcc -Werror -Wl,-q $cflags "$srcdir/link-test.c" \
+    -Wl,--start-group $libs -Wl,--end-group -o link-test.elf
+  vita-elf-create link-test.elf link-test.velf
+  vita-make-fself -s link-test.velf link-test.self
 }
 
 package() {
