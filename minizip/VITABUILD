@@ -21,17 +21,18 @@ build() {
 
 check() {
   cd minizip-ng-$pkgver/build
-  local pc cflags libs
-  # Linked the way a consumer links it: installed, through its own
-  # pkg-config metadata, which the wrapper relocates to where it lies.
+  local stage pc cflags libs
+  stage="$PWD/check-root$prefix"
   make DESTDIR="$PWD/check-root" install >/dev/null
-  pc="$PWD/check-root$prefix/lib/pkgconfig/minizip.pc"
+  pc="$stage/lib/pkgconfig/minizip.pc"
   cflags=$(arm-vita-eabi-pkg-config --cflags "$pc")
   libs=$(arm-vita-eabi-pkg-config --static --libs "$pc")
 
+  # The .pc carries absolute directories, which can point at an installed
+  # minizip instead of this build, so the staged ones go first.
   # Static archive creation does not resolve references into OpenSSL; a
   # minizip built against another OpenSSL ABI only fails when linked.
-  arm-vita-eabi-gcc -Werror -Wl,-q $cflags "$srcdir/link-test.c" \
+  arm-vita-eabi-gcc -Werror -Wl,-q -I"$stage/include/minizip" -L"$stage/lib" $cflags "$srcdir/link-test.c" \
     -Wl,--start-group $libs -Wl,--end-group -o link-test.elf
   vita-elf-create link-test.elf link-test.velf
   vita-make-fself -s link-test.velf link-test.self
