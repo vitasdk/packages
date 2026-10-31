@@ -1,9 +1,9 @@
 pkgname=box2d
-pkgver=3.1.1
+pkgver=3.2.0
 pkgrel=1
 url="https://box2d.org/"
 source=("https://github.com/erincatto/box2d/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('fb6ef914b50f4312d7d921a600eabc12318bb3c55a0b8c0b90608fa4488ef2e4')
+sha256sums=('ffec747b27a2267016f8d0240d658c82d187fb2271fa0f69fcbe53fbc067180d')
 
 build() {
   cd box2d-$pkgver

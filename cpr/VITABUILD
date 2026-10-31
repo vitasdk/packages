@@ -1,9 +1,9 @@
 pkgname=cpr
-pkgver=1.14.1
+pkgver=1.15.1
 pkgrel=1
-url="https://docs.libcpr.org/"
+url="https://docs.libcpr.dev/"
 source=("https://github.com/libcpr/cpr/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('213ccc7c98683d2ca6304d9760005effa12ec51d664bababf114566cb2b1e23c')
+sha256sums=('c2fc62a030c4ca5d7c3517e8068531297f938bf4ab52bf951d4fc9bbc9222716')
 depends=('curl')
 
 build() {
