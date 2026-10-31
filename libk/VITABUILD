@@ -1,8 +1,8 @@
 pkgname=libk
-pkgver=0.0.0.r7.g5aa300c
-pkgrel=2
+pkgver=0.0.0.r8.gcb74521
+pkgrel=1
 url="https://github.com/DaveeFTW/libk"
-source=("git+https://github.com/DaveeFTW/libk.git#commit=5aa300ce6c3c72c91fc417bd01df298ea6410044")
+source=("git+https://github.com/DaveeFTW/libk.git#commit=cb74521af599c16767ad06ab1065df660b6806f0")
 _follow=dev
 sha256sums=('SKIP')
 
