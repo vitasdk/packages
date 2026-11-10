@@ -1,6 +1,6 @@
 pkgname=sdl2_vitagl
 pkgver=2.32.8
-pkgrel=1
+pkgrel=2
 pkgdesc="SDL2 with the vitaGL video backend, for projects that need OpenGL"
 url='https://www.libsdl.org'
 license=('Zlib')
@@ -10,7 +10,7 @@ conflicts=('sdl2')
 source=("https://github.com/libsdl-org/SDL/releases/download/release-${pkgver}/SDL2-${pkgver}.tar.gz"
         "vitagl-backend.patch")
 sha256sums=('0ca83e9c9b31e18288c7ec811108e58bac1f1bb5ec6577ad386830eac51c787e'
-            'dd120e63ae595ab184598adb54d6c6cd7f8fa2f9b8f5178356218d4b77d39de4')
+            '98391eb34d664fa16af44fb2446b5280824462365654db8289013892a37e7c6f')
 
 prepare() {
   cd "SDL2-${pkgver}"

@@ -10,7 +10,7 @@ index d65157f56..6f42ffd78 100644
  endif()
  
  # General source files
-@@ -2588,6 +2589,33 @@ elseif(VITA)
+@@ -2588,6 +2589,35 @@ elseif(VITA)
        endif()
      endif()
  
@@ -33,6 +33,8 @@ index d65157f56..6f42ffd78 100644
 +          mathneon
 +          SceShaccCg_stub
 +          SceKernelDmacMgr_stub
++          SceShaccCgExt
++          taihen_stub
 +        )
 +        set(HAVE_VIDEO_VITA_VGL ON)
 +        set(SDL_VIDEO_VITA_VGL 1)
@@ -44,7 +46,7 @@ index d65157f56..6f42ffd78 100644
      if(VIDEO_VITA_PVR)
        check_include_file(gpu_es4/psp2_pvr_hint.h HAVE_PVR_H)
        if(HAVE_PVR_H)
-@@ -2627,6 +2655,7 @@ elseif(VITA)
+@@ -2627,6 +2657,7 @@ elseif(VITA)
      set(SDL_VIDEO_RENDER_VITA_GXM 1)
  
      list(APPEND EXTRA_LIBS
