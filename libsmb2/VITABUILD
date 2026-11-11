@@ -1,9 +1,9 @@
 pkgname=libsmb2
-pkgver=6.2
+pkgver=6.3.2
 pkgrel=1
 url="https://github.com/sahlberg/libsmb2"
 source=("https://github.com/sahlberg/libsmb2/archive/refs/tags/$pkgname-$pkgver.tar.gz")
-sha256sums=('8e1f9efc6b2e0f6546f0fe121ac0ddf4fc2f0908ae5a6bd1f185be7c9e0bcbb3')
+sha256sums=('a9e59c2e0bf5fe1232142e2ae3a00697046a0201ce85ae5f80af714cc85dc66a')
 
 build() {
   cd $pkgname-$pkgname-$pkgver
