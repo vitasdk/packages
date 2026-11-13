@@ -1,9 +1,9 @@
 pkgname=libpcre2
-pkgver=10.48
+pkgver=10.49
 pkgrel=1
 url='https://www.pcre.org/'
 source=("https://github.com/PhilipHazel/pcre2/releases/download/pcre2-${pkgver}/pcre2-${pkgver}.tar.gz" "libpcre2.patch")
-sha256sums=('ebcc25aadf2a51fa1fefa9b8bc9e7a79b3dae86870a0f1152a22e42befd46888' 'SKIP')
+sha256sums=('929f0b20e62879252a15886b06c89f1edef61a363cbd5826fb041080a5e557ae' 'SKIP')
 
 prepare() {
   cd pcre2-$pkgver
