@@ -1,9 +1,9 @@
 pkgname=libjpeg-turbo
-pkgver=3.2.0
+pkgver=3.2.1
 pkgrel=1
 url="https://www.libjpeg-turbo.org/"
 source=("https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('6f30092cef9fb839779646608f4ee14ae3cbac989c47fa05e841b0841f09878e')
+sha256sums=('c27ad72a68da151177929aa969ae773a2da5ac2af9ce946079314fdac8cece7f')
 
 build() {
   cd $pkgname-$pkgver
