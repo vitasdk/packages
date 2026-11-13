@@ -1,5 +1,6 @@
 *.tar.xz
 *.tar.gz
+*.tgz
 *.zip
 *.tar.bz2
 *.part

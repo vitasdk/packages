@@ -1,22 +1,22 @@
 pkgname=icu4c
-pkgver=73.2
+pkgver=79.1
 pkgrel=1
 url='https://icu.unicode.org/'
 source=(
-  "https://github.com/unicode-org/icu/releases/download/release-73-2/icu4c-73_2-src.tgz"
-  "icu-73.2.patch"
+  "https://github.com/unicode-org/icu/releases/download/release-${pkgver}/${pkgname}-${pkgver}-sources.tgz"
+  "icu4c.patch"
   "build_vita_armv7-a.sh"
 )
 
 sha256sums=(
-  '818a80712ed3caacd9b652305e01afc7fa167e6f2e94996da44b90c2ab604ce1'
-  'SKIP'
-  'SKIP'
+  '06fa63ecb521048f8082f12ad988f6b678d90cbd88aafce24cbc94902b191d99'
+  'a3ff8ecbebab9674347dfcf39a3599e5c92d3e05fb01e17b85bc0add093cb780'
+  'ace967329d5cb4282e70802281f51a3f65fa6a8b179eeadea7015362f0866c68'
 )
 
 prepare() {
   cd icu
-  patch -p1 < ../icu-73.2.patch
+  patch -p1 < ../icu4c.patch
   mkdir -p vita
   cp ../build_vita_armv7-a.sh vita
   mkdir -p build-linux
@@ -31,16 +31,16 @@ build() {
   ./build_vita_armv7-a.sh
 }
 
-package () {
+package() {
   cd icu/vita
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/brkitr
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/coll
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/curr
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/lang
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/rbnf
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/region
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/translit
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/unit
-  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt73l/zone
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/brkitr
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/coll
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/curr
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/lang
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/rbnf
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/region
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/translit
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/unit
+  mkdir -p $pkgdir/$prefix/share/icu/$pkgver/icudt79l/zone
   make DESTDIR=$pkgdir install
 }
